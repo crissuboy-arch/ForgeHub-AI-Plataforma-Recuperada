@@ -20,8 +20,9 @@ export default function SignupPage() {
     try {
       await signUp(email, password, fullName);
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Falha ao cadastrar');
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError(String(err));
     }
   };
 
