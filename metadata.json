@@ -1,0 +1,6 @@
+{
+  "name": "ForgeHub AI",
+  "description": "Premium Dark SaaS platform to Remix, Customize, and Deploy intelligent micro-apps, agents, skills, automations, and templates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
