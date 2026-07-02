@@ -5,21 +5,31 @@ import { Typography } from '../atoms/Typography';
 
 export interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  /** Optional class for the container */
+  error?: string;
   containerClassName?: string;
 }
 
 /**
- * Simple form field component that pairs a label with an input.
- * Uses the Input atom and Typography for styling.
+ * Campo de formulário: rótulo + Input + mensagem de erro opcional.
  */
-export const FormField: React.FC<FormFieldProps> = ({ label, containerClassName, ...inputProps }) => {
+export const FormField: React.FC<FormFieldProps> = ({
+  label,
+  error,
+  containerClassName,
+  id,
+  ...inputProps
+}) => {
   return (
     <div className={containerClassName}>
-      <Typography variant="small" className="block mb-1 text-gray-600">
+      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-content">
         {label}
-      </Typography>
-      <Input {...inputProps} />
+      </label>
+      <Input id={id} invalid={!!error} {...inputProps} />
+      {error && (
+        <Typography variant="caption" className="mt-1 block text-danger">
+          {error}
+        </Typography>
+      )}
     </div>
   );
 };

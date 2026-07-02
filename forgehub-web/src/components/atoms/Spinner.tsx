@@ -7,13 +7,15 @@ type SpinnerProps = {
   className?: string;
 };
 
+/** Indicador de carregamento. Herda a cor do texto (currentColor). */
 export const Spinner: React.FC<SpinnerProps> = ({ size = 20, className }) => (
   <svg
-    className={classNames('animate-spin text-indigo-600', className)}
+    className={classNames('animate-spin', className)}
     style={{ width: size, height: size }}
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
   >
     <circle
       className="opacity-25"

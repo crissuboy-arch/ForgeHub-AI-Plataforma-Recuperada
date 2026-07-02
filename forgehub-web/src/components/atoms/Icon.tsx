@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 // Outline icons
 import {
-  MenuIcon,
+  Bars3Icon,
   XMarkIcon,
   HomeIcon,
   SquaresPlusIcon,
@@ -12,9 +12,20 @@ import {
   ClockIcon,
   PhotoIcon,
   ArrowRightOnRectangleIcon,
+  MagnifyingGlassIcon,
+  Cog6ToothIcon,
+  SparklesIcon,
+  ArrowsRightLeftIcon,
+  PlusIcon,
+  ChevronRightIcon,
+  ChevronUpDownIcon,
+  ArrowLeftIcon,
+  BoltIcon,
+  RectangleStackIcon,
+  CommandLineIcon,
 } from '@heroicons/react/24/outline';
 // Solid icons
-import { UserIcon } from '@heroicons/react/24/solid';
+import { UserIcon, StarIcon } from '@heroicons/react/24/solid';
 
 type IconProps = {
   name: string; // name of the SVG icon
@@ -22,18 +33,39 @@ type IconProps = {
   size?: number; // size in pixels
 };
 
+const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+  menu: Bars3Icon,
+  x: XMarkIcon,
+  close: XMarkIcon,
+  user: UserIcon,
+  logout: ArrowRightOnRectangleIcon,
+  home: HomeIcon,
+  collection: SquaresPlusIcon,
+  favorite: HeartIcon,
+  star: StarIcon,
+  recent: ClockIcon,
+  asset: PhotoIcon,
+  search: MagnifyingGlassIcon,
+  settings: Cog6ToothIcon,
+  sparkles: SparklesIcon,
+  remix: ArrowsRightLeftIcon,
+  plus: PlusIcon,
+  chevron: ChevronRightIcon,
+  'chevron-updown': ChevronUpDownIcon,
+  back: ArrowLeftIcon,
+  bolt: BoltIcon,
+  stack: RectangleStackIcon,
+  command: CommandLineIcon,
+};
+
 export const Icon: React.FC<IconProps> = ({ name, className, size = 20 }) => {
-  const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-    menu: MenuIcon,
-    x: XMarkIcon,
-    user: UserIcon,
-    logout: ArrowRightOnRectangleIcon,
-    home: HomeIcon,
-    collection: SquaresPlusIcon,
-    favorite: HeartIcon,
-    recent: ClockIcon,
-    asset: PhotoIcon,
-  };
-  const IconComponent = icons[name] || icons['home'];
-  return <IconComponent className={classNames('inline-block', className)} width={size} height={size} />;
+  const IconComponent = icons[name] || icons['asset'];
+  return (
+    <IconComponent
+      className={classNames('inline-block shrink-0', className)}
+      width={size}
+      height={size}
+      aria-hidden="true"
+    />
+  );
 };

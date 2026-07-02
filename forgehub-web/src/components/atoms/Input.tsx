@@ -4,9 +4,19 @@ import classNames from 'classnames';
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
+  invalid?: boolean;
 };
 
-export const Input: React.FC<InputProps> = ({ className, ...rest }) => {
-  const base = 'w-full px-3 py-2 border rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500';
-  return <input className={classNames(base, className)} {...rest} />;
+/**
+ * Campo de texto filled (Design System Bible 4.3).
+ * Altura 48px, raio 12px, fundo surface, foco azul, placeholder muted.
+ */
+export const Input: React.FC<InputProps> = ({ className, invalid, ...rest }) => {
+  const base =
+    'w-full h-12 px-4 rounded-interactive bg-surface text-content ' +
+    'placeholder:text-muted border transition-colors duration-200 ' +
+    'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ' +
+    'focus-visible:border-primary';
+  const border = invalid ? 'border-danger' : 'border-border';
+  return <input className={classNames(base, border, className)} {...rest} />;
 };

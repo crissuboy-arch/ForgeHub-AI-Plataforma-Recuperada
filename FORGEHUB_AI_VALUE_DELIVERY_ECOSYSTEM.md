@@ -119,53 +119,57 @@ O **Download Center** é a central unificada onde o usuário exporta os arquivos
 
 Todo Asset disponível no ecossistema da ForgeHub AI segue um rigoroso padrão de árvore de diretórios em sua contraparte na nuvem do Google Drive. Isso garante consistência de navegação: se o cliente sabe mexer em um Asset da ForgeHub, ele sabe mexer em todos os 500+ disponíveis.
 
+> **PADRÃO CANÔNICO ÚNICO (18 pastas):** esta estrutura foi unificada com o **Design System Bible §5.1**, que é a fonte oficial única. A antiga variação de 17 pastas (com `07 Criativos`/`08 Canva`, `12 Planilhas`, `13 Prompt`, `14 Tutorial`) foi **descontinuada** para eliminar conflito de documentação.
+
 ```
 Nome do Produto (Ex: [Kit] Agente de Vendas Imobiliárias com IA)
-├── 01 MicroApp/
-│   ├── app_config.json (Configurações da interface)
-│   └── ui_mockup.png (Captura de tela da interface)
-├── 02 Skill/
-│   ├── skill_definition.json (Integração técnica)
-│   └── make_scenario.json (Template para Make.com)
-├── 03 AI Agent/
-│   ├── agent_instructions.txt (Manual de persona)
-│   └── agent_config.json (Chaves e modelo LLM associado)
-├── 04 Landing/
+├── 01_MicroApp/      (mockups de interface + payloads JSON de config)
+│   ├── app_config.json
+│   └── ui_mockup.png
+├── 02_Skill/         (schemas de webhooks e cenários de integração)
+│   ├── skill_definition.json
+│   └── make_scenario.json
+├── 03_AI_Agent/      (instruções de sistema, contexto, params LLM)
+│   ├── agent_instructions.txt
+│   └── agent_config.json
+├── 04_Landing/       (HTML de backup + links de templates)
 │   ├── framer_template_link.txt
-│   └── index.html (Código bruto de backup)
-├── 05 Checkout/
-│   └── conversion_tricks_guide.pdf (Guia de otimização de taxas)
-├── 06 Copy/
+│   └── index.html
+├── 05_Checkout/      (roteiros de conversão de checkout)
+│   └── conversion_tricks_guide.pdf
+├── 06_Copy/          (cartas de venda, copies de anúncio, e-mails)
 │   ├── email_sequence.docx
 │   └── sales_letter_master.txt
-├── 07 Criativos/
-│   ├── ad_images_raw/ (Banco de imagens puras)
-│   └── video_scripts.pdf (Roteiros detalhados de criativos)
-├── 08 Canva/
-│   ├── design_links.gdoc (Links das artes do feed e stories)
-│   └── banner_links.gdoc (Links de capas de vendas)
-├── 09 Documentos/
-│   ├── operational_checklist.xlsx
-│   └── client_onboarding_form.gform (Formulário de captura)
-├── 10 PDF/
+├── 07_Canva/         (links diretos "usar como modelo" no Canva)
+│   ├── design_links.gdoc
+│   └── banner_links.gdoc
+├── 08_Criativos/     (imagens/vetores limpos sem marca d'água)
+│   ├── ad_images_raw/
+│   └── video_scripts.pdf
+├── 09_Documentos/    (contratos, termos, formulários abertos)
+│   ├── operational_checklist.gform
+│   └── client_onboarding_form.gform
+├── 10_PDF/           (manuais, playbooks e guias em alta resolução)
 │   ├── sales_playbook.pdf
 │   └── setup_manual_printable.pdf
-├── 11 Word/
+├── 11_Word/          (documentos .docx editáveis localmente)
 │   └── editable_contracts_template.docx
-├── 12 Planilhas/
+├── 12_Excel/         (simuladores, calculadoras de ROI, planilhas)
 │   └── financial_simulator_roi.xlsx
-├── 13 Prompt/
+├── 13_PowerPoint/    (apresentações de pitch e materiais de webinar)
+│   └── sales_pitch_deck.pptx
+├── 14_Prompts/       (Prompt Mestre + variações por modelo)
 │   ├── master_prompt.txt
 │   └── variations_by_model.json
-├── 14 Tutorial/
+├── 15_Vídeos/        (roteiros de criativos de alta retenção)
 │   ├── video_onboarding_link.txt
 │   └── step_by_step_installation.md
-├── 15 Mockups/
+├── 16_Mockups/       (imagens fotorrealistas 3D do produto)
 │   ├── product_box_3d.png
 │   └── tablet_mockup_preview.png
-├── 16 Licença/
+├── 17_Licença/       (direitos autorais, white-label, revenda)
 │   └── terms_of_commercial_use.pdf
-└── 17 Atualizações/
+└── 18_Atualizações/  (histórico de changelogs e correções)
     └── changelog.txt
 ```
 

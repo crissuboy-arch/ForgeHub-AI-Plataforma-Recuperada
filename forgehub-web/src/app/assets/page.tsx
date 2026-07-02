@@ -1,21 +1,36 @@
 // src/app/assets/page.tsx
-import React from 'react';
-import { MainLayout } from '../../components/templates/MainLayout';
-import { AssetCard } from '../../components/molecules/AssetCard';
+import { AssetGrid } from '../../components/organisms/AssetGrid';
+import { PageHeader } from '../../components/molecules/PageHeader';
+import { Badge } from '../../components/atoms/Badge';
+import { Icon } from '../../components/atoms/Icon';
 import { mockAssets } from '../../data/mockAssets';
-import { Typography } from '../../components/atoms/Typography';
+
+const categories = ['Todos', 'MicroApp', 'AI Agent', 'Landing', 'Prompt', 'Copy'];
 
 export default function AssetsPage() {
   return (
-    <MainLayout>
-      <section className="p-4">
-        <Typography variant="h4" className="mb-4">Assets</Typography>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {mockAssets.map((asset) => (
-            <AssetCard key={asset.id} asset={asset} />
+    <div className="mx-auto max-w-7xl px-6 py-8">
+      <PageHeader
+        title="Assets"
+        subtitle="Sua biblioteca de ativos digitais inteligentes."
+      />
+
+      {/* Busca + filtros (visuais) */}
+      <div className="mb-6 flex flex-col gap-3">
+        <div className="flex h-11 items-center gap-2 rounded-interactive border border-border bg-surface px-3 text-muted">
+          <Icon name="search" size={18} />
+          <span className="text-sm">Buscar por nome, categoria ou tag…</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((c, i) => (
+            <Badge key={c} tone={i === 0 ? 'primary' : 'default'}>
+              {c}
+            </Badge>
           ))}
         </div>
-      </section>
-    </MainLayout>
+      </div>
+
+      <AssetGrid assets={mockAssets} />
+    </div>
   );
 }

@@ -14,19 +14,16 @@ type Variant =
   | 'caption';
 
 interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
-  /**
-   * HTML tag/visual style to render. Defaults to "p".
-   */
+  /** HTML tag/visual style to render. Defaults to "p". */
   variant?: Variant;
-  /** Additional Tailwind classes */
   className?: string;
-  /** Children content */
   children: React.ReactNode;
 }
 
 /**
- * Simple typographic component that maps a variant to a HTML element with sensible defaults.
- * Uses Tailwind CSS utilities for font family (Inter) and color (gray-900 / gray-600).
+ * Componente tipográfico ForgeHub (Bible 3.3).
+ * Escala com fonte Inter e cores do Dark Slate (content / muted).
+ * Pesos: Bold(700) display, SemiBold(600) títulos, Medium(500) rótulos.
  */
 export const Typography: React.FC<TypographyProps> = ({
   variant = 'p',
@@ -35,18 +32,22 @@ export const Typography: React.FC<TypographyProps> = ({
   ...rest
 }) => {
   const baseClasses = {
-    h1: 'text-4xl font-bold tracking-tight text-gray-900',
-    h2: 'text-3xl font-semibold tracking-tight text-gray-900',
-    h3: 'text-2xl font-semibold text-gray-900',
-    h4: 'text-xl font-medium text-gray-900',
-    h5: 'text-lg font-medium text-gray-800',
-    h6: 'text-base font-medium text-gray-800',
-    p: 'text-base text-gray-700',
-    small: 'text-sm text-gray-600',
-    caption: 'text-xs text-gray-500',
+    h1: 'text-4xl sm:text-5xl font-bold tracking-tight text-content',
+    h2: 'text-3xl font-bold tracking-tight text-content',
+    h3: 'text-2xl font-semibold tracking-tight text-content',
+    h4: 'text-xl font-semibold text-content',
+    h5: 'text-base font-semibold text-content',
+    h6: 'text-sm font-medium text-content',
+    p: 'text-base text-muted leading-relaxed',
+    small: 'text-sm text-muted',
+    caption: 'text-xs text-muted',
   } as const;
 
-  const Component = variant as keyof JSX.IntrinsicElements;
+  const Component: React.ElementType = variant.startsWith('h')
+    ? variant
+    : variant === 'p'
+      ? 'p'
+      : 'span';
   const classes = classNames(baseClasses[variant], className);
 
   return (
