@@ -36,6 +36,13 @@ interface AssetRow {
   cover_url: string | null;
   banner_url: string | null;
   mockup_url: string | null;
+  logo_url?: string | null;
+  video_youtube_url?: string | null;
+  video_loom_url?: string | null;
+  thumbnail_url?: string | null;
+  preview_url?: string | null;
+  prompt_content?: string | null;
+  prompt_format?: string | null;
   parent_id: string | null;
   created_by: string | null;
   health_score: number;
@@ -68,6 +75,67 @@ function mapSummary(row: AssetRow): AssetSummary {
     updatedAt: row.updated_at,
     coverUrl: row.cover_url ?? undefined,
   };
+}
+
+// ------------------------------------------------------------- Busca (Sprint 5)
+export interface SearchableAsset extends AssetSummary {
+  description?: string;
+  tags: string[];
+  ai: string[];
+  platforms: string[];
+  languages: string[];
+  countries: string[];
+  license: string;
+  revenueModel: string;
+  deliveryBundle: string;
+}
+
+/** Carrega os assets com os campos pesquisáveis para busca instantânea client-side. */
+export async function listSearchableAssets(): Promise<SearchableAsset[]> {
+  const { data, error } = await supabase
+    .from('assets')
+    .select(
+      'id, slug, name, short_description, status, level, health_score, updated_at, cover_url, version,' +
+        ' license, revenue_model, delivery_bundle, categories(label),' +
+        ' asset_tags(tags(label)), asset_ai_tools(ai_slug), asset_platforms(platform_slug),' +
+        ' asset_languages(language_code), asset_countries(country_code)',
+    )
+    .in('status', ['active', 'updated'])
+    .order('updated_at', { ascending: false });
+  if (error) throw error;
+  return ((data ?? []) as unknown as Record<string, unknown>[]).map((r) => {
+    const base = mapSummary(r as unknown as AssetRow);
+    const arr = <T>(rel: unknown, pick: (x: Record<string, unknown>) => T): T[] =>
+      ((rel ?? []) as Record<string, unknown>[]).map(pick);
+    return {
+      ...base,
+      description: (r.short_description as string) ?? undefined,
+      tags: arr(r.asset_tags, (t) => {
+        const tag = Array.isArray(t.tags) ? t.tags[0] : t.tags;
+        return (tag as { label: string })?.label ?? '';
+      }).filter(Boolean),
+      ai: arr(r.asset_ai_tools, (a) => a.ai_slug as string),
+      platforms: arr(r.asset_platforms, (p) => p.platform_slug as string),
+      languages: arr(r.asset_languages, (l) => l.language_code as string),
+      countries: arr(r.asset_countries, (c) => c.country_code as string),
+      license: String(r.license ?? ''),
+      revenueModel: String(r.revenue_model ?? ''),
+      deliveryBundle: String(r.delivery_bundle ?? ''),
+    };
+  });
+}
+
+// ------------------------------------------------------------- Dashboard stats (reais)
+export interface DashboardStats { totalAssets: number; views: number; downloads: number; remixes: number; }
+
+export async function getDashboardStats(): Promise<DashboardStats> {
+  const [assets, analytics] = await Promise.all([
+    supabase.from('assets').select('id', { count: 'exact', head: true }).in('status', ['active', 'updated']),
+    supabase.from('asset_analytics').select('views, downloads, remixes'),
+  ]);
+  const rows = (analytics.data ?? []) as { views: number; downloads: number; remixes: number }[];
+  const sum = (k: 'views' | 'downloads' | 'remixes') => rows.reduce((a, r) => a + (Number(r[k]) || 0), 0);
+  return { totalAssets: assets.count ?? 0, views: sum('views'), downloads: sum('downloads'), remixes: sum('remixes') };
 }
 
 // ------------------------------------------------------------- Queries
@@ -127,6 +195,13 @@ export async function getAssetDetail(slug: string): Promise<AssetDetail | null> 
     difficulty: row.difficulty ?? undefined,
     bannerUrl: row.banner_url ?? undefined,
     mockupUrl: row.mockup_url ?? undefined,
+    logoUrl: row.logo_url ?? undefined,
+    videoYoutubeUrl: row.video_youtube_url ?? undefined,
+    videoLoomUrl: row.video_loom_url ?? undefined,
+    thumbnailUrl: row.thumbnail_url ?? undefined,
+    previewUrl: row.preview_url ?? undefined,
+    promptContent: row.prompt_content ?? undefined,
+    promptFormat: row.prompt_format ?? undefined,
     parentId: row.parent_id,
     createdBy: row.created_by,
     createdAt: row.created_at,

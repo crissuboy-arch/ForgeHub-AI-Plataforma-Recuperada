@@ -23,14 +23,30 @@ import {
   BoltIcon,
   RectangleStackIcon,
   CommandLineIcon,
+  CheckIcon,
+  ArrowDownTrayIcon,
+  ShareIcon,
+  DocumentTextIcon,
+  GlobeAltIcon,
+  TagIcon,
+  CodeBracketIcon,
+  ArrowTopRightOnSquareIcon,
+  LanguageIcon,
+  CurrencyDollarIcon,
+  EyeIcon,
+  CubeIcon,
+  ChartBarIcon,
+  ClipboardDocumentIcon,
+  RocketLaunchIcon,
 } from '@heroicons/react/24/outline';
 // Solid icons
-import { UserIcon, StarIcon } from '@heroicons/react/24/solid';
+import { UserIcon, StarIcon, HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 
 type IconProps = {
   name: string; // name of the SVG icon
   className?: string;
   size?: number; // size in pixels
+  style?: React.CSSProperties;
 };
 
 const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -56,15 +72,32 @@ const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   bolt: BoltIcon,
   stack: RectangleStackIcon,
   command: CommandLineIcon,
+  check: CheckIcon,
+  download: ArrowDownTrayIcon,
+  share: ShareIcon,
+  docs: DocumentTextIcon,
+  globe: GlobeAltIcon,
+  tag: TagIcon,
+  code: CodeBracketIcon,
+  external: ArrowTopRightOnSquareIcon,
+  language: LanguageIcon,
+  money: CurrencyDollarIcon,
+  eye: EyeIcon,
+  cube: CubeIcon,
+  chart: ChartBarIcon,
+  clipboard: ClipboardDocumentIcon,
+  rocket: RocketLaunchIcon,
+  'favorite-solid': HeartSolidIcon,
 };
 
-export const Icon: React.FC<IconProps> = ({ name, className, size = 20 }) => {
+export const Icon: React.FC<IconProps> = ({ name, className, size = 20, style }) => {
   const IconComponent = icons[name] || icons['asset'];
   return (
     <IconComponent
       className={classNames('inline-block shrink-0', className)}
       width={size}
       height={size}
+      style={style}
       aria-hidden="true"
     />
   );

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="56" viewBox="0 0 260 56" fill="none">
+  <defs>
+    <linearGradient id="g" x1="8" y1="6" x2="48" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1472FF"/>
+      <stop offset="1" stop-color="#00C2FF"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8,4)">
+    <path d="M24 3 42.2 13.5V34.5L24 45 5.8 34.5V13.5Z" fill="url(#g)" fill-opacity="0.12" stroke="url(#g)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 15H31" stroke="#C8A459" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M18 15V33" stroke="#F1F5F9" stroke-width="3.4" stroke-linecap="round"/>
+    <path d="M18 23.5H28" stroke="#F1F5F9" stroke-width="3.4" stroke-linecap="round"/>
+  </g>
+  <text x="66" y="36" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="800" letter-spacing="-0.5">
+    <tspan fill="#F1F5F9">Forge</tspan><tspan fill="#1472FF">Hub</tspan><tspan fill="#C8A459" font-size="15" dy="-8"> AI</tspan>
+  </text>
+</svg>

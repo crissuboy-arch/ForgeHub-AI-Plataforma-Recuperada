@@ -8,7 +8,10 @@ export type AssetStatus = 'draft' | 'active' | 'updated' | 'archived';
 export type AssetLevel = 'starter' | 'pro' | 'elite' | 'enterprise';
 export type AssetDifficulty = 'iniciante' | 'intermediario' | 'avancado';
 export type AssetLicense = 'uso_pessoal' | 'comercial' | 'white_label' | 'open_source';
-export type LinkType = 'microapp' | 'deploy' | 'github' | 'remix' | 'drive' | 'canva' | 'docs';
+export type LinkType =
+  | 'microapp' | 'deploy' | 'github' | 'remix' | 'drive' | 'canva' | 'docs'
+  | 'lovable_remix' | 'bolt_remix' | 'vercel' | 'netlify' | 'figma' | 'demo' | 'prompt'
+  | 'base44' | 'cursor' | 'sales';
 export type ChecklistItem =
   | 'github' | 'deploy' | 'drive' | 'canva' | 'prompt' | 'landing'
   | 'copy' | 'criativos' | 'documentacao' | 'videos' | 'microapp' | 'mockups';
@@ -79,6 +82,13 @@ export interface Asset extends AssetSummary {
   difficulty?: AssetDifficulty;
   bannerUrl?: string;
   mockupUrl?: string;
+  logoUrl?: string;
+  videoYoutubeUrl?: string;
+  videoLoomUrl?: string;
+  thumbnailUrl?: string;
+  previewUrl?: string;
+  promptContent?: string;
+  promptFormat?: string;
   parentId?: string | null;
   createdBy?: string | null;
   createdAt: string;
@@ -91,6 +101,17 @@ export interface Asset extends AssetSummary {
   languages: string[]; // ISO 639-1
   platforms: Platform[];
   buildAiTools: string[]; // slugs de ai_tools
+}
+
+// ---------------------------------------------------------------- Coleções / Settings (Sprint 5)
+export interface Collection { id: string; name: string; slug: string; count?: number; }
+export interface UserSettings {
+  fullName?: string;
+  avatarUrl?: string;
+  theme: string;
+  language: string;
+  workspace?: string;
+  preferences: Record<string, unknown>;
 }
 
 /** Asset + todas as relações (payload da ficha premium — Sprint 3). */

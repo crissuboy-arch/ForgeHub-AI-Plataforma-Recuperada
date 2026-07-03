@@ -1,19 +1,15 @@
 'use client';
 // src/components/organisms/AssetGrid.tsx
-import React, { useEffect, useState } from 'react';
+// Consome os dados reais do Supabase (useAssets) com os três estados de UX:
+// carregando (skeletons) → conteúdo (cards) → vazio/erro.
+import React from 'react';
 import { AssetCard } from '../molecules/AssetCard';
 import { EmptyState } from '../molecules/EmptyState';
 import { Skeleton } from '../atoms/Skeleton';
-import { Button } from '../atoms/Button';
-import { Icon } from '../atoms/Icon';
-import { AssetSummary } from '../../types';
+import { useAssets } from '../../hooks/useAssets';
+import type { AssetSummary } from '../../types';
 
-type AssetGridProps = {
-  assets: AssetSummary[];
-};
-
-const gridClass =
-  'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+const gridClass = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
 
 function CardSkeleton() {
   return (
@@ -29,20 +25,12 @@ function CardSkeleton() {
   );
 }
 
-/**
- * Grade de assets com os três estados de UX (Bible 2.3):
- * carregando (skeletons) → conteúdo (cards) → vazio (EmptyState).
- * O "loading" simula a busca dos dados mock para demonstrar o skeleton.
- */
-export const AssetGrid: React.FC<AssetGridProps> = ({ assets }) => {
-  const [loading, setLoading] = useState(true);
+export const AssetGrid: React.FC<{ assets?: AssetSummary[] }> = ({ assets: provided }) => {
+  const { data, isLoading: fetching, isError: fetchError } = useAssets();
+  const isLoading = provided ? false : fetching;
+  const isError = provided ? false : fetchError;
 
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 650);
-    return () => clearTimeout(t);
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className={gridClass}>
         {Array.from({ length: 8 }).map((_, i) => (
@@ -52,26 +40,33 @@ export const AssetGrid: React.FC<AssetGridProps> = ({ assets }) => {
     );
   }
 
+  if (isError) {
+    return (
+      <EmptyState
+        iconName="bolt"
+        title="Não foi possível carregar os assets"
+        description="Houve um erro ao consultar a biblioteca. Tente recarregar a página."
+      />
+    );
+  }
+
+  const assets = provided ?? data ?? [];
   if (assets.length === 0) {
     return (
       <EmptyState
         iconName="stack"
         title="Nenhum asset por aqui ainda"
-        description="Explore o catálogo e adicione seu primeiro ativo para começar a forjar."
-        action={
-          <Button variant="primary">
-            <Icon name="plus" size={16} />
-            Explorar catálogo
-          </Button>
-        }
+        description="Assim que novos ativos forem publicados, eles aparecem aqui."
       />
     );
   }
 
   return (
     <div className={gridClass}>
-      {assets.map((asset) => (
-        <AssetCard key={asset.id} asset={asset} />
+      {assets.map((asset, i) => (
+        <div key={asset.id} className="animate-in" style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}>
+          <AssetCard asset={asset} />
+        </div>
       ))}
     </div>
   );

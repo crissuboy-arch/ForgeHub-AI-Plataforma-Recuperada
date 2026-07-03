@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { Spinner } from './Spinner';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'link';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'link' | 'gold';
   size?: 'sm' | 'md';
   loading?: boolean;
   className?: string;
@@ -26,7 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const base =
     'inline-flex items-center justify-center gap-2 font-semibold rounded-interactive ' +
-    'transition-colors duration-200 focus:outline-none focus-visible:ring-2 ' +
+    'transition-all duration-200 focus:outline-none focus-visible:ring-2 ' +
     'focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ' +
     'disabled:opacity-50 disabled:pointer-events-none';
 
@@ -36,11 +36,12 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   const variants: Record<string, string> = {
-    primary: 'bg-primary text-white hover:bg-primary-hover',
+    primary: 'bg-brand-glow text-white hover:shadow-[var(--shadow-glow-blue)]',
+    gold: 'bg-gold-glow text-[#0B1E3C] hover:shadow-[var(--shadow-glow-gold)]',
     secondary:
-      'border border-border bg-transparent text-content hover:bg-surface',
+      'border border-white/15 bg-transparent text-content hover:border-primary/60 hover:bg-surface-2',
     danger: 'bg-danger text-white hover:bg-danger/90',
-    ghost: 'bg-transparent text-muted hover:bg-surface hover:text-content',
+    ghost: 'bg-transparent text-muted hover:bg-surface-2 hover:text-content',
     link: 'bg-transparent text-primary hover:text-primary-hover hover:underline px-0 h-auto',
   };
 

@@ -18,6 +18,7 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
   const items = [
     { href: '/dashboard', label: 'Dashboard', iconName: 'home' },
     { href: '/assets', label: 'Assets', iconName: 'asset' },
+    { href: '/admin/assets', label: 'Asset Studio', iconName: 'command' },
     { href: '/collections', label: 'Coleções', iconName: 'collection', soon: true },
     { href: '/favorites', label: 'Favoritos', iconName: 'favorite', soon: true },
     { href: '/recent', label: 'Recentes', iconName: 'recent', soon: true },

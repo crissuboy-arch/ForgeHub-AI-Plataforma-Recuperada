@@ -32,10 +32,10 @@ export const Typography: React.FC<TypographyProps> = ({
   ...rest
 }) => {
   const baseClasses = {
-    h1: 'text-4xl sm:text-5xl font-bold tracking-tight text-content',
-    h2: 'text-3xl font-bold tracking-tight text-content',
-    h3: 'text-2xl font-semibold tracking-tight text-content',
-    h4: 'text-xl font-semibold text-content',
+    h1: 'font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-content',
+    h2: 'font-display text-3xl font-bold tracking-tight text-content',
+    h3: 'font-display text-2xl font-bold tracking-tight text-content',
+    h4: 'font-display text-xl font-bold tracking-tight text-content',
     h5: 'text-base font-semibold text-content',
     h6: 'text-sm font-medium text-content',
     p: 'text-base text-muted leading-relaxed',
