@@ -7,6 +7,7 @@ import { Button } from '../../components/atoms/Button';
 import { Typography } from '../../components/atoms/Typography';
 import { getSettings, saveSettings } from '../../data/userData';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { ThemeSwitcher } from '../../components/molecules/ThemeSwitcher';
 import type { UserRole } from '../../types';
 
 export default function SettingsPage() {
@@ -15,7 +16,6 @@ export default function SettingsPage() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [workspace, setWorkspace] = useState('');
   const [language, setLanguage] = useState('pt');
-  const [theme, setTheme] = useState('dark');
   const [role, setRole] = useState<UserRole>('aluno');
   const [newsletter, setNewsletter] = useState(false);
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
@@ -29,7 +29,6 @@ export default function SettingsPage() {
         setAvatarUrl(s.avatarUrl ?? '');
         setWorkspace(s.workspace ?? '');
         setLanguage(s.language ?? 'pt');
-        setTheme(s.theme ?? 'dark');
         setRole(s.role ?? 'aluno');
         setNewsletter(Boolean((s.preferences as { newsletter?: boolean })?.newsletter));
       })
@@ -41,7 +40,7 @@ export default function SettingsPage() {
     setBusy(true);
     setMsg(null);
     try {
-      await saveSettings({ fullName, avatarUrl, workspace, language, theme, preferences: { newsletter } });
+      await saveSettings({ fullName, avatarUrl, workspace, language, preferences: { newsletter } });
       setMsg({ kind: 'ok', text: t('settings.saved') });
     } catch (err) {
       setMsg({ kind: 'err', text: err instanceof Error ? err.message : String(err) });
@@ -93,13 +92,10 @@ export default function SettingsPage() {
                 <option value="es">{t('settings.langES')}</option>
               </select>
             </label>
-            <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-content">{t('settings.theme')}</span>
-              <select className={inputClass} value={theme} onChange={(e) => setTheme(e.target.value)}>
-                <option value="dark">{t('settings.themeDark')}</option>
-                <option value="light">{t('settings.themeLight')}</option>
-              </select>
-            </label>
+            <div className="block">
+              <span className="mb-1.5 block text-sm font-medium text-content">{t('theme.label')}</span>
+              <ThemeSwitcher />
+            </div>
           </div>
           <label className="mt-4 flex items-center gap-2 text-sm text-content">
             <input type="checkbox" className="h-4 w-4 accent-[var(--color-primary)]" checked={newsletter} onChange={(e) => setNewsletter(e.target.checked)} />

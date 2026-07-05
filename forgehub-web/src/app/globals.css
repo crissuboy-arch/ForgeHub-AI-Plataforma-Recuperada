@@ -58,6 +58,38 @@
   color-scheme: dark;
 }
 
+/*
+ * TEMA CLARO PREMIUM (item 12) — não é inversão: branco + cinza muito claro,
+ * sombras suaves, azul premium e dourado discreto. Recolore via override dos
+ * tokens (todas as utilities usam var(--color-*)).
+ */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-canvas: #f5f8fd;   /* app principal */
+  --color-deep: #eaf0f9;     /* body / áreas externas */
+  --color-surface: #ffffff;  /* painéis, sidebar, cards */
+  --color-surface-2: #eef3fb;/* elevação 2 / hover */
+  --color-card: #ffffff;
+  --color-border: #dbe3ef;   /* contornos sutis */
+  --color-content: #0f2138;  /* texto navy profundo */
+  --color-muted: #566579;
+  --color-dim: #8593a6;
+  --shadow-soft: 0 4px 18px -6px rgba(15, 33, 56, 0.12), 0 2px 6px -2px rgba(15, 33, 56, 0.08);
+  --shadow-modal: 0 24px 48px -12px rgba(15, 33, 56, 0.18), 0 8px 20px -8px rgba(15, 33, 56, 0.1);
+  --gradient-card: linear-gradient(180deg, #ffffff 0%, #f4f7fc 100%);
+}
+:root[data-theme="light"] body::before {
+  background: radial-gradient(circle, #7cc4ff 0%, transparent 70%);
+  opacity: 0.1;
+}
+:root[data-theme="light"] body::after {
+  background: radial-gradient(circle, #1472ff 0%, transparent 70%);
+  opacity: 0.06;
+}
+:root[data-theme="light"] .ring-hairline {
+  box-shadow: inset 0 1px 0 0 color-mix(in srgb, white 60%, transparent);
+}
+
 html,
 body {
   height: 100%;

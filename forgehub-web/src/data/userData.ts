@@ -107,18 +107,14 @@ export async function getSettings(): Promise<UserSettings | null> {
 export async function saveSettings(s: Partial<UserSettings>): Promise<void> {
   const u = await uid();
   if (!u) throw new Error('Faça login para salvar.');
-  const { error } = await supabase.from('user_settings').upsert(
-    {
-      user_id: u,
-      full_name: s.fullName ?? null,
-      avatar_url: s.avatarUrl ?? null,
-      theme: s.theme ?? 'dark',
-      language: s.language ?? 'pt',
-      workspace: s.workspace ?? null,
-      preferences: s.preferences ?? {},
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'user_id' },
-  );
+  // Parcial-seguro: grava apenas os campos fornecidos (não zera os demais).
+  const payload: Record<string, unknown> = { user_id: u, updated_at: new Date().toISOString() };
+  if (s.fullName !== undefined) payload.full_name = s.fullName ?? null;
+  if (s.avatarUrl !== undefined) payload.avatar_url = s.avatarUrl ?? null;
+  if (s.theme !== undefined) payload.theme = s.theme;
+  if (s.language !== undefined) payload.language = s.language;
+  if (s.workspace !== undefined) payload.workspace = s.workspace ?? null;
+  if (s.preferences !== undefined) payload.preferences = s.preferences;
+  const { error } = await supabase.from('user_settings').upsert(payload, { onConflict: 'user_id' });
   if (error) throw error;
 }

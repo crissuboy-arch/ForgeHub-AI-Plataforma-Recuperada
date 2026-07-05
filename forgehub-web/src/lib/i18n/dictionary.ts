@@ -276,6 +276,8 @@ const ptBR: Dict = {
   'toast.remixed': 'Kit remixado com sucesso.', 'toast.favAdded': 'Adicionado aos favoritos.',
   'toast.favRemoved': 'Removido dos favoritos.', 'toast.promptCopied': 'Prompt copiado.',
   'toast.linkCopied': 'Link copiado.',
+  // Tema
+  'theme.label': 'Tema', 'theme.dark': 'Escuro', 'theme.light': 'Claro', 'theme.system': 'Sistema',
 };
 
 const es: Dict = {
@@ -544,6 +546,8 @@ const es: Dict = {
   'toast.remixed': 'Kit remezclado con éxito.', 'toast.favAdded': 'Añadido a favoritos.',
   'toast.favRemoved': 'Eliminado de favoritos.', 'toast.promptCopied': 'Prompt copiado.',
   'toast.linkCopied': 'Enlace copiado.',
+  // Tema
+  'theme.label': 'Tema', 'theme.dark': 'Oscuro', 'theme.light': 'Claro', 'theme.system': 'Sistema',
 };
 
 const en: Dict = {
@@ -812,6 +816,8 @@ const en: Dict = {
   'toast.remixed': 'Kit remixed successfully.', 'toast.favAdded': 'Added to favorites.',
   'toast.favRemoved': 'Removed from favorites.', 'toast.promptCopied': 'Prompt copied.',
   'toast.linkCopied': 'Link copied.',
+  // Theme
+  'theme.label': 'Theme', 'theme.dark': 'Dark', 'theme.light': 'Light', 'theme.system': 'System',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };

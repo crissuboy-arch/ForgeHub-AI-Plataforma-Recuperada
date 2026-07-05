@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Icon } from '../atoms/Icon';
 import { Logo } from '../atoms/Logo';
 import { LanguageSwitcher } from '../atoms/LanguageSwitcher';
+import { ThemeSwitcher } from '../molecules/ThemeSwitcher';
 import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import { useCommandPalette } from '../organisms/CommandPalette';
@@ -37,6 +38,7 @@ export const Topbar: React.FC = () => {
       </button>
 
       <div className="flex items-center gap-1">
+        <ThemeSwitcher compact className="mr-1 hidden md:inline-flex" />
         <LanguageSwitcher className="mr-1 hidden sm:flex" />
         <button className="flex h-9 w-9 items-center justify-center rounded-interactive text-muted transition-colors hover:bg-surface-2 hover:text-content" aria-label={t('topbar.notifications')}>
           <Icon name="recent" size={18} />

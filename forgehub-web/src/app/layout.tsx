@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "../lib/i18n/LanguageProvider";
+import { ThemeProvider } from "../lib/theme/ThemeProvider";
 import { ToastProvider } from "../components/organisms/Toast";
+
+// Evita flash de tema errado (FOUC): aplica data-theme antes da hidratação.
+const themeInit = `(function(){try{var m=localStorage.getItem('fh-theme')||'dark';var r=m==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;document.documentElement.dataset.theme=r;}catch(e){}})();`;
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,8 +35,11 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} ${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-deep text-content">
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <LanguageProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>{children}</ToastProvider>
+          </ThemeProvider>
         </LanguageProvider>
       </body>
     </html>
