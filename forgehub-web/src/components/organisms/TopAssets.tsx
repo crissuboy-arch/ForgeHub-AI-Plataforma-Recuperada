@@ -8,15 +8,17 @@ import { Skeleton } from '../atoms/Skeleton';
 import { CategoryBadge } from '../atoms/CategoryBadge';
 import { healthColor } from '../molecules/AssetCard';
 import { getTopAssets, type TopMetric } from '../../data/dashboard';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
 
-const METRICS: { key: TopMetric; label: string }[] = [
-  { key: 'views', label: 'Views' },
-  { key: 'downloads', label: 'Downloads' },
-  { key: 'remixes', label: 'Remixes' },
-  { key: 'health', label: 'Saúde' },
+const METRICS: { key: TopMetric; labelKey: string }[] = [
+  { key: 'views', labelKey: 'stat.views' },
+  { key: 'downloads', labelKey: 'stat.downloads' },
+  { key: 'remixes', labelKey: 'stat.remixes' },
+  { key: 'health', labelKey: 'top.health' },
 ];
 
 export const TopAssets: React.FC = () => {
+  const { t } = useLanguage();
   const [metric, setMetric] = useState<TopMetric>('views');
   const { data, isLoading } = useQuery({ queryKey: ['top-assets'], queryFn: getTopAssets });
 
@@ -31,7 +33,7 @@ export const TopAssets: React.FC = () => {
   return (
     <div className="card-premium ring-hairline rounded-container p-5">
       <div className="mb-4 flex items-center justify-between">
-        <Typography variant="h5">Top Assets</Typography>
+        <Typography variant="h5">{t('top.title')}</Typography>
         <div className="flex gap-1 rounded-interactive border border-border bg-surface/60 p-0.5">
           {METRICS.map((m) => (
             <button
@@ -39,7 +41,7 @@ export const TopAssets: React.FC = () => {
               onClick={() => setMetric(m.key)}
               className={`rounded-md px-2 py-1 text-[11px] font-medium transition-colors ${metric === m.key ? 'bg-primary/20 text-primary-hover' : 'text-muted hover:text-content'}`}
             >
-              {m.label}
+              {t(m.labelKey)}
             </button>
           ))}
         </div>
@@ -61,7 +63,7 @@ export const TopAssets: React.FC = () => {
               </Link>
             </li>
           ))}
-          {top.length === 0 && <li className="py-6 text-center text-sm text-muted">Sem dados ainda.</li>}
+          {top.length === 0 && <li className="py-6 text-center text-sm text-muted">{t('top.empty')}</li>}
         </ul>
       )}
     </div>

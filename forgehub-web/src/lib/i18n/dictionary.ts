@@ -302,6 +302,38 @@ const ptBR: Dict = {
   'profile.expiration': 'Expiração', 'profile.remixed': 'Kits remixados', 'profile.downloads': 'Downloads',
   'profile.favorites': 'Favoritos', 'profile.history': 'Histórico', 'profile.active': 'Ativa',
   'profile.none': 'Sem expiração', 'profile.edit': 'Editar em Configurações', 'profile.noHistory': 'Nenhuma atividade recente.',
+  // Landing
+  'home.startFree': 'Começar grátis', 'home.badge': 'Plataforma de ativos digitais inteligentes',
+  'home.heroTitle1': 'Crie, personalize e distribua', 'home.heroTitleHl': 'ativos digitais com IA',
+  'home.heroSub': 'A ForgeHub AI não é um repositório de templates. É uma ferramenta enterprise que compila, reescreve e hospeda seus MicroApps, copies e documentos — pronta para o seu negócio.',
+  'home.startNow': 'Começar agora', 'home.seeDemo': 'Ver demonstração',
+  'home.noCard': 'Sem cartão de crédito · Cancele quando quiser', 'home.previewLabel': 'Prévia do Dashboard ForgeHub AI',
+  'home.featuresTitle': 'Tudo para lançar mais rápido',
+  'home.featuresSub': 'Do primeiro clique ao deploy em produção, cada detalhe é pensado para velocidade e elegância.',
+  'home.f1t': 'Auto Setup em minutos', 'home.f1d': 'Personalize marca, cores, copies e documentos de um Kit inteiro em menos de 2 minutos.',
+  'home.f2t': 'Biblioteca de 500+ Kits', 'home.f2d': 'Biblioteca organizada por nicho e idioma — encontre o Kit ideal em segundos.',
+  'home.f3t': 'Deploy com um clique', 'home.f3d': 'Coloque MicroApps e automações no ar em produção estável, sem configurar servidores.',
+  'home.f4t': 'Velocidade de teclado', 'home.f4d': 'Barra global ⌘K onipresente para buscar, executar ações e navegar sem tocar no mouse.',
+  'home.ctaTitle': 'Pronto para forjar seu próximo negócio?', 'home.ctaSub': 'Junte-se aos criadores que entregam soluções de nível enterprise em minutos.',
+  'home.ctaBtn': 'Criar minha conta', 'home.footer': '© 2026 ForgeHub AI · Soluções digitais. Inteligência real. Resultados reais.',
+  // Dashboard
+  'dash.welcome': 'Bem-vindo(a)', 'dash.autoSetup': 'Começar Auto Setup', 'dash.activeTag': 'ativos',
+  'dash.activity30': 'Atividade dos últimos 30 dias', 'dash.updates': 'Atualizações', 'dash.creations': 'Criações',
+  // Top / Timeline / Grid
+  'top.title': 'Top Kits', 'top.health': 'Saúde', 'top.empty': 'Sem dados ainda.',
+  'timeline.title': 'Atividade recente', 'timeline.empty': 'Nenhuma atividade ainda.',
+  'time.now': 'agora', 'time.ago': 'atrás',
+  'grid.errTitle': 'Não foi possível carregar os Kits',
+  'grid.errDesc': 'Houve um erro ao consultar a biblioteca. Tente recarregar a página.',
+  'grid.emptyTitle': 'Nenhum Kit por aqui ainda', 'grid.emptyDesc': 'Assim que novos Kits forem publicados, eles aparecem aqui.',
+  // Níveis + Biblioteca
+  'level.starter': 'Starter', 'level.pro': 'Pró', 'level.elite': 'Elite', 'level.enterprise': 'Empresa',
+  'lib.newCollection': 'Nova', 'lib.deleteCollection': 'Excluir coleção',
+  'lib.confirmDeleteCollection': 'Excluir esta coleção?', 'lib.manageCollection': 'Gerenciar coleção',
+  // Página de erro
+  'err.title': 'Algo saiu do trilho',
+  'err.desc': 'Encontramos um erro inesperado. Você pode tentar novamente — se persistir, nossa equipe já foi notificada.',
+  'err.retry': 'Tentar novamente',
 };
 
 const es: Dict = {
@@ -596,6 +628,38 @@ const es: Dict = {
   'profile.expiration': 'Expiración', 'profile.remixed': 'Kits remezclados', 'profile.downloads': 'Descargas',
   'profile.favorites': 'Favoritos', 'profile.history': 'Historial', 'profile.active': 'Activa',
   'profile.none': 'Sin expiración', 'profile.edit': 'Editar en Configuración', 'profile.noHistory': 'Sin actividad reciente.',
+  // Landing
+  'home.startFree': 'Empezar gratis', 'home.badge': 'Plataforma de activos digitales inteligentes',
+  'home.heroTitle1': 'Crea, personaliza y distribuye', 'home.heroTitleHl': 'activos digitales con IA',
+  'home.heroSub': 'ForgeHub AI no es un repositorio de plantillas. Es una herramienta enterprise que compila, reescribe y aloja tus MicroApps, copies y documentos — lista para tu negocio.',
+  'home.startNow': 'Empezar ahora', 'home.seeDemo': 'Ver demostración',
+  'home.noCard': 'Sin tarjeta de crédito · Cancela cuando quieras', 'home.previewLabel': 'Vista previa del Dashboard ForgeHub AI',
+  'home.featuresTitle': 'Todo para lanzar más rápido',
+  'home.featuresSub': 'Del primer clic al deploy en producción, cada detalle está pensado para velocidad y elegancia.',
+  'home.f1t': 'Auto Setup en minutos', 'home.f1d': 'Personaliza marca, colores, copies y documentos de un Kit entero en menos de 2 minutos.',
+  'home.f2t': 'Biblioteca de 500+ Kits', 'home.f2d': 'Biblioteca organizada por nicho e idioma — encuentra el Kit ideal en segundos.',
+  'home.f3t': 'Deploy con un clic', 'home.f3d': 'Pon MicroApps y automatizaciones en producción estable, sin configurar servidores.',
+  'home.f4t': 'Velocidad de teclado', 'home.f4d': 'Barra global ⌘K omnipresente para buscar, ejecutar acciones y navegar sin tocar el ratón.',
+  'home.ctaTitle': '¿Listo para forjar tu próximo negocio?', 'home.ctaSub': 'Únete a los creadores que entregan soluciones de nivel enterprise en minutos.',
+  'home.ctaBtn': 'Crear mi cuenta', 'home.footer': '© 2026 ForgeHub AI · Soluciones digitales. Inteligencia real. Resultados reales.',
+  // Dashboard
+  'dash.welcome': 'Bienvenido(a)', 'dash.autoSetup': 'Iniciar Auto Setup', 'dash.activeTag': 'activos',
+  'dash.activity30': 'Actividad de los últimos 30 días', 'dash.updates': 'Actualizaciones', 'dash.creations': 'Creaciones',
+  // Top / Timeline / Grid
+  'top.title': 'Top Kits', 'top.health': 'Salud', 'top.empty': 'Sin datos aún.',
+  'timeline.title': 'Actividad reciente', 'timeline.empty': 'Sin actividad aún.',
+  'time.now': 'ahora', 'time.ago': 'atrás',
+  'grid.errTitle': 'No se pudieron cargar los Kits',
+  'grid.errDesc': 'Hubo un error al consultar la biblioteca. Intenta recargar la página.',
+  'grid.emptyTitle': 'Ningún Kit por aquí aún', 'grid.emptyDesc': 'En cuanto se publiquen nuevos Kits, aparecerán aquí.',
+  // Niveles + Biblioteca
+  'level.starter': 'Starter', 'level.pro': 'Pro', 'level.elite': 'Elite', 'level.enterprise': 'Empresa',
+  'lib.newCollection': 'Nueva', 'lib.deleteCollection': 'Eliminar colección',
+  'lib.confirmDeleteCollection': '¿Eliminar esta colección?', 'lib.manageCollection': 'Gestionar colección',
+  // Página de error
+  'err.title': 'Algo salió mal',
+  'err.desc': 'Encontramos un error inesperado. Puedes intentar de nuevo — si persiste, nuestro equipo ya fue notificado.',
+  'err.retry': 'Intentar de nuevo',
 };
 
 const en: Dict = {
@@ -890,6 +954,38 @@ const en: Dict = {
   'profile.expiration': 'Expiration', 'profile.remixed': 'Remixed Kits', 'profile.downloads': 'Downloads',
   'profile.favorites': 'Favorites', 'profile.history': 'History', 'profile.active': 'Active',
   'profile.none': 'No expiration', 'profile.edit': 'Edit in Settings', 'profile.noHistory': 'No recent activity.',
+  // Landing
+  'home.startFree': 'Start free', 'home.badge': 'Smart digital assets platform',
+  'home.heroTitle1': 'Create, customize and distribute', 'home.heroTitleHl': 'digital assets with AI',
+  'home.heroSub': 'ForgeHub AI is not a template repository. It is an enterprise tool that compiles, rewrites and hosts your MicroApps, copy and documents — ready for your business.',
+  'home.startNow': 'Start now', 'home.seeDemo': 'See demo',
+  'home.noCard': 'No credit card · Cancel anytime', 'home.previewLabel': 'ForgeHub AI Dashboard preview',
+  'home.featuresTitle': 'Everything to launch faster',
+  'home.featuresSub': 'From the first click to production deploy, every detail is built for speed and elegance.',
+  'home.f1t': 'Auto Setup in minutes', 'home.f1d': 'Customize brand, colors, copy and documents of an entire Kit in under 2 minutes.',
+  'home.f2t': 'Library of 500+ Kits', 'home.f2d': 'Library organized by niche and language — find the ideal Kit in seconds.',
+  'home.f3t': 'One-click deploy', 'home.f3d': 'Ship MicroApps and automations to stable production, without configuring servers.',
+  'home.f4t': 'Keyboard speed', 'home.f4d': 'Ever-present global ⌘K bar to search, run actions and navigate without touching the mouse.',
+  'home.ctaTitle': 'Ready to forge your next business?', 'home.ctaSub': 'Join the creators shipping enterprise-grade solutions in minutes.',
+  'home.ctaBtn': 'Create my account', 'home.footer': '© 2026 ForgeHub AI · Digital solutions. Real intelligence. Real results.',
+  // Dashboard
+  'dash.welcome': 'Welcome', 'dash.autoSetup': 'Start Auto Setup', 'dash.activeTag': 'active',
+  'dash.activity30': 'Activity in the last 30 days', 'dash.updates': 'Updates', 'dash.creations': 'Creations',
+  // Top / Timeline / Grid
+  'top.title': 'Top Kits', 'top.health': 'Health', 'top.empty': 'No data yet.',
+  'timeline.title': 'Recent activity', 'timeline.empty': 'No activity yet.',
+  'time.now': 'now', 'time.ago': 'ago',
+  'grid.errTitle': 'Could not load Kits',
+  'grid.errDesc': 'There was an error querying the library. Try reloading the page.',
+  'grid.emptyTitle': 'No Kits here yet', 'grid.emptyDesc': 'As soon as new Kits are published, they show up here.',
+  // Levels + Library
+  'level.starter': 'Starter', 'level.pro': 'Pro', 'level.elite': 'Elite', 'level.enterprise': 'Enterprise',
+  'lib.newCollection': 'New', 'lib.deleteCollection': 'Delete collection',
+  'lib.confirmDeleteCollection': 'Delete this collection?', 'lib.manageCollection': 'Manage collection',
+  // Error page
+  'err.title': 'Something went off track',
+  'err.desc': 'We hit an unexpected error. You can try again — if it persists, our team has been notified.',
+  'err.retry': 'Try again',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };

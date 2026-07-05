@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Typography } from '../components/atoms/Typography';
 import { Button } from '../components/atoms/Button';
 import { Icon } from '../components/atoms/Icon';
+import { useLanguage } from '../lib/i18n/LanguageProvider';
 
 export default function Error({
   error,
@@ -12,6 +13,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useLanguage();
   useEffect(() => {
     // Em produção, isto iria para o monitoramento.
     console.error(error);
@@ -22,14 +24,13 @@ export default function Error({
       <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-container bg-danger/15 text-danger">
         <Icon name="bolt" size={32} />
       </div>
-      <Typography variant="h3">Algo saiu do trilho</Typography>
+      <Typography variant="h3">{t('err.title')}</Typography>
       <Typography variant="p" className="mt-2 max-w-md">
-        Encontramos um erro inesperado. Você pode tentar novamente — se persistir, nossa equipe já
-        foi notificada.
+        {t('err.desc')}
       </Typography>
       <div className="mt-8">
         <Button variant="primary" onClick={reset}>
-          Tentar novamente
+          {t('err.retry')}
         </Button>
       </div>
     </div>

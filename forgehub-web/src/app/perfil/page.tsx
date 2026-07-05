@@ -11,6 +11,7 @@ import { Skeleton } from '../../components/atoms/Skeleton';
 import { AssetCard } from '../../components/molecules/AssetCard';
 import { getSettings, getProfileStats, listRecents } from '../../data/userData';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { useTranslatedSummaries } from '../../hooks/useTranslatedSummaries';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -38,6 +39,7 @@ export default function PerfilPage() {
   const settings = useQuery({ queryKey: ['profile-settings'], queryFn: getSettings });
   const stats = useQuery({ queryKey: ['profile-stats'], queryFn: getProfileStats });
   const recents = useQuery({ queryKey: ['profile-recents'], queryFn: () => listRecents(6) });
+  const recentsTr = useTranslatedSummaries(recents.data);
 
   const s = settings.data;
   const st = stats.data;
@@ -118,9 +120,9 @@ export default function PerfilPage() {
           {/* Histórico */}
           <section className="mt-6">
             <Typography variant="h5" className="mb-4">{t('profile.history')}</Typography>
-            {recents.data && recents.data.length > 0 ? (
+            {recentsTr.length > 0 ? (
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {recents.data.map((a) => <AssetCard key={a.id} asset={a} />)}
+                {recentsTr.map((a) => <AssetCard key={a.id} asset={a} />)}
               </div>
             ) : (
               <Typography variant="small">{t('profile.noHistory')}</Typography>

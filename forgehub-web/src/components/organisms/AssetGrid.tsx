@@ -7,6 +7,8 @@ import { AssetCard } from '../molecules/AssetCard';
 import { EmptyState } from '../molecules/EmptyState';
 import { Skeleton } from '../atoms/Skeleton';
 import { useAssets } from '../../hooks/useAssets';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { useTranslatedSummaries } from '../../hooks/useTranslatedSummaries';
 import type { AssetSummary } from '../../types';
 
 const gridClass = 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
@@ -26,9 +28,11 @@ function CardSkeleton() {
 }
 
 export const AssetGrid: React.FC<{ assets?: AssetSummary[] }> = ({ assets: provided }) => {
+  const { t } = useLanguage();
   const { data, isLoading: fetching, isError: fetchError } = useAssets();
   const isLoading = provided ? false : fetching;
   const isError = provided ? false : fetchError;
+  const assets = useTranslatedSummaries(provided ?? data ?? []);
 
   if (isLoading) {
     return (
@@ -44,19 +48,18 @@ export const AssetGrid: React.FC<{ assets?: AssetSummary[] }> = ({ assets: provi
     return (
       <EmptyState
         iconName="bolt"
-        title="Não foi possível carregar os assets"
-        description="Houve um erro ao consultar a biblioteca. Tente recarregar a página."
+        title={t('grid.errTitle')}
+        description={t('grid.errDesc')}
       />
     );
   }
 
-  const assets = provided ?? data ?? [];
   if (assets.length === 0) {
     return (
       <EmptyState
         iconName="stack"
-        title="Nenhum asset por aqui ainda"
-        description="Assim que novos ativos forem publicados, eles aparecem aqui."
+        title={t('grid.emptyTitle')}
+        description={t('grid.emptyDesc')}
       />
     );
   }

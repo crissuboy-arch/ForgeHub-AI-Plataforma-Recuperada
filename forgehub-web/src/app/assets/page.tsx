@@ -25,12 +25,12 @@ function haystack(a: AssetSummary | SearchableAsset): string {
   ].filter(Boolean).join(' ').toLowerCase();
 }
 
-const LANGS: { code: string; label: string }[] = [
-  { code: 'todos', label: 'Todos' }, { code: 'pt-BR', label: 'PT' }, { code: 'es', label: 'ES' }, { code: 'en', label: 'EN' },
+const LANGS: { code: string; label?: string; labelKey?: string }[] = [
+  { code: 'todos', labelKey: 'library.all' }, { code: 'pt-BR', label: 'PT' }, { code: 'es', label: 'ES' }, { code: 'en', label: 'EN' },
 ];
-const LEVELS: { code: string; label: string }[] = [
-  { code: 'todos', label: 'Todos' }, { code: 'starter', label: 'Starter' }, { code: 'pro', label: 'Pró' },
-  { code: 'elite', label: 'Elite' }, { code: 'enterprise', label: 'Empresa' },
+const LEVELS: { code: string; labelKey: string }[] = [
+  { code: 'todos', labelKey: 'library.all' }, { code: 'starter', labelKey: 'level.starter' }, { code: 'pro', labelKey: 'level.pro' },
+  { code: 'elite', labelKey: 'level.elite' }, { code: 'enterprise', labelKey: 'level.enterprise' },
 ];
 
 export default function LibraryPage() {
@@ -70,13 +70,13 @@ export default function LibraryPage() {
   const refreshCollections = () => qc.invalidateQueries({ queryKey: ['collections'] });
   const refreshCollAssets = () => qc.invalidateQueries({ queryKey: ['collection-assets', collectionId] });
   const onNewCollection = async () => {
-    const name = window.prompt('Nome da nova coleção:');
+    const name = window.prompt(t('coll.prompt'));
     if (!name?.trim()) return;
     try { await createCollection(name.trim()); refreshCollections(); }
     catch (e) { window.alert(e instanceof Error ? e.message : String(e)); }
   };
   const onDeleteCollection = async (id: string) => {
-    if (!window.confirm('Excluir esta coleção?')) return;
+    if (!window.confirm(t('lib.confirmDeleteCollection'))) return;
     await deleteCollection(id);
     if (collectionId === id) setCollectionId(null);
     refreshCollections();
@@ -132,12 +132,12 @@ export default function LibraryPage() {
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5">
-            <span className="text-xs uppercase tracking-wide text-dim">Idioma</span>
-            {LANGS.map((l) => <button key={l.code} onClick={() => setLangFilter(l.code)} className={chip(langFilter === l.code)}>{l.label}</button>)}
+            <span className="text-xs uppercase tracking-wide text-dim">{t('settings.language')}</span>
+            {LANGS.map((l) => <button key={l.code} onClick={() => setLangFilter(l.code)} className={chip(langFilter === l.code)}>{l.labelKey ? t(l.labelKey) : l.label}</button>)}
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="text-xs uppercase tracking-wide text-dim">Nível</span>
-            {LEVELS.map((l) => <button key={l.code} onClick={() => setLevel(l.code)} className={chip(level === l.code)}>{l.label}</button>)}
+            <span className="text-xs uppercase tracking-wide text-dim">{t('studio.f.level')}</span>
+            {LEVELS.map((l) => <button key={l.code} onClick={() => setLevel(l.code)} className={chip(level === l.code)}>{t(l.labelKey)}</button>)}
           </div>
         </div>
 
@@ -148,17 +148,17 @@ export default function LibraryPage() {
           {(collections.data ?? []).map((col) => (
             <span key={col.id} className="inline-flex items-center gap-1">
               <button type="button" onClick={() => setCollectionId(col.id)}><Badge tone={collectionId === col.id ? 'primary' : 'default'}>{col.name} · {col.count ?? 0}</Badge></button>
-              <button type="button" onClick={() => onDeleteCollection(col.id)} className="text-muted hover:text-danger" title="Excluir coleção"><Icon name="x" size={12} /></button>
+              <button type="button" onClick={() => onDeleteCollection(col.id)} className="text-muted hover:text-danger" title={t('lib.deleteCollection')}><Icon name="x" size={12} /></button>
             </span>
           ))}
-          <button type="button" onClick={onNewCollection} className="inline-flex items-center gap-1 rounded-interactive border border-dashed border-border px-2.5 py-0.5 text-xs text-muted hover:text-content"><Icon name="plus" size={12} /> Nova</button>
+          <button type="button" onClick={onNewCollection} className="inline-flex items-center gap-1 rounded-interactive border border-dashed border-border px-2.5 py-0.5 text-xs text-muted hover:text-content"><Icon name="plus" size={12} /> {t('lib.newCollection')}</button>
         </div>
       </div>
 
       {/* Gerenciar coleção */}
       {collectionId && (collectionAssets.data ?? []).length > 0 && (
         <div className="mb-4 rounded-container border border-border bg-card p-4">
-          <Typography variant="caption" className="mb-2 block uppercase tracking-wide">Gerenciar coleção</Typography>
+          <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('lib.manageCollection')}</Typography>
           <ul className="space-y-1">
             {(collectionAssets.data ?? []).map((a, i) => (
               <li key={a.id} className="flex items-center justify-between rounded-interactive px-2 py-1 text-sm hover:bg-surface">

@@ -319,7 +319,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               if (ytId) {
                 return (
                   <div className="aspect-video w-full overflow-hidden rounded-container border border-border">
-                    <iframe className="h-full w-full" src={`https://www.youtube.com/embed/${ytId}`} title="Vídeo" allowFullScreen />
+                    <iframe className="h-full w-full" src={`https://www.youtube.com/embed/${ytId}`} title={t('detail.video')} allowFullScreen />
                   </div>
                 );
               }
