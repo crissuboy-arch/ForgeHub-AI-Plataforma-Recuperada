@@ -5,10 +5,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../hooks/useAuth';
 import { FormField } from '../../../components/molecules/FormField';
+import { PasswordInput } from '../../../components/molecules/PasswordInput';
+import { PasswordStrength } from '../../../components/molecules/PasswordStrength';
+import { SocialAuth } from '../../../components/molecules/SocialAuth';
 import { Button } from '../../../components/atoms/Button';
 import { Typography } from '../../../components/atoms/Typography';
 import { Icon } from '../../../components/atoms/Icon';
 import { useLanguage } from '../../../lib/i18n/LanguageProvider';
+import { authErrorKey } from '../../../lib/authErrors';
 
 export default function SignupPage() {
   const { t } = useLanguage();
@@ -17,18 +21,18 @@ export default function SignupPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorKey(null);
     setLoading(true);
     try {
       await signUp(email, password, fullName);
       router.push('/dashboard');
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : String(err));
+      setErrorKey(authErrorKey(err));
     } finally {
       setLoading(false);
     }
@@ -39,18 +43,12 @@ export default function SignupPage() {
       {/* Painel de marca */}
       <div className="relative hidden flex-col justify-between bg-brand-glow p-12 lg:flex">
         <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-interactive bg-white/20 text-base font-bold text-white">
-            F
-          </span>
+          <span className="flex h-9 w-9 items-center justify-center rounded-interactive bg-white/20 text-base font-bold text-white">F</span>
           <span className="text-lg font-semibold text-white">ForgeHub AI</span>
         </div>
         <div>
-          <p className="max-w-md text-3xl font-bold leading-tight text-white">
-            {t('auth.brandSignup')}
-          </p>
-          <p className="mt-4 max-w-sm text-white/70">
-            {t('auth.brandSignupSub')}
-          </p>
+          <p className="max-w-md text-3xl font-bold leading-tight text-white">{t('auth.brandSignup')}</p>
+          <p className="mt-4 max-w-sm text-white/70">{t('auth.brandSignupSub')}</p>
         </div>
         <p className="text-sm text-white/60">© 2026 ForgeHub AI</p>
       </div>
@@ -61,16 +59,12 @@ export default function SignupPage() {
           <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-muted hover:text-content">
             <Icon name="back" size={16} /> {t('auth.back')}
           </Link>
-          <Typography variant="h3" className="mb-1">
-            {t('auth.createAccount')}
-          </Typography>
-          <Typography variant="small" className="mb-8 block">
-            {t('auth.signupSubtitle')}
-          </Typography>
+          <Typography variant="h3" className="mb-1">{t('auth.createAccount')}</Typography>
+          <Typography variant="small" className="mb-8 block">{t('auth.signupSubtitle')}</Typography>
 
-          {error && (
+          {errorKey && (
             <div className="mb-4 rounded-interactive border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
-              {error}
+              {t(errorKey)}
             </div>
           )}
 
@@ -82,6 +76,7 @@ export default function SignupPage() {
               placeholder={t('auth.fullNamePlaceholder')}
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
+              autoComplete="name"
               required
             />
             <FormField
@@ -91,32 +86,37 @@ export default function SignupPage() {
               placeholder={t('auth.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               required
             />
-            <FormField
-              id="password"
-              label={t('auth.password')}
-              type="password"
-              placeholder={t('auth.passwordMin')}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div>
+              <PasswordInput
+                id="password"
+                label={t('auth.password')}
+                value={password}
+                onChange={setPassword}
+                placeholder={t('auth.passwordMin')}
+                autoComplete="new-password"
+                required
+              />
+              <PasswordStrength password={password} />
+            </div>
           </div>
 
-          <Typography variant="caption" className="mt-4 block">
-            {t('auth.terms')}
-          </Typography>
+          <Typography variant="caption" className="mt-4 block">{t('auth.terms')}</Typography>
 
           <Button type="submit" variant="primary" loading={loading} className="mt-6 w-full">
             {t('auth.createAccount')}
           </Button>
 
+          <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wide text-muted">
+            <span className="h-px flex-1 bg-border" /> {t('auth.or')} <span className="h-px flex-1 bg-border" />
+          </div>
+          <SocialAuth />
+
           <Typography variant="small" className="mt-6 block text-center">
             {t('auth.haveAccount')}{' '}
-            <Link href="/login" className="font-medium text-primary hover:text-primary-hover">
-              {t('auth.login')}
-            </Link>
+            <Link href="/login" className="font-medium text-primary hover:text-primary-hover">{t('auth.login')}</Link>
           </Typography>
         </form>
       </div>

@@ -6,6 +6,8 @@ import React, { useState } from 'react';
 import { Icon } from '../atoms/Icon';
 import { uploadMedia } from '../../data/storage';
 import { generateVariants, IMAGE_PRESETS, type PresetKey } from '../../lib/image';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { useToast } from '../organisms/Toast';
 
 // preset → campo do formulário
 const FIELD: Record<PresetKey, 'thumbnailUrl' | 'coverUrl' | 'bannerUrl' | 'previewUrl'> = {
@@ -18,6 +20,8 @@ const FIELD: Record<PresetKey, 'thumbnailUrl' | 'coverUrl' | 'bannerUrl' | 'prev
 type MediaField = 'thumbnailUrl' | 'coverUrl' | 'bannerUrl' | 'previewUrl';
 
 export const SmartImageUpload: React.FC<{ onDone: (field: MediaField, url: string) => void }> = ({ onDone }) => {
+  const { t } = useLanguage();
+  const { toast } = useToast();
   const [busy, setBusy] = useState(false);
   const [pct, setPct] = useState(0);
   const [done, setDone] = useState<PresetKey[]>([]);
@@ -40,6 +44,7 @@ export const SmartImageUpload: React.FC<{ onDone: (field: MediaField, url: strin
         i += 1;
         setPct(Math.round((i / keys.length) * 100));
       }
+      toast(t('toast.uploadDone'), 'success');
     } catch (ex) {
       setErr(ex instanceof Error ? ex.message : String(ex));
     } finally {

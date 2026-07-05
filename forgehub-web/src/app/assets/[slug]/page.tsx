@@ -18,6 +18,7 @@ import { Skeleton } from '../../../components/atoms/Skeleton';
 import { relativeDate } from '../../../components/molecules/AssetCard';
 import { HealthRing } from '../../../components/atoms/HealthRing';
 import { useLanguage } from '../../../lib/i18n/LanguageProvider';
+import { useToast } from '../../../components/organisms/Toast';
 import type { AssetDetail, LinkType, PlatformKind } from '../../../types';
 
 // ------------------------------------------------------------- Rótulos (via i18n: t(`revenue.${x}`), t(`checklist.${x}`)…)
@@ -108,6 +109,7 @@ export default function AssetDetailPage() {
 
 function AssetDetailView({ asset }: { asset: AssetDetail }) {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const linkOf = (type: LinkType) => asset.links.find((l) => l.type === type)?.url;
   const media = useMemo(
     () => [asset.mockupUrl, asset.coverUrl, ...asset.screenshots.map((s) => s.url)].filter(Boolean) as string[],
@@ -129,6 +131,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
       const now = await toggleFavorite(asset.id);
       setFav(now);
       setFavMsg(null);
+      toast(t(now ? 'toast.favAdded' : 'toast.favRemoved'), 'success');
     } catch (e) {
       setFavMsg(e instanceof Error ? e.message : String(e));
       setTimeout(() => setFavMsg(null), 2500);
@@ -166,6 +169,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
     if (!text) return;
     navigator.clipboard?.writeText(text);
     setCopied(key);
+    toast(t(key === 'prompt' ? 'toast.promptCopied' : 'toast.linkCopied'), 'success');
     setTimeout(() => setCopied(null), 1800);
   };
 
@@ -180,7 +184,10 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
     setRemixErr(null);
     try {
       const res = await duplicateAsset(asset.slug);
-      if (res) router.push(isAdmin ? `/admin/assets/edit/${res.slug}` : `/assets/${res.slug}`);
+      if (res) {
+        toast(t('toast.remixed'), 'success');
+        router.push(isAdmin ? `/admin/assets/edit/${res.slug}` : `/assets/${res.slug}`);
+      }
     } catch (e) {
       setRemixErr(e instanceof Error ? e.message : String(e));
       setTimeout(() => setRemixErr(null), 3000);

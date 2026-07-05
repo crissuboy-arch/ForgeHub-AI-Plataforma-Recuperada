@@ -34,10 +34,15 @@ import {
   LanguageIcon,
   CurrencyDollarIcon,
   EyeIcon,
+  EyeSlashIcon,
+  LockClosedIcon,
   CubeIcon,
   ChartBarIcon,
   ClipboardDocumentIcon,
   RocketLaunchIcon,
+  SunIcon,
+  MoonIcon,
+  ComputerDesktopIcon,
 } from '@heroicons/react/24/outline';
 // Solid icons
 import { UserIcon, StarIcon, HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
@@ -83,6 +88,11 @@ const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   language: LanguageIcon,
   money: CurrencyDollarIcon,
   eye: EyeIcon,
+  'eye-off': EyeSlashIcon,
+  lock: LockClosedIcon,
+  sun: SunIcon,
+  moon: MoonIcon,
+  system: ComputerDesktopIcon,
   cube: CubeIcon,
   chart: ChartBarIcon,
   clipboard: ClipboardDocumentIcon,

@@ -20,6 +20,7 @@ import { uploadMedia } from '../../data/storage';
 import { SmartImageUpload } from '../molecules/SmartImageUpload';
 import { healthColor } from '../molecules/AssetCard';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { useToast } from './Toast';
 
 type MediaKey =
   | 'coverUrl' | 'bannerUrl' | 'logoUrl' | 'thumbnailUrl' | 'previewUrl' | 'mockupUrl';
@@ -202,6 +203,7 @@ type Props = { mode: 'new' | 'edit'; assetId?: string; initialValues?: AssetForm
 export function AssetForm({ mode, assetId, initialValues }: Props) {
   const router = useRouter();
   const { t } = useLanguage();
+  const { toast } = useToast();
   const { register, handleSubmit, control, setValue, formState: { errors } } =
     useForm<AssetFormValues>({
       resolver: zodResolver(assetFormSchema) as unknown as Resolver<AssetFormValues>,
@@ -238,6 +240,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
     (values) => run(publish ? 'publish' : 'save', async () => {
       const res = await saveAsset(values, { id: assetId, publish });
       setMsg({ kind: 'ok', text: publish ? t('studio.published') : t('studio.saved') });
+      toast(publish ? t('toast.published') : t('toast.kitSaved'), 'success');
       if (mode === 'new') router.push(`/admin/assets/edit/${res.slug}`);
     }),
     () => setMsg({ kind: 'err', text: t('studio.fixFields') }),

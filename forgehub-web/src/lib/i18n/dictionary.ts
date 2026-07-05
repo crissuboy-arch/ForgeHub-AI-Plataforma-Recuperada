@@ -244,6 +244,38 @@ const ptBR: Dict = {
   'studio.analyticsNew': 'Disponível após salvar o Kit.',
   'studio.analyticsNote': 'Os números de analytics são somente leitura e exibidos na ficha pública do Kit.',
   'studio.tagPlaceholder': 'Digite e pressione Enter para adicionar',
+  // Erros de autenticação (amigáveis — nunca técnicos)
+  'autherr.generic': 'Algo deu errado. Tente novamente.',
+  'autherr.invalidCredentials': 'Senha incorreta. Verifique seu e-mail ou senha.',
+  'autherr.notConfirmed': 'Confirme seu e-mail antes de entrar.',
+  'autherr.alreadyRegistered': 'Este e-mail já possui conta. Tente entrar.',
+  'autherr.notFound': 'Conta não encontrada. Deseja criar uma conta?',
+  'autherr.weakPassword': 'Senha muito fraca. Use pelo menos 8 caracteres.',
+  'autherr.rateLimit': 'Muitas tentativas. Aguarde um instante e tente novamente.',
+  'autherr.sessionExpired': 'Sua sessão expirou. Faça login novamente.',
+  'autherr.network': 'Falha de conexão. Verifique sua internet.',
+  'autherr.oauth': 'Não foi possível conectar com o provedor. Tente novamente.',
+  // Login/Cadastro — UX
+  'auth.showPw': 'Mostrar senha', 'auth.hidePw': 'Ocultar senha',
+  'auth.capsLock': 'Caps Lock está ligado',
+  'auth.remember': 'Lembrar-me',
+  'auth.or': 'ou',
+  'auth.google': 'Continuar com Google', 'auth.github': 'Continuar com GitHub',
+  'auth.forgotTitle': 'Recuperar senha',
+  'auth.forgotDesc': 'Enviaremos um link de redefinição para o seu e-mail.',
+  'auth.forgotSend': 'Enviar link', 'auth.forgotSent': 'Link enviado! Verifique seu e-mail.',
+  'auth.forgotCancel': 'Cancelar', 'auth.forgotNeedEmail': 'Digite seu e-mail primeiro.',
+  // Força da senha
+  'pw.strength': 'Força da senha', 'pw.weak': 'Fraca', 'pw.medium': 'Média', 'pw.strong': 'Forte',
+  'pw.min': 'Mínimo 8 caracteres', 'pw.upper': 'Letra maiúscula', 'pw.lower': 'Letra minúscula',
+  'pw.number': 'Número', 'pw.special': 'Caractere especial',
+  // Toasts (feedback visual)
+  'toast.langChanged': 'Idioma alterado.', 'toast.themeChanged': 'Tema alterado.',
+  'toast.kitSaved': 'Kit salvo.', 'toast.published': 'Kit publicado.',
+  'toast.uploadDone': 'Upload concluído.', 'toast.downloadStarted': 'Download iniciado.',
+  'toast.remixed': 'Kit remixado com sucesso.', 'toast.favAdded': 'Adicionado aos favoritos.',
+  'toast.favRemoved': 'Removido dos favoritos.', 'toast.promptCopied': 'Prompt copiado.',
+  'toast.linkCopied': 'Link copiado.',
 };
 
 const es: Dict = {
@@ -480,6 +512,38 @@ const es: Dict = {
   'studio.analyticsNew': 'Disponible tras guardar el Kit.',
   'studio.analyticsNote': 'Los números de analytics son de solo lectura y se muestran en la ficha pública del Kit.',
   'studio.tagPlaceholder': 'Escribe y presiona Enter para añadir',
+  // Errores de autenticación (amigables)
+  'autherr.generic': 'Algo salió mal. Inténtalo de nuevo.',
+  'autherr.invalidCredentials': 'Contraseña incorrecta. Verifica tu correo o contraseña.',
+  'autherr.notConfirmed': 'Confirma tu correo antes de entrar.',
+  'autherr.alreadyRegistered': 'Este correo ya tiene cuenta. Intenta entrar.',
+  'autherr.notFound': 'Cuenta no encontrada. ¿Deseas crear una cuenta?',
+  'autherr.weakPassword': 'Contraseña muy débil. Usa al menos 8 caracteres.',
+  'autherr.rateLimit': 'Demasiados intentos. Espera un momento e inténtalo de nuevo.',
+  'autherr.sessionExpired': 'Tu sesión expiró. Inicia sesión de nuevo.',
+  'autherr.network': 'Error de conexión. Verifica tu internet.',
+  'autherr.oauth': 'No se pudo conectar con el proveedor. Inténtalo de nuevo.',
+  // Login/Registro — UX
+  'auth.showPw': 'Mostrar contraseña', 'auth.hidePw': 'Ocultar contraseña',
+  'auth.capsLock': 'Bloq Mayús está activado',
+  'auth.remember': 'Recordarme',
+  'auth.or': 'o',
+  'auth.google': 'Continuar con Google', 'auth.github': 'Continuar con GitHub',
+  'auth.forgotTitle': 'Recuperar contraseña',
+  'auth.forgotDesc': 'Te enviaremos un enlace de restablecimiento a tu correo.',
+  'auth.forgotSend': 'Enviar enlace', 'auth.forgotSent': '¡Enlace enviado! Revisa tu correo.',
+  'auth.forgotCancel': 'Cancelar', 'auth.forgotNeedEmail': 'Escribe tu correo primero.',
+  // Fuerza de la contraseña
+  'pw.strength': 'Fuerza de la contraseña', 'pw.weak': 'Débil', 'pw.medium': 'Media', 'pw.strong': 'Fuerte',
+  'pw.min': 'Mínimo 8 caracteres', 'pw.upper': 'Letra mayúscula', 'pw.lower': 'Letra minúscula',
+  'pw.number': 'Número', 'pw.special': 'Carácter especial',
+  // Toasts
+  'toast.langChanged': 'Idioma cambiado.', 'toast.themeChanged': 'Tema cambiado.',
+  'toast.kitSaved': 'Kit guardado.', 'toast.published': 'Kit publicado.',
+  'toast.uploadDone': 'Upload completado.', 'toast.downloadStarted': 'Descarga iniciada.',
+  'toast.remixed': 'Kit remezclado con éxito.', 'toast.favAdded': 'Añadido a favoritos.',
+  'toast.favRemoved': 'Eliminado de favoritos.', 'toast.promptCopied': 'Prompt copiado.',
+  'toast.linkCopied': 'Enlace copiado.',
 };
 
 const en: Dict = {
@@ -716,6 +780,38 @@ const en: Dict = {
   'studio.analyticsNew': 'Available after saving the Kit.',
   'studio.analyticsNote': 'Analytics numbers are read-only and shown on the Kit public page.',
   'studio.tagPlaceholder': 'Type and press Enter to add',
+  // Auth errors (friendly)
+  'autherr.generic': 'Something went wrong. Please try again.',
+  'autherr.invalidCredentials': 'Incorrect password. Check your email or password.',
+  'autherr.notConfirmed': 'Confirm your email before signing in.',
+  'autherr.alreadyRegistered': 'This email already has an account. Try signing in.',
+  'autherr.notFound': 'Account not found. Do you want to create one?',
+  'autherr.weakPassword': 'Password too weak. Use at least 8 characters.',
+  'autherr.rateLimit': 'Too many attempts. Wait a moment and try again.',
+  'autherr.sessionExpired': 'Your session expired. Please sign in again.',
+  'autherr.network': 'Connection failed. Check your internet.',
+  'autherr.oauth': 'Could not connect with the provider. Please try again.',
+  // Login/Signup — UX
+  'auth.showPw': 'Show password', 'auth.hidePw': 'Hide password',
+  'auth.capsLock': 'Caps Lock is on',
+  'auth.remember': 'Remember me',
+  'auth.or': 'or',
+  'auth.google': 'Continue with Google', 'auth.github': 'Continue with GitHub',
+  'auth.forgotTitle': 'Reset password',
+  'auth.forgotDesc': "We'll send a reset link to your email.",
+  'auth.forgotSend': 'Send link', 'auth.forgotSent': 'Link sent! Check your email.',
+  'auth.forgotCancel': 'Cancel', 'auth.forgotNeedEmail': 'Enter your email first.',
+  // Password strength
+  'pw.strength': 'Password strength', 'pw.weak': 'Weak', 'pw.medium': 'Medium', 'pw.strong': 'Strong',
+  'pw.min': 'At least 8 characters', 'pw.upper': 'Uppercase letter', 'pw.lower': 'Lowercase letter',
+  'pw.number': 'Number', 'pw.special': 'Special character',
+  // Toasts
+  'toast.langChanged': 'Language changed.', 'toast.themeChanged': 'Theme changed.',
+  'toast.kitSaved': 'Kit saved.', 'toast.published': 'Kit published.',
+  'toast.uploadDone': 'Upload complete.', 'toast.downloadStarted': 'Download started.',
+  'toast.remixed': 'Kit remixed successfully.', 'toast.favAdded': 'Added to favorites.',
+  'toast.favRemoved': 'Removed from favorites.', 'toast.promptCopied': 'Prompt copied.',
+  'toast.linkCopied': 'Link copied.',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };
