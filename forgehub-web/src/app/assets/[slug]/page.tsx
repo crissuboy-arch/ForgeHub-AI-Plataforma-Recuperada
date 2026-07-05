@@ -4,56 +4,23 @@
 // via useAssetDetail. Estilo Linear/Vercel/Notion: Dark Slate, glass, hover 200ms.
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAssetDetail } from '../../../hooks/useAssets';
 import { toggleFavorite, recordRecent, listFavoriteIds } from '../../../data/userData';
 import { listCollections, addToCollection, createCollection } from '../../../data/collections';
+import { duplicateAsset } from '../../../data/adminAssets';
+import { useRole } from '../../../hooks/useRole';
 import { Typography } from '../../../components/atoms/Typography';
 import { Badge } from '../../../components/atoms/Badge';
 import { Icon } from '../../../components/atoms/Icon';
 import { Skeleton } from '../../../components/atoms/Skeleton';
 import { relativeDate } from '../../../components/molecules/AssetCard';
 import { HealthRing } from '../../../components/atoms/HealthRing';
-import type {
-  AssetDetail,
-  ChecklistItem,
-  LinkType,
-  PlatformKind,
-  RevenueModel,
-  DeliveryBundle,
-  AssetLicense,
-  AssetDifficulty,
-  UpdateType,
-} from '../../../types';
+import { useLanguage } from '../../../lib/i18n/LanguageProvider';
+import type { AssetDetail, LinkType, PlatformKind } from '../../../types';
 
-// ------------------------------------------------------------- Rótulos
-const revenueLabel: Record<RevenueModel, string> = {
-  one_time: 'Pagamento único', subscription: 'Assinatura', freemium: 'Freemium',
-  free: 'Gratuito', royalties: 'Royalties', license_resale: 'Revenda / Licença',
-};
-const bundleLabel: Record<DeliveryBundle, string> = {
-  solo: 'Solo', pack: 'Pack', suite: 'Suíte', full_kit: 'Kit Completo',
-};
-const licenseLabel: Record<AssetLicense, string> = {
-  uso_pessoal: 'Uso pessoal', comercial: 'Comercial', white_label: 'White-label', open_source: 'Open Source',
-};
-const difficultyLabel: Record<AssetDifficulty, string> = {
-  iniciante: 'Iniciante', intermediario: 'Intermediário', avancado: 'Avançado',
-};
-const kindLabel: Record<PlatformKind, string> = {
-  build_tool: 'Construção', deploy: 'Deploy', sales: 'Vendas', marketing: 'Marketing', cms: 'CMS',
-};
-const checklistLabel: Record<ChecklistItem, string> = {
-  github: 'GitHub', deploy: 'Deploy', drive: 'Google Drive', canva: 'Canva', prompt: 'Prompt',
-  landing: 'Landing', copy: 'Copy', criativos: 'Criativos', documentacao: 'Documentação',
-  videos: 'Vídeos', microapp: 'MicroApp', mockups: 'Mockups',
-};
-const updateLabel: Record<UpdateType, string> = {
-  novo_prompt: 'Novo Prompt', nova_landing: 'Nova Landing', novo_canva: 'Novo Canva',
-  novo_agente: 'Novo Agente', nova_copy: 'Nova Copy', correcao: 'Correção', outro: 'Atualização',
-};
-
+// ------------------------------------------------------------- Rótulos (via i18n: t(`revenue.${x}`), t(`checklist.${x}`)…)
 const flag = (cc: string) =>
   cc.toUpperCase().replace(/./g, (c) => String.fromCodePoint(127397 + c.charCodeAt(0)));
 
@@ -114,14 +81,15 @@ function DetailSkeleton() {
 }
 
 function NotFound() {
+  const { t } = useLanguage();
   return (
     <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-      <Typography variant="h3" className="mb-2">Asset não encontrado</Typography>
+      <Typography variant="h3" className="mb-2">{t('detail.notFound')}</Typography>
       <Typography variant="p" className="mb-8">
-        O ativo que você procura não existe, foi arquivado ou está em rascunho.
+        {t('detail.notFoundDesc')}
       </Typography>
       <Link href="/assets" className="inline-flex h-11 items-center gap-2 rounded-interactive bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
-        <Icon name="stack" size={16} /> Ver todos os assets
+        <Icon name="stack" size={16} /> {t('detail.seeAll')}
       </Link>
     </div>
   );
@@ -139,7 +107,8 @@ export default function AssetDetailPage() {
 }
 
 function AssetDetailView({ asset }: { asset: AssetDetail }) {
-  const linkOf = (t: LinkType) => asset.links.find((l) => l.type === t)?.url;
+  const { t } = useLanguage();
+  const linkOf = (type: LinkType) => asset.links.find((l) => l.type === type)?.url;
   const media = useMemo(
     () => [asset.mockupUrl, asset.coverUrl, ...asset.screenshots.map((s) => s.url)].filter(Boolean) as string[],
     [asset],
@@ -173,7 +142,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
     if (!collectionId) return;
     try {
       await addToCollection(collectionId, asset.id);
-      setCollMsg('Adicionado à coleção.');
+      setCollMsg(t('coll.added'));
       setTimeout(() => setCollMsg(null), 1800);
     } catch (e) {
       setCollMsg(e instanceof Error ? e.message : String(e));
@@ -181,7 +150,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
     }
   };
   const onNewColl = async () => {
-    const name = window.prompt('Nome da nova coleção:');
+    const name = window.prompt(t('coll.prompt'));
     if (!name?.trim()) return;
     try {
       const c = await createCollection(name.trim());
@@ -200,8 +169,28 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
     setTimeout(() => setCopied(null), 1800);
   };
 
+  // Remixar = clonar o Kit para a área pessoal. Original permanece intacto.
+  // Admin abre o Studio para personalizar; aluno recebe a cópia na sua área.
+  const router = useRouter();
+  const { isAdmin } = useRole();
+  const [remixing, setRemixing] = useState(false);
+  const [remixErr, setRemixErr] = useState<string | null>(null);
+  const onRemix = async () => {
+    setRemixing(true);
+    setRemixErr(null);
+    try {
+      const res = await duplicateAsset(asset.slug);
+      if (res) router.push(isAdmin ? `/admin/assets/edit/${res.slug}` : `/assets/${res.slug}`);
+    } catch (e) {
+      setRemixErr(e instanceof Error ? e.message : String(e));
+      setTimeout(() => setRemixErr(null), 3000);
+    } finally {
+      setRemixing(false);
+    }
+  };
+
   const openUrl = linkOf('microapp') ?? linkOf('deploy') ?? linkOf('demo');
-  const remixUrl = linkOf('remix') ?? linkOf('lovable_remix') ?? linkOf('bolt_remix') ?? linkOf('github');
+  const salesUrl = linkOf('sales') ?? linkOf('demo');
   const driveUrl = linkOf('drive');
   const docsUrl = linkOf('docs');
   const downloadUrl = driveUrl ?? linkOf('github') ?? linkOf('deploy'); // Drive → GitHub → deploy/ZIP
@@ -226,7 +215,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
     <div className="animate-in mx-auto max-w-6xl px-6 py-8">
       {/* Voltar */}
       <Link href="/assets" className="mb-5 inline-flex items-center gap-1 text-sm text-muted transition-colors hover:text-content">
-        <Icon name="back" size={16} /> Voltar para Assets
+        <Icon name="back" size={16} /> {t('gate.back')}
       </Link>
 
       {/* Hero */}
@@ -239,7 +228,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               <Badge tone="primary">{asset.category}</Badge>
               <Badge tone="default">{asset.level.charAt(0).toUpperCase() + asset.level.slice(1)}</Badge>
               <Badge tone={asset.status === 'draft' ? 'warning' : 'success'}>
-                {asset.status === 'updated' ? 'Atualizado' : asset.status === 'active' ? 'Ativo' : asset.status}
+                {t(`status.${asset.status}`)}
               </Badge>
               <span className="text-xs text-muted">{asset.version}</span>
             </div>
@@ -255,7 +244,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
         {/* Coluna principal */}
         <div className="space-y-6 lg:col-span-2">
           {/* Galeria / Imagem principal / Screenshots */}
-          <Section icon="asset" title="Galeria">
+          <Section icon="asset" title={t('detail.gallery')}>
             <div className="overflow-hidden rounded-container border border-border bg-surface">
               {media.length > 0 ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -282,8 +271,36 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             )}
           </Section>
 
+          {/* Mockups do Kit (App / Landing / Checkout / Ebook) */}
+          <Section icon="stack" title={t('detail.included')}>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {[
+                { label: t('incl.app'), icon: 'bolt', url: openUrl },
+                { label: t('incl.sales'), icon: 'money', url: salesUrl },
+                { label: t('incl.checkout'), icon: 'cube', url: linkOf('deploy') ?? linkOf('demo') },
+                { label: t('incl.ebook'), icon: 'docs', url: docsUrl ?? driveUrl },
+              ].map((m) => (
+                <div key={m.label} className="overflow-hidden rounded-container border border-border bg-surface/50">
+                  <div className="flex h-28 items-center justify-center bg-brand-glow/15">
+                    <Icon name={m.icon} size={30} className="text-primary-hover" />
+                  </div>
+                  <div className="flex items-center justify-between p-3">
+                    <span className="text-sm font-medium text-content">{m.label}</span>
+                    {m.url ? (
+                      <a href={m.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover">
+                        {t('action.open')} <Icon name="external" size={13} />
+                      </a>
+                    ) : (
+                      <span className="text-xs text-dim">{t('incl.notIncluded')}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+
           {/* Vídeo (YouTube/Loom reais quando existirem) */}
-          <Section icon="rocket" title="Vídeo">
+          <Section icon="rocket" title={t('detail.video')}>
             {(() => {
               const ytId = asset.videoYoutubeUrl?.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{6,})/)?.[1];
               if (ytId) {
@@ -296,7 +313,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               if (asset.videoLoomUrl) {
                 return (
                   <a href={asset.videoLoomUrl} target="_blank" rel="noopener noreferrer" className="flex h-48 items-center justify-center rounded-container border border-border bg-surface/50 text-primary hover:text-primary-hover">
-                    <span className="flex items-center gap-2"><Icon name="rocket" size={20} /> Assistir no Loom</span>
+                    <span className="flex items-center gap-2"><Icon name="rocket" size={20} /> {t('detail.watchLoom')}</span>
                   </a>
                 );
               }
@@ -304,7 +321,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                 <div className="flex h-48 items-center justify-center rounded-container border border-dashed border-border bg-surface/50 text-center">
                   <div>
                     <Icon name="rocket" size={28} className="mx-auto mb-2 text-muted" />
-                    <Typography variant="small">Sem vídeo cadastrado.</Typography>
+                    <Typography variant="small">{t('detail.noVideo')}</Typography>
                   </div>
                 </div>
               );
@@ -313,13 +330,13 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
 
           {/* Descrição completa */}
           {asset.fullDescription && (
-            <Section icon="docs" title="Sobre este asset">
+            <Section icon="docs" title={t('detail.about')}>
               <Typography variant="p" className="whitespace-pre-line">{asset.fullDescription}</Typography>
             </Section>
           )}
 
           {/* Health Score + Checklist */}
-          <Section icon="check" title="Health Score">
+          <Section icon="check" title={t('detail.health')}>
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
               <HealthRing score={asset.healthScore} />
               <div className="grid flex-1 grid-cols-2 gap-2 sm:grid-cols-3">
@@ -331,7 +348,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                       className={c.present ? 'text-success' : 'text-danger/70'}
                     />
                     <span className={c.present ? 'text-content' : 'text-muted line-through'}>
-                      {checklistLabel[c.item]}
+                      {t(`checklist.${c.item}`)}
                     </span>
                   </div>
                 ))}
@@ -340,24 +357,24 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
           </Section>
 
           {/* Analytics */}
-          <Section icon="chart" title="Analytics">
+          <Section icon="chart" title={t('detail.analytics')}>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Stat icon="eye" label="Views" value={analytics.views} />
-              <Stat icon="rocket" label="Opens" value={analytics.opens} />
-              <Stat icon="download" label="Downloads" value={analytics.downloads} />
-              <Stat icon="favorite" label="Favoritos" value={analytics.favorites} />
-              <Stat icon="remix" label="Remixes" value={analytics.remixes} />
-              <Stat icon="share" label="Shares" value={analytics.shares} />
+              <Stat icon="eye" label={t('stat.views')} value={analytics.views} />
+              <Stat icon="rocket" label={t('stat.opens')} value={analytics.opens} />
+              <Stat icon="download" label={t('stat.downloads')} value={analytics.downloads} />
+              <Stat icon="favorite" label={t('stat.favorites')} value={analytics.favorites} />
+              <Stat icon="remix" label={t('stat.remixes')} value={analytics.remixes} />
+              <Stat icon="share" label={t('stat.shares')} value={analytics.shares} />
             </div>
           </Section>
 
           {/* Compatibilidade / Plataformas */}
           {platformsByKind.length > 0 && (
-            <Section icon="cube" title="Plataformas suportadas">
+            <Section icon="cube" title={t('detail.platforms')}>
               <div className="space-y-3">
                 {platformsByKind.map(([kind, labels]) => (
                   <div key={kind} className="flex flex-wrap items-center gap-2">
-                    <span className="w-24 shrink-0 text-xs uppercase tracking-wide text-muted">{kindLabel[kind]}</span>
+                    <span className="w-24 shrink-0 text-xs uppercase tracking-wide text-muted">{t(`kind.${kind}`)}</span>
                     {labels.map((l) => <Badge key={l} tone="default">{l}</Badge>)}
                   </div>
                 ))}
@@ -366,37 +383,37 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
           )}
 
           {/* Idiomas / Países / IA / Tags */}
-          <Section icon="globe" title="Alcance e construção">
+          <Section icon="globe" title={t('detail.reach')}>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">Idiomas</Typography>
+                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('detail.languages')}</Typography>
                 <div className="flex flex-wrap gap-1.5">
                   {asset.languages.map((l) => <Badge key={l} tone="default">{l.toUpperCase()}</Badge>)}
                 </div>
               </div>
               <div>
-                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">Países</Typography>
+                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('detail.countries')}</Typography>
                 <div className="flex flex-wrap gap-1.5">
                   {asset.targetCountries.map((c) => <Badge key={c} tone="default">{flag(c)} {c}</Badge>)}
                 </div>
               </div>
               <div>
-                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">IA utilizada</Typography>
+                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('detail.aiUsed')}</Typography>
                 <div className="flex flex-wrap gap-1.5">
                   {asset.buildAiTools.map((a) => <Badge key={a} tone="primary">{a}</Badge>)}
                 </div>
               </div>
               <div>
-                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">Tags</Typography>
+                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('detail.tags')}</Typography>
                 <div className="flex flex-wrap gap-1.5">
-                  {asset.tags.map((t) => <Badge key={t} tone="default"><Icon name="tag" size={11} /> {t}</Badge>)}
+                  {asset.tags.map((tag) => <Badge key={tag} tone="default"><Icon name="tag" size={11} /> {tag}</Badge>)}
                 </div>
               </div>
             </div>
           </Section>
 
           {/* Arquivos disponíveis */}
-          <Section icon="download" title="Arquivos disponíveis">
+          <Section icon="download" title={t('detail.files')}>
             {asset.files.length > 0 ? (
               <ul className="divide-y divide-border">
                 {asset.files.map((f) => (
@@ -415,13 +432,13 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               </ul>
             ) : (
               <Typography variant="small">
-                Os arquivos deste asset ficam organizados no Google Drive (18 pastas). Use o botão “Download” para acessá-los.
+                {t('detail.filesEmpty')}
               </Typography>
             )}
           </Section>
 
           {/* Histórico de versões */}
-          <Section icon="clipboard" title="Histórico de versões">
+          <Section icon="clipboard" title={t('detail.versions')}>
             {asset.versions.length > 0 ? (
               <ol className="relative space-y-4 border-l border-border pl-5">
                 {asset.versions.slice().reverse().map((v) => (
@@ -429,7 +446,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                     <span className="absolute -left-[23px] top-1 h-2.5 w-2.5 rounded-full bg-primary" />
                     <div className="flex items-center gap-2">
                       <Typography variant="h6">{v.version}</Typography>
-                      {v.isCurrent && <Badge tone="success">atual</Badge>}
+                      {v.isCurrent && <Badge tone="success">{t('detail.current')}</Badge>}
                       <span className="text-xs text-muted">{relativeDate(v.releasedAt)}</span>
                     </div>
                     {v.notes && <Typography variant="small">{v.notes}</Typography>}
@@ -437,17 +454,17 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                 ))}
               </ol>
             ) : (
-              <Typography variant="small">Sem versões registradas.</Typography>
+              <Typography variant="small">{t('detail.versionsEmpty')}</Typography>
             )}
           </Section>
 
           {/* Histórico de updates */}
           {asset.updates.length > 0 && (
-            <Section icon="sparkles" title="Novidades">
+            <Section icon="sparkles" title={t('detail.news')}>
               <ul className="space-y-3">
                 {asset.updates.map((u) => (
                   <li key={u.id} className="flex items-start gap-3">
-                    <Badge tone="primary">{updateLabel[u.type]}</Badge>
+                    <Badge tone="primary">{t(`update.${u.type}`)}</Badge>
                     <div>
                       <Typography variant="h6">{u.title}</Typography>
                       {u.description && <Typography variant="small">{u.description}</Typography>}
@@ -470,45 +487,53 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                 aria-disabled={!openUrl}
                 className={`flex h-12 w-full items-center justify-center gap-2 rounded-interactive text-sm font-semibold transition-colors ${openUrl ? 'bg-primary text-white hover:bg-primary-hover' : 'pointer-events-none bg-primary/40 text-white/60'}`}
               >
-                <Icon name="bolt" size={16} /> Abrir
+                <Icon name="bolt" size={16} /> {t('action.open')}
               </a>
+              <button
+                onClick={onRemix}
+                disabled={remixing}
+                className="bg-brand-glow flex h-12 w-full items-center justify-center gap-2 rounded-interactive text-sm font-semibold text-white transition-all hover:shadow-[var(--shadow-glow-blue)] disabled:opacity-60"
+              >
+                <Icon name="remix" size={16} /> {remixing ? t('action.remixing') : t('action.remixKit')}
+              </button>
+              {remixErr && <p className="text-xs text-danger">{remixErr}</p>}
               <div className="grid grid-cols-2 gap-2">
                 <a
-                  href={remixUrl ?? undefined} target="_blank" rel="noopener noreferrer"
-                  aria-disabled={!remixUrl}
-                  className={`flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold transition-colors ${remixUrl ? 'text-content hover:bg-surface' : 'pointer-events-none text-muted/50'}`}
+                  href={salesUrl ?? undefined} target="_blank" rel="noopener noreferrer"
+                  aria-disabled={!salesUrl}
+                  className={`flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold transition-colors ${salesUrl ? 'text-content hover:bg-surface' : 'pointer-events-none text-muted/50'}`}
                 >
-                  <Icon name="remix" size={15} /> Remixar
+                  <Icon name="money" size={15} /> {t('action.sales')}
                 </a>
                 <button
                   onClick={onToggleFav}
                   className="flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold text-content transition-colors hover:bg-surface"
                 >
                   <Icon name={fav ? 'favorite-solid' : 'favorite'} size={15} className={fav ? 'text-danger' : ''} />
-                  {fav ? 'Favorito' : 'Favoritar'}
+                  {fav ? t('action.favYes') : t('action.favNo')}
                 </button>
                 <button
                   onClick={() => copy('share', typeof window !== 'undefined' ? window.location.href : '')}
                   className="flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold text-content transition-colors hover:bg-surface"
                 >
                   <Icon name={copied === 'share' ? 'check' : 'share'} size={15} className={copied === 'share' ? 'text-success' : ''} />
-                  {copied === 'share' ? 'Copiado' : 'Compartilhar'}
+                  {copied === 'share' ? t('action.copied') : t('action.share')}
                 </button>
                 <a
                   href={downloadUrl ?? undefined} target="_blank" rel="noopener noreferrer"
                   aria-disabled={!downloadUrl}
                   className={`flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold transition-colors ${downloadUrl ? 'text-content hover:bg-surface' : 'pointer-events-none text-muted/50'}`}
                 >
-                  <Icon name="download" size={15} /> Download
+                  <Icon name="download" size={15} /> {t('action.download')}
                 </a>
                 <button
                   onClick={() => copy('prompt', promptCopyTarget)}
                   disabled={!promptAvailable}
                   className="flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold text-content transition-colors hover:bg-surface disabled:pointer-events-none disabled:text-muted/50"
-                  title={promptText ? 'Copiar conteúdo completo do prompt' : 'Copiar link do prompt'}
+                  title={promptText ? t('action.promptTitleFull') : t('action.promptTitleLink')}
                 >
                   <Icon name={copied === 'prompt' ? 'check' : 'clipboard'} size={15} className={copied === 'prompt' ? 'text-success' : ''} />
-                  {copied === 'prompt' ? 'Copiado' : 'Copiar Prompt'}
+                  {copied === 'prompt' ? t('action.copied') : t('action.copyPrompt')}
                 </button>
               </div>
               {favMsg && <p className="text-xs text-danger">{favMsg}</p>}
@@ -517,23 +542,23 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                 aria-disabled={!docsUrl}
                 className={`flex h-11 w-full items-center justify-center gap-2 rounded-interactive text-sm font-semibold transition-colors ${docsUrl ? 'text-primary hover:bg-primary/10' : 'pointer-events-none text-muted/50'}`}
               >
-                <Icon name="docs" size={15} /> Abrir documentação
+                <Icon name="docs" size={15} /> {t('action.openDocs')}
               </a>
             </div>
 
             {/* Adicionar à coleção */}
             <div className="border-t border-border pt-3">
-              <Typography variant="caption" className="mb-2 block uppercase tracking-wide">Adicionar à coleção</Typography>
+              <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('coll.add')}</Typography>
               <div className="flex gap-2">
                 <select
                   value=""
                   onChange={(e) => { addToColl(e.target.value); e.target.value = ''; }}
                   className="h-9 flex-1 rounded-interactive border border-border bg-surface px-2 text-sm text-content focus:outline-none"
                 >
-                  <option value="">Escolher coleção…</option>
+                  <option value="">{t('coll.choose')}</option>
                   {(collections.data ?? []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
-                <button type="button" onClick={onNewColl} className="rounded-interactive border border-border px-2 text-muted transition-colors hover:text-content" title="Nova coleção">
+                <button type="button" onClick={onNewColl} className="rounded-interactive border border-border px-2 text-muted transition-colors hover:text-content" title={t('coll.newTitle')}>
                   <Icon name="plus" size={14} />
                 </button>
               </div>
@@ -542,30 +567,30 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
 
             {/* Metadados */}
             <div className="divide-y divide-border border-t border-border pt-1">
-              <Meta icon="clipboard" label="Versão atual" value={asset.version} />
-              <Meta icon="recent" label="Atualizado" value={relativeDate(asset.updatedAt)} />
+              <Meta icon="clipboard" label={t('meta.currentVersion')} value={asset.version} />
+              <Meta icon="recent" label={t('meta.updated')} value={relativeDate(asset.updatedAt)} />
               {asset.setupTimeMinutes != null && (
-                <Meta icon="bolt" label="Personalização" value={`~${asset.setupTimeMinutes} min`} />
+                <Meta icon="bolt" label={t('meta.setup')} value={`~${asset.setupTimeMinutes} min`} />
               )}
               {asset.timeToPublishMinutes != null && (
-                <Meta icon="rocket" label="Até publicação" value={`~${asset.timeToPublishMinutes} min`} />
+                <Meta icon="rocket" label={t('meta.toPublish')} value={`~${asset.timeToPublishMinutes} min`} />
               )}
-              <Meta icon="star" label="Nível" value={asset.level.charAt(0).toUpperCase() + asset.level.slice(1)} />
-              <Meta icon="money" label="Receita" value={revenueLabel[asset.revenueModel]} />
-              <Meta icon="cube" label="Bundle" value={bundleLabel[asset.deliveryBundle]} />
-              <Meta icon="docs" label="Licença" value={licenseLabel[asset.license]} />
+              <Meta icon="star" label={t('meta.level')} value={asset.level.charAt(0).toUpperCase() + asset.level.slice(1)} />
+              <Meta icon="money" label={t('meta.revenue')} value={t(`revenue.${asset.revenueModel}`)} />
+              <Meta icon="cube" label={t('meta.bundle')} value={t(`bundle.${asset.deliveryBundle}`)} />
+              <Meta icon="docs" label={t('meta.license')} value={t(`license.${asset.license}`)} />
               {asset.difficulty && (
-                <Meta icon="chart" label="Dificuldade" value={difficultyLabel[asset.difficulty]} />
+                <Meta icon="chart" label={t('meta.difficulty')} value={t(`difficulty.${asset.difficulty}`)} />
               )}
               {asset.suggestedPrice != null && (
-                <Meta icon="money" label="Preço sugerido" value={`R$ ${asset.suggestedPrice.toFixed(2)}`} />
+                <Meta icon="money" label={t('meta.suggestedPrice')} value={`R$ ${asset.suggestedPrice.toFixed(2)}`} />
               )}
             </div>
 
             {/* Links diretos */}
             {asset.links.length > 0 && (
               <div className="border-t border-border pt-3">
-                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">Links</Typography>
+                <Typography variant="caption" className="mb-2 block uppercase tracking-wide">{t('detail.links')}</Typography>
                 <div className="flex flex-wrap gap-1.5">
                   {asset.links.map((l) => (
                     <a

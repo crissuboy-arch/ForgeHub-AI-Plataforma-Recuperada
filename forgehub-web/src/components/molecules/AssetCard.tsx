@@ -1,3 +1,4 @@
+'use client';
 // src/components/molecules/AssetCard.tsx
 import React from 'react';
 import Link from 'next/link';
@@ -6,6 +7,7 @@ import { Icon } from '../atoms/Icon';
 import { CategoryBadge, categoryColor, categoryIcon } from '../atoms/CategoryBadge';
 import { TierBadge } from '../atoms/TierBadge';
 import classNames from 'classnames';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import { AssetSummary, AssetStatus } from '../../types';
 
 export interface AssetCardProps {
@@ -19,10 +21,6 @@ const statusStyle: Record<AssetStatus, string> = {
   draft: 'bg-warning/12 text-warning',
   archived: 'bg-surface-2 text-muted',
 };
-const statusLabel: Record<AssetStatus, string> = {
-  active: 'Ativo', updated: 'Atualizado', draft: 'Rascunho', archived: 'Arquivado',
-};
-
 const MESES_PT = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
 export function relativeDate(iso: string): string {
   const [, month, day] = iso.slice(0, 10).split('-');
@@ -45,6 +43,7 @@ const hexA = (hex: string, a: number) => {
  * Capa com gradiente por categoria + tier + completude; hover com glow azul.
  */
 export const AssetCard: React.FC<AssetCardProps> = ({ asset, className }) => {
+  const { t } = useLanguage();
   const color = categoryColor(asset.category);
   return (
     <Link
@@ -77,8 +76,18 @@ export const AssetCard: React.FC<AssetCardProps> = ({ asset, className }) => {
 
       {/* Corpo */}
       <div className="flex flex-1 flex-col p-4">
-        <div className="mb-2">
+        <div className="mb-2 flex items-center gap-1.5">
           <CategoryBadge category={asset.category} />
+          {asset.language && (
+            <span className="inline-flex items-center rounded-full border border-border bg-surface/60 px-2 py-0.5 text-[10px] font-semibold uppercase text-muted">
+              {asset.language === 'pt-BR' ? 'PT' : asset.language.toUpperCase()}
+            </span>
+          )}
+          {typeof asset.filesCount === 'number' && asset.filesCount > 0 && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium text-dim">
+              <Icon name="docs" size={10} /> {asset.filesCount}
+            </span>
+          )}
         </div>
         <Typography variant="h5" className="mb-1 truncate transition-colors group-hover:text-primary-hover" title={asset.name}>
           {asset.name}
@@ -91,12 +100,12 @@ export const AssetCard: React.FC<AssetCardProps> = ({ asset, className }) => {
         <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
           <div className="flex items-center gap-2">
             <span className={classNames('rounded-full px-2 py-0.5 text-[11px] font-medium', statusStyle[asset.status])}>
-              {statusLabel[asset.status]}
+              {t(`status.${asset.status}`)}
             </span>
             {asset.version && <span className="text-xs text-dim">{asset.version}</span>}
           </div>
           <span className="inline-flex items-center gap-1 text-sm font-semibold text-primary transition-transform group-hover:translate-x-0.5">
-            Abrir <Icon name="chevron" size={14} />
+            {t('common.open')} <Icon name="chevron" size={14} />
           </span>
         </div>
       </div>

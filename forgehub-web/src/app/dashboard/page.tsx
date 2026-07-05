@@ -14,6 +14,7 @@ import { listRecents, getSettings } from '../../data/userData';
 import { getDashboardStats } from '../../data/assets';
 import { getActivitySeries } from '../../data/dashboard';
 import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
 
 // Recharts sob demanda (mantém o bundle inicial leve)
 const ActivityChart = dynamic(() => import('../../components/organisms/ActivityChart'), {
@@ -23,6 +24,7 @@ const ActivityChart = dynamic(() => import('../../components/organisms/ActivityC
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const recents = useQuery({ queryKey: ['recents'], queryFn: () => listRecents(4) });
   const stats = useQuery({ queryKey: ['dashboard-stats'], queryFn: getDashboardStats });
   const settings = useQuery({ queryKey: ['settings'], queryFn: getSettings });
@@ -45,7 +47,7 @@ export default function DashboardPage() {
             <h1 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
               {firstName ? `Bem-vindo(a), ${firstName} 👋` : 'Bem-vindo(a) 👋'}
             </h1>
-            <p className="mt-2 text-white/85">Aqui está o que está acontecendo hoje na sua ForgeHub AI.</p>
+            <p className="mt-2 text-white/85">{t('dashboard.subtitle')}</p>
           </div>
           <button className="inline-flex h-11 items-center gap-2 rounded-interactive bg-white px-5 text-sm font-semibold text-[#0B1E3C] shadow-lg transition-transform hover:-translate-y-0.5">
             <Icon name="sparkles" size={16} /> Começar Auto Setup
@@ -84,7 +86,7 @@ export default function DashboardPage() {
         <section className="mb-8">
           <div className="mb-4 flex items-center gap-2">
             <Icon name="recent" size={18} className="text-muted" />
-            <Typography variant="h4">Recentes</Typography>
+            <Typography variant="h4">{t('dashboard.recent')}</Typography>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {recents.data!.map((a) => <AssetCard key={a.id} asset={a} />)}
@@ -96,7 +98,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <Typography variant="h4">Seus assets</Typography>
+            <Typography variant="h4">{t('dashboard.yourAssets')}</Typography>
           </div>
           <AssetGrid />
         </div>

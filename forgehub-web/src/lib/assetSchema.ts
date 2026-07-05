@@ -88,6 +88,8 @@ export const assetFormSchema = z.object({
     z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Slug inválido (use apenas minúsculas, números e hífens)'),
   ),
   category: z.string().min(1, 'Selecione a categoria'),
+  language: z.enum(['pt-BR', 'es', 'en']),
+  niche: z.string().optional().or(z.literal('')),
   shortDescription: z.string().trim().max(200, 'Máximo 200 caracteres').optional().or(z.literal('')),
   fullDescription: z.string().trim().optional().or(z.literal('')),
   level: z.enum(LEVELS),
@@ -155,7 +157,7 @@ export type AssetFormValues = z.infer<typeof assetFormSchema>;
 // ------------------------------------------------------------- Valores default
 export function emptyFormValues(): AssetFormValues {
   return {
-    name: '', slug: '', category: '', shortDescription: '', fullDescription: '',
+    name: '', slug: '', category: '', language: 'pt-BR', niche: '', shortDescription: '', fullDescription: '',
     level: 'starter', status: 'draft', license: 'comercial',
     revenueModel: 'one_time', deliveryBundle: 'solo',
     setupTimeMinutes: null, timeToPublishMinutes: null, suggestedPrice: null,

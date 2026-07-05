@@ -5,14 +5,21 @@ const BUCKET = 'asset-media';
 const BASE = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
-/** Faz upload com barra de progresso real (XHR) e retorna a URL pública. */
-export async function uploadMedia(file: File, onProgress?: (pct: number) => void): Promise<string> {
+const extFromType = (type: string) => (type.split('/')[1] || 'bin').split('+')[0];
+
+/** Faz upload com barra de progresso real (XHR) e retorna a URL pública.
+ *  Aceita File ou Blob (para versões geradas pelo Upload Inteligente). */
+export async function uploadMedia(
+  file: Blob,
+  onProgress?: (pct: number) => void,
+  suffix = '',
+): Promise<string> {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
   if (!token) throw new Error('Faça login para enviar arquivos.');
 
-  const ext = (file.name.split('.').pop() || 'bin').toLowerCase();
-  const path = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`;
+  const ext = (file instanceof File ? file.name.split('.').pop() : extFromType(file.type)) || 'bin';
+  const path = `${Date.now()}-${Math.round(Math.random() * 1e9)}${suffix}.${ext.toLowerCase()}`;
 
   await new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();

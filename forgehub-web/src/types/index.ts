@@ -57,6 +57,9 @@ export interface AssetAnalytics {
  * Versão enxuta para cards/grades/listas (Vault, Dashboard).
  * É o que a UI atual (Sprint 1.5) consome.
  */
+export type AppLanguage = 'pt-BR' | 'es' | 'en';
+export interface Niche { slug: string; label: string; icon?: string; position?: number; }
+
 export interface AssetSummary {
   id: string;
   slug: string;
@@ -69,11 +72,16 @@ export interface AssetSummary {
   healthScore: number;
   updatedAt: string;
   coverUrl?: string;
+  language?: string; // idioma primário (pt-BR/es/en)
+  niche?: string; // slug do nicho
+  filesCount?: number; // nº de arquivos incluídos
 }
 
 /** Registro completo do Asset (ficha). */
 export interface Asset extends AssetSummary {
   workspaceId: string;
+  language: string;
+  niche?: string;
   tags: string[];
   fullDescription?: string;
   license: AssetLicense;
@@ -105,12 +113,14 @@ export interface Asset extends AssetSummary {
 
 // ---------------------------------------------------------------- Coleções / Settings (Sprint 5)
 export interface Collection { id: string; name: string; slug: string; count?: number; }
+export type UserRole = 'admin' | 'aluno';
 export interface UserSettings {
   fullName?: string;
   avatarUrl?: string;
   theme: string;
   language: string;
   workspace?: string;
+  role?: UserRole;
   preferences: Record<string, unknown>;
 }
 

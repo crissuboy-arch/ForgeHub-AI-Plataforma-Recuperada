@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '../atoms/Icon';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
 
 type Command = {
   id: string;
@@ -19,12 +20,13 @@ type Command = {
   href: string;
 };
 
-const COMMANDS: Command[] = [
-  { id: 'dashboard', label: 'Ir para o Dashboard', iconName: 'home', href: '/dashboard', hint: 'Navegação' },
-  { id: 'assets', label: 'Abrir biblioteca de Assets', iconName: 'asset', href: '/assets', hint: 'Navegação' },
-  { id: 'settings', label: 'Abrir Configurações', iconName: 'settings', href: '/settings', hint: 'Navegação' },
-  { id: 'landing', label: 'Ver Landing Page', iconName: 'sparkles', href: '/', hint: 'Navegação' },
-  { id: 'login', label: 'Tela de Login', iconName: 'user', href: '/login', hint: 'Conta' },
+// Definição agnóstica de idioma; rótulos resolvidos via i18n em tempo de render.
+const COMMAND_DEFS: { id: string; labelKey: string; hintKey: string; iconName: string; href: string }[] = [
+  { id: 'dashboard', labelKey: 'cmd.dashboard', iconName: 'home', href: '/dashboard', hintKey: 'cmd.nav' },
+  { id: 'assets', labelKey: 'cmd.assets', iconName: 'asset', href: '/assets', hintKey: 'cmd.nav' },
+  { id: 'settings', labelKey: 'cmd.settings', iconName: 'settings', href: '/settings', hintKey: 'cmd.nav' },
+  { id: 'landing', labelKey: 'cmd.landing', iconName: 'sparkles', href: '/', hintKey: 'cmd.nav' },
+  { id: 'login', labelKey: 'cmd.login', iconName: 'user', href: '/login', hintKey: 'cmd.account' },
 ];
 
 type CommandPaletteContextType = {
@@ -49,6 +51,12 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
+  const { t } = useLanguage();
+
+  const COMMANDS: Command[] = useMemo(
+    () => COMMAND_DEFS.map((c) => ({ id: c.id, iconName: c.iconName, href: c.href, label: t(c.labelKey), hint: t(c.hintKey) })),
+    [t],
+  );
 
   const open = useCallback(() => setIsOpen(true), []);
   const close = useCallback(() => {
@@ -62,7 +70,7 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
     const q = query.trim().toLowerCase();
     if (!q) return COMMANDS;
     return COMMANDS.filter((c) => c.label.toLowerCase().includes(q));
-  }, [query]);
+  }, [query, COMMANDS]);
 
   // Atalho global Ctrl+K / ⌘K
   useEffect(() => {
@@ -128,7 +136,7 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
                   setActiveIndex(0);
                 }}
                 onKeyDown={onInputKeyDown}
-                placeholder="Buscar ações e telas…"
+                placeholder={t('palette.placeholder')}
                 className="h-14 flex-1 bg-transparent text-content placeholder:text-muted focus:outline-none"
               />
               <kbd className="rounded-md border border-border bg-card px-1.5 py-0.5 text-xs text-muted">
@@ -138,7 +146,7 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
             <ul className="max-h-80 overflow-y-auto p-2">
               {results.length === 0 && (
                 <li className="px-3 py-8 text-center text-sm text-muted">
-                  Nenhum resultado para “{query}”.
+                  {t('palette.noResults')} “{query}”.
                 </li>
               )}
               {results.map((cmd, i) => (

@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import { NavItem } from '../molecules/NavItem';
 import { Icon } from '../atoms/Icon';
 import { Typography } from '../atoms/Typography';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { useRole } from '../../hooks/useRole';
 import classNames from 'classnames';
 
 /**
@@ -14,15 +16,19 @@ import classNames from 'classnames';
  */
 export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
   const pathname = usePathname();
+  const { t } = useLanguage();
+  const { isAdmin } = useRole();
 
   const items = [
-    { href: '/dashboard', label: 'Dashboard', iconName: 'home' },
-    { href: '/assets', label: 'Assets', iconName: 'asset' },
-    { href: '/admin/assets', label: 'Asset Studio', iconName: 'command' },
-    { href: '/collections', label: 'Coleções', iconName: 'collection', soon: true },
-    { href: '/favorites', label: 'Favoritos', iconName: 'favorite', soon: true },
-    { href: '/recent', label: 'Recentes', iconName: 'recent', soon: true },
-    { href: '/settings', label: 'Configurações', iconName: 'settings' },
+    { href: '/dashboard', label: t('nav.dashboard'), iconName: 'home' },
+    { href: '/assets', label: t('nav.assets'), iconName: 'asset' },
+    // Asset Studio: exclusivo de administradores (item 5 do aditivo)
+    ...(isAdmin ? [{ href: '/admin/assets', label: t('nav.studio'), iconName: 'command' }] : []),
+    { href: '/collections', label: t('nav.collections'), iconName: 'collection', soon: true },
+    { href: '/favorites', label: t('nav.favorites'), iconName: 'favorite', soon: true },
+    { href: '/recent', label: t('nav.recent'), iconName: 'recent', soon: true },
+    { href: '/planos', label: t('nav.plans'), iconName: 'star' },
+    { href: '/settings', label: t('nav.settings'), iconName: 'settings' },
   ];
 
   return (
@@ -42,10 +48,10 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
         </span>
         <span className="flex-1 overflow-hidden">
           <Typography variant="h6" className="truncate">
-            Meu Workspace
+            {t('sidebar.workspace')}
           </Typography>
           <Typography variant="caption" className="truncate">
-            Plano Pro
+            {t('sidebar.plan')}
           </Typography>
         </span>
         <Icon name="chevron-updown" size={16} className="text-muted" />
@@ -60,6 +66,7 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
             iconName={item.iconName}
             label={item.label}
             soon={item.soon}
+            soonLabel={t('nav.soon')}
             active={pathname === item.href || pathname?.startsWith(item.href + '/')}
           />
         ))}
@@ -73,10 +80,10 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
           </span>
           <span className="flex-1 overflow-hidden">
             <Typography variant="h6" className="truncate">
-              Você
+              {t('sidebar.you')}
             </Typography>
             <Typography variant="caption" className="truncate">
-              Ver perfil
+              {t('topbar.profile')}
             </Typography>
           </span>
         </div>

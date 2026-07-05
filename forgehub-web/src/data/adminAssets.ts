@@ -27,6 +27,13 @@ export async function listTags(): Promise<Tag[]> {
   if (error) throw error;
   return (data ?? []) as Tag[];
 }
+export async function listNiches(): Promise<import('../types').Niche[]> {
+  const { data, error } = await supabase.from('niches').select('*').order('position');
+  if (error) return []; // resiliente: se a migration 0005 ainda não foi aplicada
+  return ((data ?? []) as { slug: string; label: string; icon: string | null; position: number }[]).map((n) => ({
+    slug: n.slug, label: n.label, icon: n.icon ?? undefined, position: n.position,
+  }));
+}
 
 export type AdminAssetRow = {
   id: string; slug: string; name: string; status: string; level: string; healthScore: number; updatedAt: string;
@@ -84,6 +91,8 @@ export async function getAssetForEdit(
   values.name = str('name');
   values.slug = str('slug');
   values.category = str('category_slug');
+  values.language = (str('language') || 'pt-BR') as AssetFormValues['language'];
+  values.niche = str('niche');
   values.shortDescription = str('short_description');
   values.fullDescription = str('full_description');
   values.level = (row.level as AssetFormValues['level']) ?? 'starter';
@@ -161,6 +170,8 @@ export async function saveAsset(
     slug: values.slug,
     name: values.name,
     category_slug: values.category || null,
+    language: values.language || 'pt-BR',
+    niche: values.niche || null,
     short_description: values.shortDescription || null,
     full_description: values.fullDescription || null,
     status,

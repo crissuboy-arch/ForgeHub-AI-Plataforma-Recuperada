@@ -8,8 +8,10 @@ import { getAssetForEdit } from '../../../../../data/adminAssets';
 import { Skeleton } from '../../../../../components/atoms/Skeleton';
 import { Typography } from '../../../../../components/atoms/Typography';
 import { Icon } from '../../../../../components/atoms/Icon';
+import { useLanguage } from '../../../../../lib/i18n/LanguageProvider';
 
 export default function EditAssetPage() {
+  const { t } = useLanguage();
   const params = useParams<{ slug: string }>();
   const slug = params?.slug ?? '';
   const { data, isLoading, isError } = useQuery({
@@ -31,12 +33,12 @@ export default function EditAssetPage() {
   if (isError || !data) {
     return (
       <div className="mx-auto max-w-2xl px-6 py-24 text-center">
-        <Typography variant="h3" className="mb-2">Asset não encontrado</Typography>
+        <Typography variant="h3" className="mb-2">{t('studio.editNotFound')}</Typography>
         <Typography variant="p" className="mb-8">
-          Verifique se você está autenticado (a edição exige login) e se o slug existe.
+          {t('studio.editNotFoundDesc')}
         </Typography>
         <Link href="/admin/assets" className="inline-flex h-11 items-center gap-2 rounded-interactive bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
-          <Icon name="back" size={16} /> Voltar ao Studio
+          <Icon name="back" size={16} /> {t('studio.backToStudio')}
         </Link>
       </div>
     );

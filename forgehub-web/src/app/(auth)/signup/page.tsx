@@ -8,8 +8,10 @@ import { FormField } from '../../../components/molecules/FormField';
 import { Button } from '../../../components/atoms/Button';
 import { Typography } from '../../../components/atoms/Typography';
 import { Icon } from '../../../components/atoms/Icon';
+import { useLanguage } from '../../../lib/i18n/LanguageProvider';
 
 export default function SignupPage() {
+  const { t } = useLanguage();
   const { signUp } = useAuth();
   const router = useRouter();
   const [fullName, setFullName] = useState('');
@@ -44,10 +46,10 @@ export default function SignupPage() {
         </div>
         <div>
           <p className="max-w-md text-3xl font-bold leading-tight text-white">
-            Comece a forjar ativos de nível enterprise em minutos.
+            {t('auth.brandSignup')}
           </p>
           <p className="mt-4 max-w-sm text-white/70">
-            Sem configurar servidores. Sem cara de template. Só resultado.
+            {t('auth.brandSignupSub')}
           </p>
         </div>
         <p className="text-sm text-white/60">© 2026 ForgeHub AI</p>
@@ -57,13 +59,13 @@ export default function SignupPage() {
       <div className="flex items-center justify-center bg-canvas px-6 py-12">
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-muted hover:text-content">
-            <Icon name="back" size={16} /> Voltar
+            <Icon name="back" size={16} /> {t('auth.back')}
           </Link>
           <Typography variant="h3" className="mb-1">
-            Criar conta
+            {t('auth.createAccount')}
           </Typography>
           <Typography variant="small" className="mb-8 block">
-            Leva menos de um minuto.
+            {t('auth.signupSubtitle')}
           </Typography>
 
           {error && (
@@ -75,27 +77,27 @@ export default function SignupPage() {
           <div className="space-y-4">
             <FormField
               id="fullName"
-              label="Nome completo"
+              label={t('auth.fullName')}
               type="text"
-              placeholder="Seu nome"
+              placeholder={t('auth.fullNamePlaceholder')}
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
             />
             <FormField
               id="email"
-              label="E-mail"
+              label={t('auth.email')}
               type="email"
-              placeholder="voce@empresa.com"
+              placeholder={t('auth.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <FormField
               id="password"
-              label="Senha"
+              label={t('auth.password')}
               type="password"
-              placeholder="Mínimo 8 caracteres"
+              placeholder={t('auth.passwordMin')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -103,17 +105,17 @@ export default function SignupPage() {
           </div>
 
           <Typography variant="caption" className="mt-4 block">
-            Ao criar a conta, você concorda com os Termos de Uso e a Política de Privacidade.
+            {t('auth.terms')}
           </Typography>
 
           <Button type="submit" variant="primary" loading={loading} className="mt-6 w-full">
-            Criar conta
+            {t('auth.createAccount')}
           </Button>
 
           <Typography variant="small" className="mt-6 block text-center">
-            Já tem conta?{' '}
+            {t('auth.haveAccount')}{' '}
             <Link href="/login" className="font-medium text-primary hover:text-primary-hover">
-              Entrar
+              {t('auth.login')}
             </Link>
           </Typography>
         </form>

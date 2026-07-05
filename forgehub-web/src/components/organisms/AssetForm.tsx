@@ -15,9 +15,11 @@ import {
   LEVELS, STATUSES, LICENSES, REVENUE_MODELS, DELIVERY_BUNDLES,
   LINK_FIELDS, CHECKLIST_ITEMS, COUNTRIES, LANGUAGES, type AssetFormValues,
 } from '../../lib/assetSchema';
-import { listCategories, listPlatforms, listAiTools, listTags, saveAsset, deleteAsset, duplicateAsset } from '../../data/adminAssets';
+import { listCategories, listPlatforms, listAiTools, listTags, listNiches, saveAsset, deleteAsset, duplicateAsset } from '../../data/adminAssets';
 import { uploadMedia } from '../../data/storage';
+import { SmartImageUpload } from '../molecules/SmartImageUpload';
 import { healthColor } from '../molecules/AssetCard';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
 
 type MediaKey =
   | 'coverUrl' | 'bannerUrl' | 'logoUrl' | 'thumbnailUrl' | 'previewUrl' | 'mockupUrl';
@@ -28,6 +30,7 @@ function MediaUpload({ label, name, control, setValue, register }: {
   setValue: (n: MediaKey, v: string, o?: object) => void;
   register: ReturnType<typeof useForm<AssetFormValues>>['register'];
 }) {
+  const { t } = useLanguage();
   const url = useWatch({ control, name }) as string;
   const [pct, setPct] = useState<number | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -59,13 +62,13 @@ function MediaUpload({ label, name, control, setValue, register }: {
         <div className="flex-1">
           <div className="flex flex-wrap gap-2">
             <label className="cursor-pointer rounded-interactive border border-border bg-surface px-3 py-1.5 text-sm text-content transition-colors hover:bg-card">
-              <Icon name="download" size={13} className="mr-1 inline rotate-180" /> {url ? 'Substituir' : 'Enviar'}
+              <Icon name="download" size={13} className="mr-1 inline rotate-180" /> {url ? t('studio.replace') : t('studio.upload')}
               <input type="file" accept="image/*" className="hidden" onChange={onFile} />
             </label>
             {url && (
               <button type="button" onClick={() => setValue(name, '', { shouldValidate: true })}
                 className="rounded-interactive border border-border px-3 py-1.5 text-sm text-danger transition-colors hover:bg-danger/10">
-                <Icon name="x" size={13} className="mr-1 inline" /> Remover
+                <Icon name="x" size={13} className="mr-1 inline" /> {t('studio.remove')}
               </button>
             )}
           </div>
@@ -77,7 +80,7 @@ function MediaUpload({ label, name, control, setValue, register }: {
           {err && <span className="mt-1 block text-xs text-danger">{err}</span>}
         </div>
       </div>
-      <input className={`${inputClass} mt-2`} placeholder="ou cole uma URL https://…" {...register(name)} />
+      <input className={`${inputClass} mt-2`} placeholder={t('studio.urlPlaceholder')} {...register(name)} />
     </Field>
   );
 }
@@ -156,6 +159,7 @@ function ChipMulti({ control, name, options }: {
 
 // Autocomplete de Tags
 function TagInput({ control, suggestions }: { control: Control<AssetFormValues>; suggestions: string[] }) {
+  const { t: tr } = useLanguage();
   const [text, setText] = useState('');
   return (
     <Controller
@@ -180,7 +184,7 @@ function TagInput({ control, suggestions }: { control: Control<AssetFormValues>;
             </div>
             <input
               className={inputClass} value={text} list="tag-suggestions"
-              placeholder="Digite e pressione Enter para adicionar"
+              placeholder={tr('studio.tagPlaceholder')}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(text); } }}
             />
@@ -197,6 +201,7 @@ type Props = { mode: 'new' | 'edit'; assetId?: string; initialValues?: AssetForm
 
 export function AssetForm({ mode, assetId, initialValues }: Props) {
   const router = useRouter();
+  const { t } = useLanguage();
   const { register, handleSubmit, control, setValue, formState: { errors } } =
     useForm<AssetFormValues>({
       resolver: zodResolver(assetFormSchema) as unknown as Resolver<AssetFormValues>,
@@ -204,6 +209,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
     });
 
   const categories = useQuery({ queryKey: ['adm-categories'], queryFn: listCategories });
+  const niches = useQuery({ queryKey: ['adm-niches'], queryFn: listNiches });
   const platforms = useQuery({ queryKey: ['adm-platforms'], queryFn: listPlatforms });
   const aiTools = useQuery({ queryKey: ['adm-ai'], queryFn: listAiTools });
   const tags = useQuery({ queryKey: ['adm-tags'], queryFn: listTags });
@@ -231,10 +237,10 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
   const doSave = (publish: boolean) => handleSubmit(
     (values) => run(publish ? 'publish' : 'save', async () => {
       const res = await saveAsset(values, { id: assetId, publish });
-      setMsg({ kind: 'ok', text: publish ? 'Publicado com sucesso.' : 'Salvo com sucesso.' });
+      setMsg({ kind: 'ok', text: publish ? t('studio.published') : t('studio.saved') });
       if (mode === 'new') router.push(`/admin/assets/edit/${res.slug}`);
     }),
-    () => setMsg({ kind: 'err', text: 'Corrija os campos destacados antes de salvar.' }),
+    () => setMsg({ kind: 'err', text: t('studio.fixFields') }),
   );
 
   const onDuplicate = () => run('dup', async () => {
@@ -242,7 +248,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
     if (res) router.push(`/admin/assets/edit/${res.slug}`);
   });
   const onDelete = () => {
-    if (!assetId || !window.confirm('Excluir este asset permanentemente?')) return;
+    if (!assetId || !window.confirm(t('studio.confirmDelete'))) return;
     run('del', async () => { await deleteAsset(assetId); router.push('/admin/assets'); });
   };
 
@@ -259,22 +265,22 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
       {/* Cabeçalho + ações */}
       <div className="glass sticky top-0 z-10 -mx-6 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4">
         <div>
-          <Typography variant="h4">{mode === 'new' ? 'Novo Asset' : 'Editar Asset'}</Typography>
-          <Typography variant="caption">{currentSlug || 'sem-slug'}</Typography>
+          <Typography variant="h4">{mode === 'new' ? t('studio.newAsset') : t('studio.editAsset')}</Typography>
+          <Typography variant="caption">{currentSlug || t('studio.noSlug')}</Typography>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button type="button" variant="secondary" size="sm" onClick={() => currentSlug && window.open(`/assets/${currentSlug}`, '_blank')} disabled={mode === 'new'}>
-            <Icon name="eye" size={15} /> Preview
+            <Icon name="eye" size={15} /> {t('studio.preview')}
           </Button>
           <Button type="button" variant="ghost" size="sm" onClick={onDuplicate} loading={busy === 'dup'} disabled={mode === 'new'}>
-            <Icon name="stack" size={15} /> Duplicar
+            <Icon name="stack" size={15} /> {t('studio.duplicate')}
           </Button>
           <Button type="button" variant="danger" size="sm" onClick={onDelete} loading={busy === 'del'} disabled={mode === 'new'}>
-            <Icon name="x" size={15} /> Excluir
+            <Icon name="x" size={15} /> {t('studio.delete')}
           </Button>
-          <Button type="button" variant="secondary" size="sm" onClick={doSave(false)} loading={busy === 'save'}>Salvar</Button>
+          <Button type="button" variant="secondary" size="sm" onClick={doSave(false)} loading={busy === 'save'}>{t('studio.save')}</Button>
           <Button type="button" variant="primary" size="sm" onClick={doSave(true)} loading={busy === 'publish'}>
-            <Icon name="rocket" size={15} /> Salvar e publicar
+            <Icon name="rocket" size={15} /> {t('studio.savePublish')}
           </Button>
         </div>
       </div>
@@ -287,14 +293,14 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
 
       <div className="space-y-6">
         {/* 1. Dados básicos */}
-        <Section n={1} icon="docs" title="Dados Básicos" aside={
+        <Section n={1} icon="docs" title={t('studio.sec1')} aside={
           <span className={`flex items-center gap-1 text-sm font-semibold ${healthColor(health)}`}>
             <Icon name="check" size={14} /> Health {health}%
           </span>
         }>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label="Nome" error={errors.name?.message}><input className={inputClass} {...register('name')} /></Field>
-            <Field label="Slug" error={errors.slug?.message} hint="pode digitar com maiúsculas e espaços — vira slug automaticamente">
+            <Field label={t('studio.f.name')} error={errors.name?.message}><input className={inputClass} {...register('name')} /></Field>
+            <Field label={t('studio.f.slug')} error={errors.slug?.message} hint={t('studio.f.slugHint')}>
               <div className="flex gap-2">
                 <input
                   className={inputClass}
@@ -302,52 +308,68 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
                   onChange={(e) => setValue('slug', liveSlug(e.target.value), { shouldValidate: false })}
                   onBlur={(e) => setValue('slug', finalizeSlug(e.target.value), { shouldValidate: true })}
                 />
-                <Button type="button" variant="secondary" size="sm" onClick={slugFromName}>Gerar</Button>
+                <Button type="button" variant="secondary" size="sm" onClick={slugFromName}>{t('studio.gen')}</Button>
               </div>
             </Field>
-            <Field label="Categoria" error={errors.category?.message}>
+            <Field label={t('studio.f.category')} error={errors.category?.message}>
               <select className={inputClass} {...register('category')}>
-                <option value="">Selecione…</option>
+                <option value="">{t('studio.select')}</option>
                 {(categories.data ?? []).map((c) => <option key={c.slug} value={c.slug}>{c.label}</option>)}
               </select>
             </Field>
-            <Field label="Nível"><Select options={LEVELS} {...register('level')} /></Field>
-            <Field label="Status"><Select options={STATUSES} {...register('status')} /></Field>
-            <Field label="Licença"><Select options={LICENSES} {...register('license')} /></Field>
-            <Field label="Revenue Model"><Select options={REVENUE_MODELS} {...register('revenueModel')} /></Field>
-            <Field label="Delivery Bundle"><Select options={DELIVERY_BUNDLES} {...register('deliveryBundle')} /></Field>
-            <Field label="Tempo de personalização (min)"><input type="number" className={inputClass} {...register('setupTimeMinutes')} /></Field>
-            <Field label="Tempo até publicação (min)"><input type="number" className={inputClass} {...register('timeToPublishMinutes')} /></Field>
-            <Field label="Preço sugerido (R$)"><input type="number" step="0.01" className={inputClass} {...register('suggestedPrice')} /></Field>
-            <Field label="Health Score (somente leitura)">
+            <Field label={t('studio.f.language')}>
+              <select className={inputClass} {...register('language')}>
+                <option value="pt-BR">Português (PT-BR)</option>
+                <option value="es">Español (ES)</option>
+                <option value="en">English (EN)</option>
+              </select>
+            </Field>
+            <Field label={t('studio.f.niche')}>
+              <select className={inputClass} {...register('niche')}>
+                <option value="">{t('studio.select')}</option>
+                {(niches.data ?? []).map((n) => <option key={n.slug} value={n.slug}>{n.label}</option>)}
+              </select>
+            </Field>
+            <Field label={t('studio.f.level')}><Select options={LEVELS} {...register('level')} /></Field>
+            <Field label={t('studio.f.status')}><Select options={STATUSES} {...register('status')} /></Field>
+            <Field label={t('studio.f.license')}><Select options={LICENSES} {...register('license')} /></Field>
+            <Field label={t('studio.f.revenue')}><Select options={REVENUE_MODELS} {...register('revenueModel')} /></Field>
+            <Field label={t('studio.f.bundle')}><Select options={DELIVERY_BUNDLES} {...register('deliveryBundle')} /></Field>
+            <Field label={t('studio.f.setupTime')}><input type="number" className={inputClass} {...register('setupTimeMinutes')} /></Field>
+            <Field label={t('studio.f.publishTime')}><input type="number" className={inputClass} {...register('timeToPublishMinutes')} /></Field>
+            <Field label={t('studio.f.price')}><input type="number" step="0.01" className={inputClass} {...register('suggestedPrice')} /></Field>
+            <Field label={t('studio.f.healthRO')}>
               <div className={`flex h-11 items-center rounded-interactive border border-border bg-surface px-3 font-semibold ${healthColor(health)}`}>{health}%</div>
             </Field>
           </div>
           <div className="mt-4 grid gap-4">
-            <Field label="Descrição curta" error={errors.shortDescription?.message}><input className={inputClass} {...register('shortDescription')} /></Field>
-            <Field label="Descrição completa">
+            <Field label={t('studio.f.shortDesc')} error={errors.shortDescription?.message}><input className={inputClass} {...register('shortDescription')} /></Field>
+            <Field label={t('studio.f.fullDesc')}>
               <textarea className={`${inputClass} h-32 py-2`} {...register('fullDescription')} />
             </Field>
           </div>
         </Section>
 
         {/* 2. Mídia */}
-        <Section n={2} icon="asset" title="Mídia">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <MediaUpload label="Cover" name="coverUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label="Banner" name="bannerUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label="Logo" name="logoUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label="Thumbnail" name="thumbnailUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label="Preview" name="previewUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label="Mockup" name="mockupUrl" control={control} setValue={setValue} register={register} />
-            <Field label="Vídeo YouTube" error={errors.videoYoutubeUrl?.message}><input className={inputClass} placeholder="https://youtube.com/…" {...register('videoYoutubeUrl')} /></Field>
-            <Field label="Vídeo Loom" error={errors.videoLoomUrl?.message}><input className={inputClass} placeholder="https://loom.com/…" {...register('videoLoomUrl')} /></Field>
+        <Section n={2} icon="asset" title={t('studio.sec2')}>
+          <div className="mb-4">
+            <SmartImageUpload onDone={(field, url) => setValue(field, url, { shouldValidate: true })} />
           </div>
-          <Typography variant="caption" className="mt-3 block">Upload real no Supabase Storage. A galeria é composta pelos Screenshots (seção 10).</Typography>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <MediaUpload label={t('studio.m.cover')} name="coverUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.banner')} name="bannerUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.logo')} name="logoUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.thumbnail')} name="thumbnailUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.preview')} name="previewUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.mockup')} name="mockupUrl" control={control} setValue={setValue} register={register} />
+            <Field label={t('studio.f.ytVideo')} error={errors.videoYoutubeUrl?.message}><input className={inputClass} placeholder="https://youtube.com/…" {...register('videoYoutubeUrl')} /></Field>
+            <Field label={t('studio.f.loomVideo')} error={errors.videoLoomUrl?.message}><input className={inputClass} placeholder="https://loom.com/…" {...register('videoLoomUrl')} /></Field>
+          </div>
+          <Typography variant="caption" className="mt-3 block">{t('studio.mediaNote')}</Typography>
 
           {/* Conteúdo do Prompt (copiável na ficha) */}
           <div className="mt-5 grid gap-4">
-            <Field label="Formato do Prompt">
+            <Field label={t('studio.f.promptFormat')}>
               <select className={inputClass} {...register('promptFormat')}>
                 <option value="markdown">Markdown</option>
                 <option value="text">Texto (TXT)</option>
@@ -355,14 +377,14 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
                 <option value="prompt">Prompt</option>
               </select>
             </Field>
-            <Field label="Conteúdo do Prompt (copiável)">
-              <textarea className={`${inputClass} h-40 py-2 font-mono text-xs`} placeholder="Cole aqui o prompt completo…" {...register('promptContent')} />
+            <Field label={t('studio.f.promptContent')}>
+              <textarea className={`${inputClass} h-40 py-2 font-mono text-xs`} placeholder={t('studio.promptPlaceholder')} {...register('promptContent')} />
             </Field>
           </div>
         </Section>
 
         {/* 3. Links */}
-        <Section n={3} icon="external" title="Links">
+        <Section n={3} icon="external" title={t('studio.sec3')}>
           <div className="grid gap-4 sm:grid-cols-2">
             {LINK_FIELDS.map((l) => (
               <Field key={l.key} label={l.label} error={errors.links?.[l.key]?.message}>
@@ -373,44 +395,44 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
         </Section>
 
         {/* 4. Plataformas */}
-        <Section n={4} icon="cube" title="Plataformas suportadas">
+        <Section n={4} icon="cube" title={t('studio.sec4')}>
           <ChipMulti control={control} name="platforms" options={(platforms.data ?? []).map((p) => ({ value: p.slug, label: p.label }))} />
         </Section>
 
         {/* 5. IA utilizadas */}
-        <Section n={5} icon="sparkles" title="IA utilizadas">
+        <Section n={5} icon="sparkles" title={t('studio.sec5')}>
           <ChipMulti control={control} name="aiTools" options={(aiTools.data ?? []).map((a) => ({ value: a.slug, label: a.label }))} />
         </Section>
 
         {/* 6. Países */}
-        <Section n={6} icon="globe" title="Países (ISO)">
+        <Section n={6} icon="globe" title={t('studio.sec6')}>
           <ChipMulti control={control} name="countries" options={COUNTRIES.map((c) => ({ value: c.code, label: `${c.code} · ${c.name}` }))} />
         </Section>
 
         {/* 7. Idiomas */}
-        <Section n={7} icon="language" title="Idiomas (ISO)">
+        <Section n={7} icon="language" title={t('studio.sec7')}>
           <ChipMulti control={control} name="languages" options={LANGUAGES.map((l) => ({ value: l.code, label: `${l.code} · ${l.name}` }))} />
         </Section>
 
         {/* 8. Tags */}
-        <Section n={8} icon="tag" title="Tags">
+        <Section n={8} icon="tag" title={t('studio.sec8')}>
           <TagInput control={control} suggestions={(tags.data ?? []).map((t) => t.label)} />
         </Section>
 
         {/* 9. Arquivos */}
-        <Section n={9} icon="download" title="Arquivos" aside={
+        <Section n={9} icon="download" title={t('studio.sec9')} aside={
           <Button type="button" variant="secondary" size="sm" onClick={() => filesFA.append({ name: '', kind: '', sizeBytes: null, url: '', driveFolder: '' })}>
-            <Icon name="plus" size={14} /> Adicionar
+            <Icon name="plus" size={14} /> {t('studio.add')}
           </Button>
         }>
-          {filesFA.fields.length === 0 && <Typography variant="small">Nenhum arquivo. Use “Adicionar”.</Typography>}
+          {filesFA.fields.length === 0 && <Typography variant="small">{t('studio.filesEmpty')}</Typography>}
           <div className="space-y-3">
             {filesFA.fields.map((f, i) => (
               <div key={f.id} className="grid items-end gap-2 rounded-interactive border border-border bg-surface p-3 sm:grid-cols-[1.4fr_1fr_0.8fr_1.6fr_auto]">
-                <Field label="Nome"><input className={inputClass} {...register(`files.${i}.name` as const)} /></Field>
-                <Field label="Tipo"><input className={inputClass} placeholder="pdf, xlsx…" {...register(`files.${i}.kind` as const)} /></Field>
-                <Field label="Peso (bytes)"><input type="number" className={inputClass} {...register(`files.${i}.sizeBytes` as const)} /></Field>
-                <Field label="Link Drive"><input className={inputClass} placeholder="https://drive…" {...register(`files.${i}.url` as const)} /></Field>
+                <Field label={t('studio.f.fileName')}><input className={inputClass} {...register(`files.${i}.name` as const)} /></Field>
+                <Field label={t('studio.f.fileType')}><input className={inputClass} placeholder="pdf, xlsx…" {...register(`files.${i}.kind` as const)} /></Field>
+                <Field label={t('studio.f.fileSize')}><input type="number" className={inputClass} {...register(`files.${i}.sizeBytes` as const)} /></Field>
+                <Field label={t('studio.f.fileLink')}><input className={inputClass} placeholder="https://drive…" {...register(`files.${i}.url` as const)} /></Field>
                 <Button type="button" variant="ghost" size="sm" onClick={() => filesFA.remove(i)}><Icon name="x" size={15} /></Button>
               </div>
             ))}
@@ -418,12 +440,12 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
         </Section>
 
         {/* 10. Screenshots */}
-        <Section n={10} icon="asset" title="Screenshots" aside={
+        <Section n={10} icon="asset" title={t('studio.sec10')} aside={
           <Button type="button" variant="secondary" size="sm" onClick={() => shotsFA.append({ url: '', caption: '', position: shotsFA.fields.length })}>
-            <Icon name="plus" size={14} /> Adicionar
+            <Icon name="plus" size={14} /> {t('studio.add')}
           </Button>
         }>
-          {shotsFA.fields.length === 0 && <Typography variant="small">Nenhum screenshot. Arraste para reordenar depois de adicionar.</Typography>}
+          {shotsFA.fields.length === 0 && <Typography variant="small">{t('studio.shotsEmpty')}</Typography>}
           <div className="space-y-2">
             {shotsFA.fields.map((f, i) => (
               <div
@@ -434,7 +456,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
                 onDrop={() => { if (dragIdx != null && dragIdx !== i) shotsFA.move(dragIdx, i); setDragIdx(null); }}
                 className={`flex items-center gap-2 rounded-interactive border bg-surface p-2 ${dragIdx === i ? 'border-primary' : 'border-border'}`}
               >
-                <span className="cursor-grab px-1 text-muted" title="Arraste para reordenar"><Icon name="menu" size={16} /></span>
+                <span className="cursor-grab px-1 text-muted" title={t('studio.dragReorder')}><Icon name="menu" size={16} /></span>
                 <span className="flex h-12 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md border border-border bg-canvas">
                   {shots?.[i]?.url ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -443,8 +465,8 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
                     <Icon name="asset" size={16} className="text-muted" />
                   )}
                 </span>
-                <input className={inputClass} placeholder="URL da imagem https://…" {...register(`screenshots.${i}.url` as const)} />
-                <input className={inputClass} placeholder="Legenda" {...register(`screenshots.${i}.caption` as const)} />
+                <input className={inputClass} placeholder={t('studio.shotUrl')} {...register(`screenshots.${i}.url` as const)} />
+                <input className={inputClass} placeholder={t('studio.caption')} {...register(`screenshots.${i}.caption` as const)} />
                 <input type="hidden" {...register(`screenshots.${i}.position` as const, { valueAsNumber: true })} />
                 <div className="flex shrink-0 gap-1">
                   <button type="button" disabled={i === 0} onClick={() => shotsFA.move(i, i - 1)} className="rounded-md border border-border p-1.5 text-muted transition-colors hover:text-content disabled:opacity-30"><Icon name="chevron" size={14} className="-rotate-90" /></button>
@@ -457,7 +479,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
         </Section>
 
         {/* 11. Checklist */}
-        <Section n={11} icon="check" title="Checklist" aside={<span className={`text-sm font-semibold ${healthColor(health)}`}>Health {health}%</span>}>
+        <Section n={11} icon="check" title={t('studio.sec11')} aside={<span className={`text-sm font-semibold ${healthColor(health)}`}>Health {health}%</span>}>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {CHECKLIST_ITEMS.map((c) => (
               <label key={c.key} className="flex items-center gap-2 rounded-interactive border border-border bg-surface px-3 py-2 text-sm text-content">
@@ -466,20 +488,20 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
               </label>
             ))}
           </div>
-          <Typography variant="caption" className="mt-3 block">O Health Score é recalculado automaticamente pelo banco ao salvar.</Typography>
+          <Typography variant="caption" className="mt-3 block">{t('studio.checklistNote')}</Typography>
         </Section>
 
         {/* 12. Analytics (somente leitura) */}
-        <Section n={12} icon="chart" title="Analytics (somente leitura)">
+        <Section n={12} icon="chart" title={t('studio.sec12')}>
           {mode === 'new' ? (
-            <Typography variant="small">Disponível após salvar o asset.</Typography>
+            <Typography variant="small">{t('studio.analyticsNew')}</Typography>
           ) : (
             <div className="flex flex-wrap gap-2">
-              {['Views', 'Downloads', 'Opens', 'Favoritos', 'Remixes', 'Shares'].map((m) => (
+              {[t('stat.views'), t('stat.downloads'), t('stat.opens'), t('stat.favorites'), t('stat.remixes'), t('stat.shares')].map((m) => (
                 <Badge key={m} tone="default">{m}</Badge>
               ))}
               <Typography variant="caption" className="mt-2 block w-full">
-                Os números de analytics são somente leitura e exibidos na ficha pública do asset.
+                {t('studio.analyticsNote')}
               </Typography>
             </div>
           )}

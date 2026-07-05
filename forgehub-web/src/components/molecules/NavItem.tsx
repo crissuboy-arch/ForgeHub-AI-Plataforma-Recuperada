@@ -11,6 +11,7 @@ export interface NavItemProps {
   active?: boolean;
   /** Marca itens ainda não implementados (fora do escopo desta Sprint). */
   soon?: boolean;
+  soonLabel?: string;
 }
 
 /**
@@ -22,6 +23,7 @@ export const NavItem: React.FC<NavItemProps> = ({
   label,
   active = false,
   soon = false,
+  soonLabel = 'em breve',
 }) => {
   const base =
     'flex items-center gap-3 rounded-interactive px-3 h-10 text-sm font-medium transition-colors duration-200';
@@ -35,7 +37,7 @@ export const NavItem: React.FC<NavItemProps> = ({
       <span className="flex-1 truncate">{label}</span>
       {soon && (
         <span className="rounded-md bg-border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted">
-          em breve
+          {soonLabel}
         </span>
       )}
     </>

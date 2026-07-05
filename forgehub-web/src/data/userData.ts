@@ -99,6 +99,7 @@ export async function getSettings(): Promise<UserSettings | null> {
     theme: (r.theme as string) ?? 'dark',
     language: (r.language as string) ?? 'pt',
     workspace: (r.workspace as string) ?? undefined,
+    role: (r.role as UserSettings['role']) ?? 'aluno',
     preferences: (r.preferences as Record<string, unknown>) ?? {},
   };
 }

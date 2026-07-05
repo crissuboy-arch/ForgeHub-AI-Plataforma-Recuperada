@@ -8,8 +8,10 @@ import { FormField } from '../../../components/molecules/FormField';
 import { Button } from '../../../components/atoms/Button';
 import { Typography } from '../../../components/atoms/Typography';
 import { Icon } from '../../../components/atoms/Icon';
+import { useLanguage } from '../../../lib/i18n/LanguageProvider';
 
 export default function LoginPage() {
+  const { t } = useLanguage();
   const { signIn } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -43,10 +45,10 @@ export default function LoginPage() {
         </div>
         <div>
           <p className="max-w-md text-3xl font-bold leading-tight text-white">
-            Bem-vindo de volta ao seu arsenal de ativos digitais inteligentes.
+            {t('auth.brandWelcome')}
           </p>
           <p className="mt-4 max-w-sm text-white/70">
-            Encontre, remixe e faça deploy — tudo em segundos.
+            {t('auth.brandWelcomeSub')}
           </p>
         </div>
         <p className="text-sm text-white/60">© 2026 ForgeHub AI</p>
@@ -56,13 +58,13 @@ export default function LoginPage() {
       <div className="flex items-center justify-center bg-canvas px-6 py-12">
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-muted hover:text-content">
-            <Icon name="back" size={16} /> Voltar
+            <Icon name="back" size={16} /> {t('auth.back')}
           </Link>
           <Typography variant="h3" className="mb-1">
-            Entrar
+            {t('auth.login')}
           </Typography>
           <Typography variant="small" className="mb-8 block">
-            Acesse seu workspace ForgeHub.
+            {t('auth.loginSubtitle')}
           </Typography>
 
           {error && (
@@ -74,16 +76,16 @@ export default function LoginPage() {
           <div className="space-y-4">
             <FormField
               id="email"
-              label="E-mail"
+              label={t('auth.email')}
               type="email"
-              placeholder="voce@empresa.com"
+              placeholder={t('auth.emailPlaceholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
             <FormField
               id="password"
-              label="Senha"
+              label={t('auth.password')}
               type="password"
               placeholder="••••••••"
               value={password}
@@ -93,17 +95,17 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-2 text-right">
-            <span className="cursor-not-allowed text-sm text-muted">Esqueci minha senha</span>
+            <span className="cursor-not-allowed text-sm text-muted">{t('auth.forgot')}</span>
           </div>
 
           <Button type="submit" variant="primary" loading={loading} className="mt-6 w-full">
-            Entrar
+            {t('auth.login')}
           </Button>
 
           <Typography variant="small" className="mt-6 block text-center">
-            Ainda não tem conta?{' '}
+            {t('auth.noAccount')}{' '}
             <Link href="/signup" className="font-medium text-primary hover:text-primary-hover">
-              Cadastre-se
+              {t('auth.signupLink')}
             </Link>
           </Typography>
         </form>

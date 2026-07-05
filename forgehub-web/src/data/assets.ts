@@ -51,6 +51,8 @@ interface AssetRow {
   delivery_bundle: Asset['deliveryBundle'];
   created_at: string;
   updated_at: string;
+  language?: string | null;
+  niche?: string | null;
   categories?: { label: string } | { label: string }[] | null;
 }
 
@@ -74,6 +76,8 @@ function mapSummary(row: AssetRow): AssetSummary {
     healthScore: row.health_score,
     updatedAt: row.updated_at,
     coverUrl: row.cover_url ?? undefined,
+    language: row.language ?? undefined,
+    niche: row.niche ?? undefined,
   };
 }
 
@@ -94,11 +98,11 @@ export interface SearchableAsset extends AssetSummary {
 export async function listSearchableAssets(): Promise<SearchableAsset[]> {
   const { data, error } = await supabase
     .from('assets')
+    // '*' mantém compatibilidade caso a migration 0005 (language/niche) ainda não tenha sido aplicada.
     .select(
-      'id, slug, name, short_description, status, level, health_score, updated_at, cover_url, version,' +
-        ' license, revenue_model, delivery_bundle, categories(label),' +
-        ' asset_tags(tags(label)), asset_ai_tools(ai_slug), asset_platforms(platform_slug),' +
-        ' asset_languages(language_code), asset_countries(country_code)',
+      '*, categories(label), asset_tags(tags(label)), asset_ai_tools(ai_slug),' +
+        ' asset_platforms(platform_slug), asset_languages(language_code),' +
+        ' asset_countries(country_code), asset_files(count)',
     )
     .in('status', ['active', 'updated'])
     .order('updated_at', { ascending: false });
@@ -107,8 +111,10 @@ export async function listSearchableAssets(): Promise<SearchableAsset[]> {
     const base = mapSummary(r as unknown as AssetRow);
     const arr = <T>(rel: unknown, pick: (x: Record<string, unknown>) => T): T[] =>
       ((rel ?? []) as Record<string, unknown>[]).map(pick);
+    const filesRel = r.asset_files as { count: number }[] | undefined;
     return {
       ...base,
+      filesCount: filesRel?.[0]?.count ?? 0,
       description: (r.short_description as string) ?? undefined,
       tags: arr(r.asset_tags, (t) => {
         const tag = Array.isArray(t.tags) ? t.tags[0] : t.tags;
@@ -185,6 +191,8 @@ export async function getAssetDetail(slug: string): Promise<AssetDetail | null> 
   const asset: Asset = {
     ...mapSummary(row),
     workspaceId: row.workspace_id,
+    language: row.language ?? 'pt-BR',
+    niche: row.niche ?? undefined,
     tags: ((tags.data ?? []) as { tags: { label: string } | { label: string }[] }[])
       .map((t) => toOne(t.tags)?.label ?? '')
       .filter(Boolean),

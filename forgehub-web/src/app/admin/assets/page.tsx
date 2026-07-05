@@ -10,28 +10,30 @@ import { Typography } from '../../../components/atoms/Typography';
 import { listAllAssets } from '../../../data/adminAssets';
 import { healthColor } from '../../../components/molecules/AssetCard';
 import { ENUM_LABELS } from '../../../lib/assetSchema';
+import { useLanguage } from '../../../lib/i18n/LanguageProvider';
 
 export default function AdminAssetsPage() {
+  const { t } = useLanguage();
   const { data, isLoading, isError } = useQuery({ queryKey: ['admin-all-assets'], queryFn: listAllAssets });
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
       <PageHeader
-        title="Asset Studio"
-        subtitle="Gerencie o catálogo — todos os assets, inclusive rascunhos."
+        title={t('studio.title')}
+        subtitle={t('studio.listSubtitle')}
         action={
           <Link href="/admin/assets/new" className="inline-flex h-11 items-center gap-2 rounded-interactive bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
-            <Icon name="plus" size={16} /> Novo Asset
+            <Icon name="plus" size={16} /> {t('studio.newBtn')}
           </Link>
         }
       />
 
       {isLoading && <div className="space-y-2">{Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>}
-      {isError && <Typography variant="small" className="text-danger">Erro ao carregar. Você precisa estar autenticado.</Typography>}
+      {isError && <Typography variant="small" className="text-danger">{t('studio.loadError')}</Typography>}
 
       {data && (
         <div className="overflow-hidden rounded-container border border-border">
-          {data.length === 0 && <div className="p-6"><Typography variant="small">Nenhum asset. Crie o primeiro.</Typography></div>}
+          {data.length === 0 && <div className="p-6"><Typography variant="small">{t('studio.empty')}</Typography></div>}
           {data.map((a) => (
             <Link key={a.id} href={`/admin/assets/edit/${a.slug}`} className="flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-3 transition-colors last:border-0 hover:bg-surface">
               <div className="min-w-0">

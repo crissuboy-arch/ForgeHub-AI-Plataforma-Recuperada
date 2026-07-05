@@ -6,13 +6,17 @@ import { FormField } from '../../components/molecules/FormField';
 import { Button } from '../../components/atoms/Button';
 import { Typography } from '../../components/atoms/Typography';
 import { getSettings, saveSettings } from '../../data/userData';
+import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import type { UserRole } from '../../types';
 
 export default function SettingsPage() {
+  const { t } = useLanguage();
   const [fullName, setFullName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [workspace, setWorkspace] = useState('');
   const [language, setLanguage] = useState('pt');
   const [theme, setTheme] = useState('dark');
+  const [role, setRole] = useState<UserRole>('aluno');
   const [newsletter, setNewsletter] = useState(false);
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -26,6 +30,7 @@ export default function SettingsPage() {
         setWorkspace(s.workspace ?? '');
         setLanguage(s.language ?? 'pt');
         setTheme(s.theme ?? 'dark');
+        setRole(s.role ?? 'aluno');
         setNewsletter(Boolean((s.preferences as { newsletter?: boolean })?.newsletter));
       })
       .catch(() => {});
@@ -37,7 +42,7 @@ export default function SettingsPage() {
     setMsg(null);
     try {
       await saveSettings({ fullName, avatarUrl, workspace, language, theme, preferences: { newsletter } });
-      setMsg({ kind: 'ok', text: 'Alterações salvas com sucesso.' });
+      setMsg({ kind: 'ok', text: t('settings.saved') });
     } catch (err) {
       setMsg({ kind: 'err', text: err instanceof Error ? err.message : String(err) });
     } finally {
@@ -49,7 +54,7 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
-      <PageHeader title="Configurações" subtitle="Gerencie seu perfil e preferências." />
+      <PageHeader title={t('settings.title')} subtitle={t('settings.subtitle')} />
 
       {msg && (
         <div className={`mb-6 rounded-interactive border px-4 py-3 text-sm ${msg.kind === 'ok' ? 'border-success/30 bg-success/10 text-success' : 'border-danger/30 bg-danger/10 text-danger'}`}>
@@ -60,42 +65,50 @@ export default function SettingsPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Perfil */}
         <section className="rounded-container border border-border bg-card p-6">
-          <Typography variant="h5" className="mb-4">Perfil</Typography>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <Typography variant="h5">{t('settings.profile')}</Typography>
+            <span className="flex items-center gap-2 rounded-interactive border border-border bg-surface px-3 py-1 text-xs font-semibold text-muted">
+              {t('settings.role')}:
+              <span className={role === 'admin' ? 'text-primary-hover' : 'text-content'}>
+                {t(role === 'admin' ? 'role.admin' : 'role.student')}
+              </span>
+            </span>
+          </div>
           <div className="space-y-4">
-            <FormField id="fullName" label="Nome completo" placeholder="Seu nome" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-            <FormField id="avatarUrl" label="Avatar (URL)" placeholder="https://…" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
-            <FormField id="workspace" label="Workspace" placeholder="Nome do seu workspace" value={workspace} onChange={(e) => setWorkspace(e.target.value)} />
+            <FormField id="fullName" label={t('settings.fullName')} placeholder={t('settings.namePlaceholder')} value={fullName} onChange={(e) => setFullName(e.target.value)} />
+            <FormField id="avatarUrl" label={t('settings.avatar')} placeholder="https://…" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
+            <FormField id="workspace" label={t('settings.workspace')} placeholder={t('settings.workspacePlaceholder')} value={workspace} onChange={(e) => setWorkspace(e.target.value)} />
           </div>
         </section>
 
         {/* Preferências */}
         <section className="rounded-container border border-border bg-card p-6">
-          <Typography variant="h5" className="mb-4">Preferências</Typography>
+          <Typography variant="h5" className="mb-4">{t('settings.prefs')}</Typography>
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-content">Idioma</span>
+              <span className="mb-1.5 block text-sm font-medium text-content">{t('settings.language')}</span>
               <select className={inputClass} value={language} onChange={(e) => setLanguage(e.target.value)}>
-                <option value="pt">Português</option>
-                <option value="en">Inglês</option>
-                <option value="es">Espanhol</option>
+                <option value="pt">{t('settings.langPT')}</option>
+                <option value="en">{t('settings.langEN')}</option>
+                <option value="es">{t('settings.langES')}</option>
               </select>
             </label>
             <label className="block">
-              <span className="mb-1.5 block text-sm font-medium text-content">Tema</span>
+              <span className="mb-1.5 block text-sm font-medium text-content">{t('settings.theme')}</span>
               <select className={inputClass} value={theme} onChange={(e) => setTheme(e.target.value)}>
-                <option value="dark">Dark Slate</option>
-                <option value="light">Claro</option>
+                <option value="dark">{t('settings.themeDark')}</option>
+                <option value="light">{t('settings.themeLight')}</option>
               </select>
             </label>
           </div>
           <label className="mt-4 flex items-center gap-2 text-sm text-content">
             <input type="checkbox" className="h-4 w-4 accent-[var(--color-primary)]" checked={newsletter} onChange={(e) => setNewsletter(e.target.checked)} />
-            Receber novidades e atualizações
+            {t('settings.newsletter')}
           </label>
         </section>
 
         <div className="flex justify-end">
-          <Button type="submit" variant="primary" loading={busy}>Salvar alterações</Button>
+          <Button type="submit" variant="primary" loading={busy}>{t('settings.save')}</Button>
         </div>
       </form>
     </div>
