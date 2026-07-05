@@ -278,6 +278,11 @@ const ptBR: Dict = {
   'toast.linkCopied': 'Link copiado.',
   // Tema
   'theme.label': 'Tema', 'theme.dark': 'Escuro', 'theme.light': 'Claro', 'theme.system': 'Sistema',
+  // Upload Inteligente
+  'smart.title': 'Upload Inteligente', 'smart.send': 'Enviar 1 imagem', 'smart.processing': 'Processando',
+  'smart.hint': 'Envie uma imagem — geramos Thumbnail (1:1), Card (4:3), Hero (16:9) e Preview/Social (1200×630), cortadas proporcionalmente e otimizadas em WebP.',
+  'smart.cancel': 'Cancelar', 'smart.remove': 'Remover imagens', 'smart.timeLeft': 'restante',
+  'smart.original': 'Imagem selecionada', 'smart.replace': 'Trocar imagem', 'smart.canceled': 'Upload cancelado.',
 };
 
 const es: Dict = {
@@ -548,6 +553,11 @@ const es: Dict = {
   'toast.linkCopied': 'Enlace copiado.',
   // Tema
   'theme.label': 'Tema', 'theme.dark': 'Oscuro', 'theme.light': 'Claro', 'theme.system': 'Sistema',
+  // Upload Inteligente
+  'smart.title': 'Upload Inteligente', 'smart.send': 'Enviar 1 imagen', 'smart.processing': 'Procesando',
+  'smart.hint': 'Sube una imagen — generamos Thumbnail (1:1), Card (4:3), Hero (16:9) y Preview/Social (1200×630), recortadas proporcionalmente y optimizadas en WebP.',
+  'smart.cancel': 'Cancelar', 'smart.remove': 'Eliminar imágenes', 'smart.timeLeft': 'restante',
+  'smart.original': 'Imagen seleccionada', 'smart.replace': 'Cambiar imagen', 'smart.canceled': 'Upload cancelado.',
 };
 
 const en: Dict = {
@@ -818,6 +828,11 @@ const en: Dict = {
   'toast.linkCopied': 'Link copied.',
   // Theme
   'theme.label': 'Theme', 'theme.dark': 'Dark', 'theme.light': 'Light', 'theme.system': 'System',
+  // Smart Upload
+  'smart.title': 'Smart Upload', 'smart.send': 'Upload 1 image', 'smart.processing': 'Processing',
+  'smart.hint': 'Upload one image — we generate Thumbnail (1:1), Card (4:3), Hero (16:9) and Preview/Social (1200×630), proportionally cropped and optimized to WebP.',
+  'smart.cancel': 'Cancel', 'smart.remove': 'Remove images', 'smart.timeLeft': 'left',
+  'smart.original': 'Selected image', 'smart.replace': 'Replace image', 'smart.canceled': 'Upload canceled.',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };
