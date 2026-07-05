@@ -15,7 +15,26 @@ import type {
   AssetChecklistRow,
   AssetUpdate,
   AssetAnalytics,
+  KitTranslation,
 } from '../types';
+
+/** Tradução pública de um Kit para um idioma (asset_translations). Null se não houver. */
+export async function getAssetTranslation(assetId: string, language: string): Promise<KitTranslation | null> {
+  const { data, error } = await supabase
+    .from('asset_translations')
+    .select('name, short_description, full_description, prompt_content')
+    .eq('asset_id', assetId)
+    .eq('language', language)
+    .maybeSingle();
+  if (error || !data) return null;
+  const r = data as Record<string, unknown>;
+  return {
+    name: (r.name as string) || undefined,
+    shortDescription: (r.short_description as string) || undefined,
+    fullDescription: (r.full_description as string) || undefined,
+    promptContent: (r.prompt_content as string) || undefined,
+  };
+}
 
 // ------------------------------------------------------------- Row types (DB)
 interface AssetRow {

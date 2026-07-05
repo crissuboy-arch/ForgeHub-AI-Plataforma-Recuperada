@@ -244,6 +244,8 @@ const ptBR: Dict = {
   'studio.analyticsNew': 'Disponível após salvar o Kit.',
   'studio.analyticsNote': 'Os números de analytics são somente leitura e exibidos na ficha pública do Kit.',
   'studio.tagPlaceholder': 'Digite e pressione Enter para adicionar',
+  'studio.sec13': 'Traduções do Kit',
+  'studio.trHint': 'Preencha o conteúdo por idioma. Campos vazios usam o conteúdo base do Kit (seção 1).',
   // Erros de autenticação (amigáveis — nunca técnicos)
   'autherr.generic': 'Algo deu errado. Tente novamente.',
   'autherr.invalidCredentials': 'Senha incorreta. Verifique seu e-mail ou senha.',
@@ -536,6 +538,8 @@ const es: Dict = {
   'studio.analyticsNew': 'Disponible tras guardar el Kit.',
   'studio.analyticsNote': 'Los números de analytics son de solo lectura y se muestran en la ficha pública del Kit.',
   'studio.tagPlaceholder': 'Escribe y presiona Enter para añadir',
+  'studio.sec13': 'Traducciones del Kit',
+  'studio.trHint': 'Rellena el contenido por idioma. Los campos vacíos usan el contenido base del Kit (sección 1).',
   // Errores de autenticación (amigables)
   'autherr.generic': 'Algo salió mal. Inténtalo de nuevo.',
   'autherr.invalidCredentials': 'Contraseña incorrecta. Verifica tu correo o contraseña.',
@@ -828,6 +832,8 @@ const en: Dict = {
   'studio.analyticsNew': 'Available after saving the Kit.',
   'studio.analyticsNote': 'Analytics numbers are read-only and shown on the Kit public page.',
   'studio.tagPlaceholder': 'Type and press Enter to add',
+  'studio.sec13': 'Kit translations',
+  'studio.trHint': 'Fill content per language. Empty fields fall back to the Kit base content (section 1).',
   // Auth errors (friendly)
   'autherr.generic': 'Something went wrong. Please try again.',
   'autherr.invalidCredentials': 'Incorrect password. Check your email or password.',

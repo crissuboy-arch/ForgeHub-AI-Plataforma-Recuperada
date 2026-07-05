@@ -1,7 +1,7 @@
 'use client';
 // src/components/organisms/AssetForm.tsx
 // Admin Asset Studio — formulário CRUD completo (React Hook Form + Zod + Supabase).
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, useFieldArray, Controller, useWatch, type Control, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
@@ -15,7 +15,9 @@ import {
   LEVELS, STATUSES, LICENSES, REVENUE_MODELS, DELIVERY_BUNDLES,
   LINK_FIELDS, CHECKLIST_ITEMS, COUNTRIES, LANGUAGES, type AssetFormValues,
 } from '../../lib/assetSchema';
-import { listCategories, listPlatforms, listAiTools, listTags, listNiches, saveAsset, deleteAsset, duplicateAsset } from '../../data/adminAssets';
+import { listCategories, listPlatforms, listAiTools, listTags, listNiches, saveAsset, deleteAsset, duplicateAsset, getAssetTranslations, saveAssetTranslations } from '../../data/adminAssets';
+import { LANGUAGES as APP_LANGUAGES } from '../../lib/i18n/dictionary';
+import type { KitTranslation } from '../../types';
 import { uploadMedia } from '../../data/storage';
 import { SmartImageUpload } from '../molecules/SmartImageUpload';
 import { healthColor } from '../molecules/AssetCard';
@@ -223,6 +225,21 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
 
+  // Traduções do Kit por idioma (item 2)
+  const [translations, setTranslations] = useState<Record<string, KitTranslation>>({});
+  const [trLang, setTrLang] = useState<string>('es');
+  const trQuery = useQuery({
+    queryKey: ['asset-translations', assetId],
+    queryFn: () => getAssetTranslations(assetId as string),
+    enabled: Boolean(assetId),
+  });
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (trQuery.data) setTranslations(trQuery.data);
+  }, [trQuery.data]);
+  const setTr = (field: keyof KitTranslation, value: string) =>
+    setTranslations((p) => ({ ...p, [trLang]: { ...p[trLang], [field]: value } }));
+
   const shots = useWatch({ control, name: 'screenshots' }) as AssetFormValues['screenshots'];
   const checklistVal = useWatch({ control, name: 'checklist' });
   const currentSlug = useWatch({ control, name: 'slug' });
@@ -239,6 +256,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
   const doSave = (publish: boolean) => handleSubmit(
     (values) => run(publish ? 'publish' : 'save', async () => {
       const res = await saveAsset(values, { id: assetId, publish });
+      await saveAssetTranslations(res.id, translations);
       setMsg({ kind: 'ok', text: publish ? t('studio.published') : t('studio.saved') });
       toast(publish ? t('toast.published') : t('toast.kitSaved'), 'success');
       if (mode === 'new') router.push(`/admin/assets/edit/${res.slug}`);
@@ -508,6 +526,37 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
               </Typography>
             </div>
           )}
+        </Section>
+
+        {/* 13. Traduções do Kit (item 2) */}
+        <Section n={13} icon="language" title={t('studio.sec13')}>
+          <div className="mb-3 inline-flex items-center rounded-interactive border border-border bg-surface/60 p-0.5">
+            {APP_LANGUAGES.map((l) => (
+              <button
+                key={l.code}
+                type="button"
+                onClick={() => setTrLang(l.code)}
+                className={`rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${trLang === l.code ? 'bg-primary/20 text-primary-hover' : 'text-muted hover:text-content'}`}
+              >
+                {l.short}
+              </button>
+            ))}
+          </div>
+          <Typography variant="caption" className="mb-4 block">{t('studio.trHint')}</Typography>
+          <div className="grid gap-4">
+            <Field label={t('studio.f.name')}>
+              <input className={inputClass} value={translations[trLang]?.name ?? ''} onChange={(e) => setTr('name', e.target.value)} />
+            </Field>
+            <Field label={t('studio.f.shortDesc')}>
+              <input className={inputClass} value={translations[trLang]?.shortDescription ?? ''} onChange={(e) => setTr('shortDescription', e.target.value)} />
+            </Field>
+            <Field label={t('studio.f.fullDesc')}>
+              <textarea className={`${inputClass} h-28 py-2`} value={translations[trLang]?.fullDescription ?? ''} onChange={(e) => setTr('fullDescription', e.target.value)} />
+            </Field>
+            <Field label={t('studio.f.promptContent')}>
+              <textarea className={`${inputClass} h-32 py-2 font-mono text-xs`} value={translations[trLang]?.promptContent ?? ''} onChange={(e) => setTr('promptContent', e.target.value)} />
+            </Field>
+          </div>
         </Section>
       </div>
     </form>

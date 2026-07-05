@@ -60,6 +60,14 @@ export interface AssetAnalytics {
 export type AppLanguage = 'pt-BR' | 'es' | 'en';
 export interface Niche { slug: string; label: string; icon?: string; position?: number; }
 
+/** Conteúdo traduzido de um Kit por idioma (tabela asset_translations). */
+export interface KitTranslation {
+  name?: string;
+  shortDescription?: string;
+  fullDescription?: string;
+  promptContent?: string;
+}
+
 export interface AssetSummary {
   id: string;
   slug: string;

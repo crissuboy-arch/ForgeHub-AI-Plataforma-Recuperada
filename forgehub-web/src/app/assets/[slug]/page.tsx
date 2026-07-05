@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAssetDetail } from '../../../hooks/useAssets';
+import { getAssetTranslation } from '../../../data/assets';
 import { toggleFavorite, recordRecent, listFavoriteIds } from '../../../data/userData';
 import { listCollections, addToCollection, createCollection } from '../../../data/collections';
 import { duplicateAsset } from '../../../data/adminAssets';
@@ -108,8 +109,13 @@ export default function AssetDetailPage() {
 }
 
 function AssetDetailView({ asset }: { asset: AssetDetail }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { toast } = useToast();
+  // Tradução do Kit para o idioma ativo (item 2); cai para o conteúdo base se ausente.
+  const trQ = useQuery({ queryKey: ['asset-tr', asset.id, lang], queryFn: () => getAssetTranslation(asset.id, lang) });
+  const displayName = trQ.data?.name || asset.name;
+  const displayShort = trQ.data?.shortDescription || asset.shortDescription;
+  const displayFull = trQ.data?.fullDescription || asset.fullDescription;
   const linkOf = (type: LinkType) => asset.links.find((l) => l.type === type)?.url;
   const media = useMemo(
     () => [asset.mockupUrl, asset.coverUrl, ...asset.screenshots.map((s) => s.url)].filter(Boolean) as string[],
@@ -202,7 +208,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
   const docsUrl = linkOf('docs');
   const downloadUrl = driveUrl ?? linkOf('github') ?? linkOf('deploy'); // Drive → GitHub → deploy/ZIP
   // Copiar Prompt: conteúdo completo (P4); se não houver, cai para o link do prompt.
-  const promptText = asset.promptContent?.trim() || '';
+  const promptText = (trQ.data?.promptContent || asset.promptContent)?.trim() || '';
   const promptCopyTarget = promptText || linkOf('prompt') || driveUrl || docsUrl || '';
   const promptAvailable = Boolean(promptCopyTarget);
 
@@ -239,9 +245,9 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               </Badge>
               <span className="text-xs text-muted">{asset.version}</span>
             </div>
-            <Typography variant="h2" className="max-w-2xl">{asset.name}</Typography>
-            {asset.shortDescription && (
-              <Typography variant="p" className="mt-1 max-w-2xl">{asset.shortDescription}</Typography>
+            <Typography variant="h2" className="max-w-2xl">{displayName}</Typography>
+            {displayShort && (
+              <Typography variant="p" className="mt-1 max-w-2xl">{displayShort}</Typography>
             )}
           </div>
         </div>
@@ -255,7 +261,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             <div className="overflow-hidden rounded-container border border-border bg-surface">
               {media.length > 0 ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={media[selected]} alt={asset.name} className="h-72 w-full object-cover sm:h-96" />
+                <img src={media[selected]} alt={displayName} className="h-72 w-full object-cover sm:h-96" />
               ) : (
                 <div className="flex h-72 items-center justify-center bg-brand-glow/20 sm:h-96">
                   <Icon name="asset" size={56} className="text-muted" />
@@ -336,9 +342,9 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
           </Section>
 
           {/* Descrição completa */}
-          {asset.fullDescription && (
+          {displayFull && (
             <Section icon="docs" title={t('detail.about')}>
-              <Typography variant="p" className="whitespace-pre-line">{asset.fullDescription}</Typography>
+              <Typography variant="p" className="whitespace-pre-line">{displayFull}</Typography>
             </Section>
           )}
 

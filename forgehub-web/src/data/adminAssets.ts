@@ -1,7 +1,7 @@
 // src/data/adminAssets.ts
 // Camada de dados do Admin Asset Studio (Sprint 4) — CRUD real no Supabase.
 import { supabase } from '../lib/supabaseClient';
-import type { AiTool, Platform, Tag, Category } from '../types';
+import type { AiTool, Platform, Tag, Category, KitTranslation } from '../types';
 import { LINK_FIELDS, CHECKLIST_ITEMS, emptyFormValues, type AssetFormValues } from '../lib/assetSchema';
 
 // ------------------------------------------------------------- Lookups reais
@@ -246,6 +246,50 @@ export async function deleteAsset(id: string): Promise<void> {
   if (error) throw error;
 }
 
+// ------------------------------------------------------------- Traduções do Kit (item 2)
+export async function getAssetTranslations(assetId: string): Promise<Record<string, KitTranslation>> {
+  const { data, error } = await supabase.from('asset_translations').select('*').eq('asset_id', assetId);
+  if (error) throw error;
+  const out: Record<string, KitTranslation> = {};
+  ((data ?? []) as Record<string, unknown>[]).forEach((r) => {
+    out[r.language as string] = {
+      name: (r.name as string) ?? '',
+      shortDescription: (r.short_description as string) ?? '',
+      fullDescription: (r.full_description as string) ?? '',
+      promptContent: (r.prompt_content as string) ?? '',
+    };
+  });
+  return out;
+}
+
+const trFilled = (v?: KitTranslation) =>
+  Boolean(v && (v.name || v.shortDescription || v.fullDescription || v.promptContent));
+
+export async function saveAssetTranslations(
+  assetId: string,
+  translations: Record<string, KitTranslation>,
+): Promise<void> {
+  const rows = Object.entries(translations)
+    .filter(([, v]) => trFilled(v))
+    .map(([language, v]) => ({
+      asset_id: assetId,
+      language,
+      name: v.name || null,
+      short_description: v.shortDescription || null,
+      full_description: v.fullDescription || null,
+      prompt_content: v.promptContent || null,
+    }));
+  // idiomas esvaziados pelo admin → remover
+  const emptyLangs = Object.entries(translations).filter(([, v]) => !trFilled(v)).map(([l]) => l);
+  if (emptyLangs.length) {
+    await supabase.from('asset_translations').delete().eq('asset_id', assetId).in('language', emptyLangs);
+  }
+  if (rows.length) {
+    const { error } = await supabase.from('asset_translations').upsert(rows, { onConflict: 'asset_id,language' });
+    if (error) throw error;
+  }
+}
+
 export async function duplicateAsset(slug: string): Promise<{ slug: string } | null> {
   const loaded = await getAssetForEdit(slug);
   if (!loaded) return null;
@@ -254,5 +298,12 @@ export async function duplicateAsset(slug: string): Promise<{ slug: string } | n
   copy.slug = `${copy.slug}-copia-${Math.floor(performance.now())}`.replace(/\.+/g, '');
   copy.status = 'draft';
   const res = await saveAsset(copy, {});
+  // copia as traduções do Kit original para a cópia (remix seguro completo)
+  try {
+    const trs = await getAssetTranslations(loaded.id);
+    if (Object.keys(trs).length) await saveAssetTranslations(res.id, trs);
+  } catch {
+    /* traduções são best-effort na duplicação */
+  }
   return { slug: res.slug };
 }
