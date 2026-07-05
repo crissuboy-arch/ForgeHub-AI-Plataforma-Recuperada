@@ -1,5 +1,5 @@
 'use client';
-// src/app/(auth)/signup/page.tsx
+// src/app/(auth)/signup/page.tsx — Cadastro premium ForgeHub com fundo de vídeo.
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,11 +8,16 @@ import { FormField } from '../../../components/molecules/FormField';
 import { PasswordInput } from '../../../components/molecules/PasswordInput';
 import { PasswordStrength } from '../../../components/molecules/PasswordStrength';
 import { SocialAuth } from '../../../components/molecules/SocialAuth';
+import { VideoBackground } from '../../../components/molecules/VideoBackground';
 import { Button } from '../../../components/atoms/Button';
 import { Typography } from '../../../components/atoms/Typography';
 import { Icon } from '../../../components/atoms/Icon';
+import { Logo } from '../../../components/atoms/Logo';
 import { useLanguage } from '../../../lib/i18n/LanguageProvider';
 import { authErrorKey } from '../../../lib/authErrors';
+
+// URL do vídeo de fundo (mp4/webm) via env NEXT_PUBLIC_AUTH_VIDEO_URL. Vazio = gradiente da marca.
+const SIGNUP_VIDEO_URL = process.env.NEXT_PUBLIC_AUTH_VIDEO_URL || '';
 
 export default function SignupPage() {
   const { t } = useLanguage();
@@ -39,28 +44,20 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2">
-      {/* Painel de marca */}
-      <div className="relative hidden flex-col justify-between bg-brand-glow p-12 lg:flex">
-        <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-interactive bg-white/20 text-base font-bold text-white">F</span>
-          <span className="text-lg font-semibold text-white">ForgeHub AI</span>
-        </div>
-        <div>
-          <p className="max-w-md text-3xl font-bold leading-tight text-white">{t('auth.brandSignup')}</p>
-          <p className="mt-4 max-w-sm text-white/70">{t('auth.brandSignupSub')}</p>
-        </div>
-        <p className="text-sm text-white/60">© 2026 ForgeHub AI</p>
-      </div>
+    <div className="relative flex min-h-screen w-full items-center justify-center px-4 py-12">
+      <VideoBackground videoUrl={SIGNUP_VIDEO_URL} />
 
-      {/* Formulário */}
-      <div className="flex items-center justify-center bg-canvas px-6 py-12">
-        <form onSubmit={handleSubmit} className="w-full max-w-sm">
-          <Link href="/" className="mb-8 inline-flex items-center gap-1 text-sm text-muted hover:text-content">
-            <Icon name="back" size={16} /> {t('auth.back')}
-          </Link>
+      <div className="animate-in relative z-20 w-full max-w-md">
+        <div className="glass rounded-container p-8 shadow-modal">
+          <div className="mb-6 flex items-center justify-between">
+            <Logo />
+            <Link href="/" className="inline-flex items-center gap-1 text-sm text-muted transition-colors hover:text-content">
+              <Icon name="back" size={15} /> {t('auth.back')}
+            </Link>
+          </div>
+
           <Typography variant="h3" className="mb-1">{t('auth.createAccount')}</Typography>
-          <Typography variant="small" className="mb-8 block">{t('auth.signupSubtitle')}</Typography>
+          <Typography variant="small" className="mb-6 block">{t('auth.signupSubtitle')}</Typography>
 
           {errorKey && (
             <div className="mb-4 rounded-interactive border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">
@@ -68,46 +65,48 @@ export default function SignupPage() {
             </div>
           )}
 
-          <div className="space-y-4">
-            <FormField
-              id="fullName"
-              label={t('auth.fullName')}
-              type="text"
-              placeholder={t('auth.fullNamePlaceholder')}
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              autoComplete="name"
-              required
-            />
-            <FormField
-              id="email"
-              label={t('auth.email')}
-              type="email"
-              placeholder={t('auth.emailPlaceholder')}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              required
-            />
-            <div>
-              <PasswordInput
-                id="password"
-                label={t('auth.password')}
-                value={password}
-                onChange={setPassword}
-                placeholder={t('auth.passwordMin')}
-                autoComplete="new-password"
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <FormField
+                id="fullName"
+                label={t('auth.fullName')}
+                type="text"
+                placeholder={t('auth.fullNamePlaceholder')}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                autoComplete="name"
                 required
               />
-              <PasswordStrength password={password} />
+              <FormField
+                id="email"
+                label={t('auth.email')}
+                type="email"
+                placeholder={t('auth.emailPlaceholder')}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+              />
+              <div>
+                <PasswordInput
+                  id="password"
+                  label={t('auth.password')}
+                  value={password}
+                  onChange={setPassword}
+                  placeholder={t('auth.passwordMin')}
+                  autoComplete="new-password"
+                  required
+                />
+                <PasswordStrength password={password} />
+              </div>
             </div>
-          </div>
 
-          <Typography variant="caption" className="mt-4 block">{t('auth.terms')}</Typography>
+            <Typography variant="caption" className="mt-4 block">{t('auth.terms')}</Typography>
 
-          <Button type="submit" variant="primary" loading={loading} className="mt-6 w-full">
-            {t('auth.createAccount')}
-          </Button>
+            <Button type="submit" variant="primary" loading={loading} className="mt-6 w-full">
+              {t('auth.createAccount')}
+            </Button>
+          </form>
 
           <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wide text-muted">
             <span className="h-px flex-1 bg-border" /> {t('auth.or')} <span className="h-px flex-1 bg-border" />
@@ -118,7 +117,7 @@ export default function SignupPage() {
             {t('auth.haveAccount')}{' '}
             <Link href="/login" className="font-medium text-primary hover:text-primary-hover">{t('auth.login')}</Link>
           </Typography>
-        </form>
+        </div>
       </div>
     </div>
   );
