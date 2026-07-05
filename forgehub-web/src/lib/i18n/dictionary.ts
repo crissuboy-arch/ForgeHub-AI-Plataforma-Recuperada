@@ -26,6 +26,7 @@ const ptBR: Dict = {
   'dashboard.yourAssets': 'Seus kits',
   'dashboard.recent': 'Recentes',
   'common.open': 'Abrir',
+  'common.clear': 'Limpar',
   'common.remix': 'Remixar',
   'common.viewKit': 'Ver Kit',
   'common.filesIncluded': 'arquivos',
@@ -334,6 +335,13 @@ const ptBR: Dict = {
   'err.title': 'Algo saiu do trilho',
   'err.desc': 'Encontramos um erro inesperado. Você pode tentar novamente — se persistir, nossa equipe já foi notificada.',
   'err.retry': 'Tentar novamente',
+  // 404 / Offline / Empty / Toasts / Indicadores
+  'nf.title': 'Página não encontrada', 'nf.desc': 'A página ou o Kit que você procura não existe ou foi movido.',
+  'nf.back': 'Voltar', 'nf.library': 'Biblioteca', 'nf.dashboard': 'Dashboard',
+  'off.title': 'Você está offline.', 'off.desc': 'Verifique sua conexão com a internet.', 'off.retry': 'Tentar novamente',
+  'empty.noKits': 'Nenhum Kit encontrado', 'empty.tryOther': 'Tente outro idioma ou outro nicho.', 'empty.explore': 'Explorar Biblioteca',
+  'toast.loginDone': 'Login realizado.', 'toast.logoutDone': 'Logout realizado.',
+  'dash.available': 'Kits disponíveis', 'dash.lastAccess': 'Últimos acessos', 'dash.indicators': 'Indicadores rápidos',
 };
 
 const es: Dict = {
@@ -352,6 +360,7 @@ const es: Dict = {
   'dashboard.yourAssets': 'Tus kits',
   'dashboard.recent': 'Recientes',
   'common.open': 'Abrir',
+  'common.clear': 'Limpiar',
   'common.remix': 'Remezclar',
   'common.viewKit': 'Ver Kit',
   'common.filesIncluded': 'archivos',
@@ -660,6 +669,13 @@ const es: Dict = {
   'err.title': 'Algo salió mal',
   'err.desc': 'Encontramos un error inesperado. Puedes intentar de nuevo — si persiste, nuestro equipo ya fue notificado.',
   'err.retry': 'Intentar de nuevo',
+  // 404 / Offline / Empty / Toasts / Indicadores
+  'nf.title': 'Página no encontrada', 'nf.desc': 'La página o el Kit que buscas no existe o fue movido.',
+  'nf.back': 'Volver', 'nf.library': 'Biblioteca', 'nf.dashboard': 'Panel',
+  'off.title': 'Estás sin conexión.', 'off.desc': 'Verifica tu conexión a internet.', 'off.retry': 'Intentar de nuevo',
+  'empty.noKits': 'Ningún Kit encontrado', 'empty.tryOther': 'Prueba otro idioma u otro nicho.', 'empty.explore': 'Explorar Biblioteca',
+  'toast.loginDone': 'Sesión iniciada.', 'toast.logoutDone': 'Sesión cerrada.',
+  'dash.available': 'Kits disponibles', 'dash.lastAccess': 'Últimos accesos', 'dash.indicators': 'Indicadores rápidos',
 };
 
 const en: Dict = {
@@ -678,6 +694,7 @@ const en: Dict = {
   'dashboard.yourAssets': 'Your kits',
   'dashboard.recent': 'Recent',
   'common.open': 'Open',
+  'common.clear': 'Clear',
   'common.remix': 'Remix',
   'common.viewKit': 'View Kit',
   'common.filesIncluded': 'files',
@@ -986,6 +1003,13 @@ const en: Dict = {
   'err.title': 'Something went off track',
   'err.desc': 'We hit an unexpected error. You can try again — if it persists, our team has been notified.',
   'err.retry': 'Try again',
+  // 404 / Offline / Empty / Toasts / Indicators
+  'nf.title': 'Page not found', 'nf.desc': "The page or Kit you're looking for doesn't exist or was moved.",
+  'nf.back': 'Back', 'nf.library': 'Library', 'nf.dashboard': 'Dashboard',
+  'off.title': "You're offline.", 'off.desc': 'Check your internet connection.', 'off.retry': 'Try again',
+  'empty.noKits': 'No Kits found', 'empty.tryOther': 'Try another language or niche.', 'empty.explore': 'Explore Library',
+  'toast.loginDone': 'Signed in.', 'toast.logoutDone': 'Signed out.',
+  'dash.available': 'Available Kits', 'dash.lastAccess': 'Recent access', 'dash.indicators': 'Quick indicators',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };

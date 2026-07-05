@@ -151,16 +151,24 @@ export async function listSearchableAssets(): Promise<SearchableAsset[]> {
 }
 
 // ------------------------------------------------------------- Dashboard stats (reais)
-export interface DashboardStats { totalAssets: number; views: number; downloads: number; remixes: number; }
+export interface DashboardStats { totalAssets: number; views: number; downloads: number; remixes: number; favorites: number; updates: number; }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-  const [assets, analytics] = await Promise.all([
+  const [assets, updated, analytics] = await Promise.all([
     supabase.from('assets').select('id', { count: 'exact', head: true }).in('status', ['active', 'updated']),
-    supabase.from('asset_analytics').select('views, downloads, remixes'),
+    supabase.from('assets').select('id', { count: 'exact', head: true }).eq('status', 'updated'),
+    supabase.from('asset_analytics').select('views, downloads, remixes, favorites'),
   ]);
-  const rows = (analytics.data ?? []) as { views: number; downloads: number; remixes: number }[];
-  const sum = (k: 'views' | 'downloads' | 'remixes') => rows.reduce((a, r) => a + (Number(r[k]) || 0), 0);
-  return { totalAssets: assets.count ?? 0, views: sum('views'), downloads: sum('downloads'), remixes: sum('remixes') };
+  const rows = (analytics.data ?? []) as { views: number; downloads: number; remixes: number; favorites: number }[];
+  const sum = (k: 'views' | 'downloads' | 'remixes' | 'favorites') => rows.reduce((a, r) => a + (Number(r[k]) || 0), 0);
+  return {
+    totalAssets: assets.count ?? 0,
+    views: sum('views'),
+    downloads: sum('downloads'),
+    remixes: sum('remixes'),
+    favorites: sum('favorites'),
+    updates: updated.count ?? 0,
+  };
 }
 
 // ------------------------------------------------------------- Queries

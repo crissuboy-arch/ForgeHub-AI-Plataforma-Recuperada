@@ -49,6 +49,7 @@ export default function LoginPage() {
       await signIn(email, password);
       if (remember) window.localStorage.setItem(REMEMBER_KEY, email);
       else window.localStorage.removeItem(REMEMBER_KEY);
+      toast(t('toast.loginDone'), 'success');
       router.push('/dashboard');
     } catch (err: unknown) {
       setErrorKey(authErrorKey(err));

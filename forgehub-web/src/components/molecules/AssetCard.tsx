@@ -61,7 +61,7 @@ export const AssetCard: React.FC<AssetCardProps> = ({ asset, className }) => {
       >
         {asset.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={asset.coverUrl} alt={asset.name} className="h-full w-full object-cover" />
+          <img src={asset.coverUrl} alt={asset.name} loading="lazy" decoding="async" className="h-full w-full object-cover" />
         ) : (
           <Icon name={categoryIcon(asset.category)} size={34} className="transition-transform duration-300 group-hover:scale-110" style={{ color }} />
         )}

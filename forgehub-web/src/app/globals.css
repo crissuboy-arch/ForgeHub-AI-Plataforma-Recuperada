@@ -186,8 +186,24 @@ body::after {
   from { opacity: 0; transform: translateX(16px) scale(0.98); }
   to { opacity: 1; transform: translateX(0) scale(1); }
 }
+@keyframes fh-loadbar {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes fh-pulse-glow {
+  0%, 100% { opacity: 0.55; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
 @media (prefers-reduced-motion: reduce) {
   .animate-in, .lift, .glow-blue-hover { animation: none; transition: none; }
+}
+
+/* Acessibilidade: foco sempre visível (AA) para teclado/leitores de tela */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Scrollbar */

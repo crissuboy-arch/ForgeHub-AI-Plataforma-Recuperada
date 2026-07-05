@@ -8,6 +8,7 @@ import { LanguageSwitcher } from '../atoms/LanguageSwitcher';
 import { ThemeSwitcher } from '../molecules/ThemeSwitcher';
 import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { useToast } from '../organisms/Toast';
 import { useCommandPalette } from '../organisms/CommandPalette';
 
 /**
@@ -18,6 +19,11 @@ export const Topbar: React.FC = () => {
   const { user, signOut } = useAuth();
   const { open } = useCommandPalette();
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const onSignOut = async () => {
+    await signOut();
+    toast(t('toast.logoutDone'), 'success');
+  };
 
   return (
     <header className="glass flex h-16 items-center justify-between gap-4 px-4">
@@ -48,7 +54,8 @@ export const Topbar: React.FC = () => {
         </Link>
         {user && (
           <button
-            onClick={signOut}
+            onClick={onSignOut}
+            aria-label={t('topbar.logout')}
             title={`${user.email} — ${t('topbar.logout')}`}
             className="ml-1 flex items-center gap-2 rounded-interactive border border-border py-1 pl-1 pr-2 text-sm text-muted transition-colors hover:border-primary/50 hover:text-content"
           >

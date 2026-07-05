@@ -57,6 +57,26 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* INDICADORES RÁPIDOS (item 7) */}
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {[
+          { icon: 'stack', label: t('dash.available'), value: s?.totalAssets ?? 0 },
+          { icon: 'download', label: t('stat.downloads'), value: s?.downloads ?? 0 },
+          { icon: 'remix', label: t('stat.remixes'), value: s?.remixes ?? 0 },
+          { icon: 'favorite', label: t('stat.favorites'), value: s?.favorites ?? 0 },
+          { icon: 'sparkles', label: t('dash.updates'), value: s?.updates ?? 0 },
+          { icon: 'recent', label: t('dash.lastAccess'), value: recents.data?.length ?? 0 },
+        ].map((it) => (
+          <div key={it.label} className="ring-hairline flex items-center gap-2.5 rounded-container border border-border bg-card px-3 py-2.5">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-interactive bg-primary/12 text-primary-hover"><Icon name={it.icon} size={15} /></span>
+            <span className="min-w-0">
+              <span className="block text-lg font-bold leading-none text-content">{it.value.toLocaleString('pt-BR')}</span>
+              <span className="block truncate text-[11px] text-muted">{it.label}</span>
+            </span>
+          </div>
+        ))}
+      </div>
+
       {/* STAT CARDS */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label={t('admin.kits')} value={s?.totalAssets ?? 0} iconName="stack" delta={t('dash.activeTag')} deltaTone="primary" />

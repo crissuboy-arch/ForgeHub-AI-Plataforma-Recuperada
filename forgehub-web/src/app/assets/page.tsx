@@ -18,7 +18,7 @@ import type { AssetSummary } from '../../types';
 function haystack(a: AssetSummary | SearchableAsset): string {
   const s = a as Partial<SearchableAsset>;
   return [
-    a.name, a.slug, a.category, a.status, a.level,
+    a.name, a.slug, a.category, a.status, a.level, a.niche, a.language,
     s.description, s.license, s.revenueModel, s.deliveryBundle,
     ...(s.tags ?? []), ...(s.ai ?? []), ...(s.platforms ?? []),
     ...(s.languages ?? []), ...(s.countries ?? []), String(a.healthScore),
@@ -128,7 +128,7 @@ export default function LibraryPage() {
         <div className="flex h-11 items-center gap-2 rounded-interactive border border-border bg-surface px-3">
           <Icon name="search" size={18} className="text-muted" />
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('topbar.search')} className="h-full flex-1 bg-transparent text-sm text-content placeholder:text-muted focus:outline-none" />
-          {q && <button onClick={() => setQ('')} className="text-muted hover:text-content"><Icon name="x" size={16} /></button>}
+          {q && <button onClick={() => setQ('')} aria-label={t('common.clear')} className="text-muted hover:text-content"><Icon name="x" size={16} /></button>}
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5">

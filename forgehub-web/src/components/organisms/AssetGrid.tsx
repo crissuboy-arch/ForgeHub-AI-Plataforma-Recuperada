@@ -3,8 +3,10 @@
 // Consome os dados reais do Supabase (useAssets) com os três estados de UX:
 // carregando (skeletons) → conteúdo (cards) → vazio/erro.
 import React from 'react';
+import Link from 'next/link';
 import { AssetCard } from '../molecules/AssetCard';
 import { EmptyState } from '../molecules/EmptyState';
+import { Icon } from '../atoms/Icon';
 import { Skeleton } from '../atoms/Skeleton';
 import { useAssets } from '../../hooks/useAssets';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
@@ -58,8 +60,13 @@ export const AssetGrid: React.FC<{ assets?: AssetSummary[] }> = ({ assets: provi
     return (
       <EmptyState
         iconName="stack"
-        title={t('grid.emptyTitle')}
-        description={t('grid.emptyDesc')}
+        title={t('empty.noKits')}
+        description={t('empty.tryOther')}
+        action={
+          <Link href="/assets" className="inline-flex h-11 items-center gap-2 rounded-interactive bg-brand-glow px-5 text-sm font-semibold text-white transition-shadow hover:shadow-[var(--shadow-glow-blue)]">
+            <Icon name="asset" size={16} /> {t('empty.explore')}
+          </Link>
+        }
       />
     );
   }

@@ -5,6 +5,7 @@ import { DashboardLayout } from '../organisms/DashboardLayout';
 import { CommandPaletteProvider } from '../organisms/CommandPalette';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '../../hooks/useAuth';
+import { SplashGate } from '../organisms/Splash';
 
 /**
  * Layout de todas as páginas autenticadas.
@@ -16,7 +17,9 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <CommandPaletteProvider>
-          <DashboardLayout>{children}</DashboardLayout>
+          <SplashGate>
+            <DashboardLayout>{children}</DashboardLayout>
+          </SplashGate>
         </CommandPaletteProvider>
       </QueryClientProvider>
     </AuthProvider>

@@ -261,7 +261,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             <div className="overflow-hidden rounded-container border border-border bg-surface">
               {media.length > 0 ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={media[selected]} alt={displayName} className="h-72 w-full object-cover sm:h-96" />
+                <img src={media[selected]} alt={displayName} loading="lazy" decoding="async" className="h-72 w-full object-cover sm:h-96" />
               ) : (
                 <div className="flex h-72 items-center justify-center bg-brand-glow/20 sm:h-96">
                   <Icon name="asset" size={56} className="text-muted" />
@@ -535,6 +535,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                 <a
                   href={downloadUrl ?? undefined} target="_blank" rel="noopener noreferrer"
                   aria-disabled={!downloadUrl}
+                  onClick={() => downloadUrl && toast(t('toast.downloadStarted'), 'success')}
                   className={`flex h-11 items-center justify-center gap-2 rounded-interactive border border-border text-sm font-semibold transition-colors ${downloadUrl ? 'text-content hover:bg-surface' : 'pointer-events-none text-muted/50'}`}
                 >
                   <Icon name="download" size={15} /> {t('action.download')}
