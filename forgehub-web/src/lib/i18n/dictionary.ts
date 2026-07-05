@@ -283,6 +283,23 @@ const ptBR: Dict = {
   'smart.hint': 'Envie uma imagem — geramos Thumbnail (1:1), Card (4:3), Hero (16:9) e Preview/Social (1200×630), cortadas proporcionalmente e otimizadas em WebP.',
   'smart.cancel': 'Cancelar', 'smart.remove': 'Remover imagens', 'smart.timeLeft': 'restante',
   'smart.original': 'Imagem selecionada', 'smart.replace': 'Trocar imagem', 'smart.canceled': 'Upload cancelado.',
+  // Painel Administrativo
+  'nav.adminDash': 'Painel Admin',
+  'admin.title': 'Painel Administrativo', 'admin.subtitle': 'Visão geral da plataforma.',
+  'admin.kits': 'Total de Kits', 'admin.active': 'Kits ativos', 'admin.downloads': 'Downloads',
+  'admin.favorites': 'Favoritos', 'admin.remixes': 'Remixes', 'admin.views': 'Visualizações',
+  'admin.users': 'Usuários', 'admin.admins': 'Admins', 'admin.students': 'Alunos',
+  'admin.revenue': 'Receita potencial', 'admin.countries': 'Países', 'admin.niches': 'Nichos',
+  'admin.languages': 'Idiomas', 'admin.conversion': 'Conversão', 'admin.byNiche': 'Kits por nicho',
+  'admin.byLanguage': 'Kits por idioma', 'admin.loadError': 'Não foi possível carregar as métricas.',
+  // Perfil
+  'nav.profile': 'Perfil',
+  'profile.title': 'Meu Perfil', 'profile.subtitle': 'Sua conta e atividade.',
+  'profile.name': 'Nome', 'profile.email': 'E-mail', 'profile.language': 'Idioma', 'profile.country': 'País',
+  'profile.plan': 'Plano', 'profile.subscription': 'Assinatura', 'profile.memberSince': 'Membro desde',
+  'profile.expiration': 'Expiração', 'profile.remixed': 'Kits remixados', 'profile.downloads': 'Downloads',
+  'profile.favorites': 'Favoritos', 'profile.history': 'Histórico', 'profile.active': 'Ativa',
+  'profile.none': 'Sem expiração', 'profile.edit': 'Editar em Configurações', 'profile.noHistory': 'Nenhuma atividade recente.',
 };
 
 const es: Dict = {
@@ -558,6 +575,23 @@ const es: Dict = {
   'smart.hint': 'Sube una imagen — generamos Thumbnail (1:1), Card (4:3), Hero (16:9) y Preview/Social (1200×630), recortadas proporcionalmente y optimizadas en WebP.',
   'smart.cancel': 'Cancelar', 'smart.remove': 'Eliminar imágenes', 'smart.timeLeft': 'restante',
   'smart.original': 'Imagen seleccionada', 'smart.replace': 'Cambiar imagen', 'smart.canceled': 'Upload cancelado.',
+  // Panel Administrativo
+  'nav.adminDash': 'Panel Admin',
+  'admin.title': 'Panel Administrativo', 'admin.subtitle': 'Visión general de la plataforma.',
+  'admin.kits': 'Total de Kits', 'admin.active': 'Kits activos', 'admin.downloads': 'Descargas',
+  'admin.favorites': 'Favoritos', 'admin.remixes': 'Remezclas', 'admin.views': 'Visualizaciones',
+  'admin.users': 'Usuarios', 'admin.admins': 'Admins', 'admin.students': 'Alumnos',
+  'admin.revenue': 'Ingresos potenciales', 'admin.countries': 'Países', 'admin.niches': 'Nichos',
+  'admin.languages': 'Idiomas', 'admin.conversion': 'Conversión', 'admin.byNiche': 'Kits por nicho',
+  'admin.byLanguage': 'Kits por idioma', 'admin.loadError': 'No se pudieron cargar las métricas.',
+  // Perfil
+  'nav.profile': 'Perfil',
+  'profile.title': 'Mi Perfil', 'profile.subtitle': 'Tu cuenta y actividad.',
+  'profile.name': 'Nombre', 'profile.email': 'Correo', 'profile.language': 'Idioma', 'profile.country': 'País',
+  'profile.plan': 'Plan', 'profile.subscription': 'Suscripción', 'profile.memberSince': 'Miembro desde',
+  'profile.expiration': 'Expiración', 'profile.remixed': 'Kits remezclados', 'profile.downloads': 'Descargas',
+  'profile.favorites': 'Favoritos', 'profile.history': 'Historial', 'profile.active': 'Activa',
+  'profile.none': 'Sin expiración', 'profile.edit': 'Editar en Configuración', 'profile.noHistory': 'Sin actividad reciente.',
 };
 
 const en: Dict = {
@@ -833,6 +867,23 @@ const en: Dict = {
   'smart.hint': 'Upload one image — we generate Thumbnail (1:1), Card (4:3), Hero (16:9) and Preview/Social (1200×630), proportionally cropped and optimized to WebP.',
   'smart.cancel': 'Cancel', 'smart.remove': 'Remove images', 'smart.timeLeft': 'left',
   'smart.original': 'Selected image', 'smart.replace': 'Replace image', 'smart.canceled': 'Upload canceled.',
+  // Admin Dashboard
+  'nav.adminDash': 'Admin Panel',
+  'admin.title': 'Admin Dashboard', 'admin.subtitle': 'Platform overview.',
+  'admin.kits': 'Total Kits', 'admin.active': 'Active Kits', 'admin.downloads': 'Downloads',
+  'admin.favorites': 'Favorites', 'admin.remixes': 'Remixes', 'admin.views': 'Views',
+  'admin.users': 'Users', 'admin.admins': 'Admins', 'admin.students': 'Students',
+  'admin.revenue': 'Potential revenue', 'admin.countries': 'Countries', 'admin.niches': 'Niches',
+  'admin.languages': 'Languages', 'admin.conversion': 'Conversion', 'admin.byNiche': 'Kits by niche',
+  'admin.byLanguage': 'Kits by language', 'admin.loadError': 'Could not load metrics.',
+  // Profile
+  'nav.profile': 'Profile',
+  'profile.title': 'My Profile', 'profile.subtitle': 'Your account and activity.',
+  'profile.name': 'Name', 'profile.email': 'Email', 'profile.language': 'Language', 'profile.country': 'Country',
+  'profile.plan': 'Plan', 'profile.subscription': 'Subscription', 'profile.memberSince': 'Member since',
+  'profile.expiration': 'Expiration', 'profile.remixed': 'Remixed Kits', 'profile.downloads': 'Downloads',
+  'profile.favorites': 'Favorites', 'profile.history': 'History', 'profile.active': 'Active',
+  'profile.none': 'No expiration', 'profile.edit': 'Edit in Settings', 'profile.noHistory': 'No recent activity.',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };

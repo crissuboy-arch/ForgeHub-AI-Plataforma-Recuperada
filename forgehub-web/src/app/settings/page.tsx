@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const [fullName, setFullName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [workspace, setWorkspace] = useState('');
+  const [country, setCountry] = useState('');
   const [language, setLanguage] = useState('pt');
   const [role, setRole] = useState<UserRole>('aluno');
   const [newsletter, setNewsletter] = useState(false);
@@ -28,6 +29,7 @@ export default function SettingsPage() {
         setFullName(s.fullName ?? '');
         setAvatarUrl(s.avatarUrl ?? '');
         setWorkspace(s.workspace ?? '');
+        setCountry(s.country ?? '');
         setLanguage(s.language ?? 'pt');
         setRole(s.role ?? 'aluno');
         setNewsletter(Boolean((s.preferences as { newsletter?: boolean })?.newsletter));
@@ -40,7 +42,7 @@ export default function SettingsPage() {
     setBusy(true);
     setMsg(null);
     try {
-      await saveSettings({ fullName, avatarUrl, workspace, language, preferences: { newsletter } });
+      await saveSettings({ fullName, avatarUrl, workspace, country, language, preferences: { newsletter } });
       setMsg({ kind: 'ok', text: t('settings.saved') });
     } catch (err) {
       setMsg({ kind: 'err', text: err instanceof Error ? err.message : String(err) });
@@ -77,6 +79,7 @@ export default function SettingsPage() {
             <FormField id="fullName" label={t('settings.fullName')} placeholder={t('settings.namePlaceholder')} value={fullName} onChange={(e) => setFullName(e.target.value)} />
             <FormField id="avatarUrl" label={t('settings.avatar')} placeholder="https://…" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
             <FormField id="workspace" label={t('settings.workspace')} placeholder={t('settings.workspacePlaceholder')} value={workspace} onChange={(e) => setWorkspace(e.target.value)} />
+            <FormField id="country" label={t('profile.country')} placeholder="Brasil / España / USA" value={country} onChange={(e) => setCountry(e.target.value)} />
           </div>
         </section>
 

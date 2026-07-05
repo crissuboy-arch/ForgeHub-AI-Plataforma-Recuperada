@@ -121,6 +121,8 @@ export interface UserSettings {
   language: string;
   workspace?: string;
   role?: UserRole;
+  country?: string;
+  plan?: string;
   preferences: Record<string, unknown>;
 }
 

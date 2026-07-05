@@ -1,6 +1,7 @@
 'use client';
 // src/components/organisms/Sidebar.tsx
 import React from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { NavItem } from '../molecules/NavItem';
 import { Icon } from '../atoms/Icon';
@@ -22,8 +23,13 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
   const items = [
     { href: '/dashboard', label: t('nav.dashboard'), iconName: 'home' },
     { href: '/assets', label: t('nav.assets'), iconName: 'asset' },
-    // Asset Studio: exclusivo de administradores (item 5 do aditivo)
-    ...(isAdmin ? [{ href: '/admin/assets', label: t('nav.studio'), iconName: 'command' }] : []),
+    // Área administrativa: exclusiva de administradores (itens 5/16 do aditivo)
+    ...(isAdmin
+      ? [
+          { href: '/admin', label: t('nav.adminDash'), iconName: 'chart' },
+          { href: '/admin/assets', label: t('nav.studio'), iconName: 'command' },
+        ]
+      : []),
     { href: '/collections', label: t('nav.collections'), iconName: 'collection', soon: true },
     { href: '/favorites', label: t('nav.favorites'), iconName: 'favorite', soon: true },
     { href: '/recent', label: t('nav.recent'), iconName: 'recent', soon: true },
@@ -74,7 +80,7 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
 
       {/* Perfil no rodapé */}
       <div className="border-t border-border p-3">
-        <div className="flex items-center gap-3 rounded-container px-2 py-2">
+        <Link href="/perfil" className="flex items-center gap-3 rounded-container px-2 py-2 transition-colors hover:bg-surface-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-card text-muted">
             <Icon name="user" size={18} />
           </span>
@@ -86,7 +92,7 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
               {t('topbar.profile')}
             </Typography>
           </span>
-        </div>
+        </Link>
       </div>
     </aside>
   );

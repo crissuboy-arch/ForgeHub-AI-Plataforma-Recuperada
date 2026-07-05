@@ -100,6 +100,8 @@ export async function getSettings(): Promise<UserSettings | null> {
     language: (r.language as string) ?? 'pt',
     workspace: (r.workspace as string) ?? undefined,
     role: (r.role as UserSettings['role']) ?? 'aluno',
+    country: (r.country as string) ?? undefined,
+    plan: (r.plan as string) ?? 'starter',
     preferences: (r.preferences as Record<string, unknown>) ?? {},
   };
 }
@@ -114,7 +116,28 @@ export async function saveSettings(s: Partial<UserSettings>): Promise<void> {
   if (s.theme !== undefined) payload.theme = s.theme;
   if (s.language !== undefined) payload.language = s.language;
   if (s.workspace !== undefined) payload.workspace = s.workspace ?? null;
+  if (s.country !== undefined) payload.country = s.country ?? null;
+  if (s.plan !== undefined) payload.plan = s.plan;
   if (s.preferences !== undefined) payload.preferences = s.preferences;
   const { error } = await supabase.from('user_settings').upsert(payload, { onConflict: 'user_id' });
   if (error) throw error;
+}
+
+// ---------------------------------------------------------------- Perfil (item 10)
+export type ProfileStats = { remixed: number; favorites: number; memberSince: string | null; email: string | null };
+
+export async function getProfileStats(): Promise<ProfileStats> {
+  const { data: userData } = await supabase.auth.getUser();
+  const u = userData.user;
+  if (!u) return { remixed: 0, favorites: 0, memberSince: null, email: null };
+  const [remixed, favorites] = await Promise.all([
+    supabase.from('assets').select('id', { count: 'exact', head: true }).eq('created_by', u.id),
+    supabase.from('favorite_assets').select('asset_id', { count: 'exact', head: true }).eq('user_id', u.id),
+  ]);
+  return {
+    remixed: remixed.count ?? 0,
+    favorites: favorites.count ?? 0,
+    memberSince: u.created_at ?? null,
+    email: u.email ?? null,
+  };
 }
