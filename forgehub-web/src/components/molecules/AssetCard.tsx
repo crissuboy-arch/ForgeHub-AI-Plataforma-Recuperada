@@ -103,6 +103,23 @@ export const AssetCard: React.FC<AssetCardProps> = ({ asset, className }) => {
           <Typography variant="small" className="line-clamp-2">{asset.shortDescription}</Typography>
         )}
 
+        {/* Métricas (item 6): remixes · downloads · preço */}
+        {(typeof asset.remixes === 'number' || typeof asset.downloads === 'number' || typeof asset.suggestedPrice === 'number') && (
+          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted">
+            {typeof asset.remixes === 'number' && (
+              <span className="inline-flex items-center gap-1"><Icon name="remix" size={11} /> {asset.remixes}</span>
+            )}
+            {typeof asset.downloads === 'number' && (
+              <span className="inline-flex items-center gap-1"><Icon name="download" size={11} /> {asset.downloads}</span>
+            )}
+            {typeof asset.suggestedPrice === 'number' && asset.suggestedPrice > 0 && (
+              <span className="ml-auto inline-flex items-center gap-1 font-semibold text-gold">
+                <Icon name="money" size={11} /> R$ {asset.suggestedPrice.toFixed(0)}
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Rodapé */}
         <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
           <div className="flex items-center gap-2">

@@ -10,15 +10,16 @@ import { generateVariants, IMAGE_PRESETS, type PresetKey } from '../../lib/image
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import { useToast } from '../organisms/Toast';
 
-// preset → campo do formulário
-const FIELD: Record<PresetKey, 'thumbnailUrl' | 'coverUrl' | 'bannerUrl' | 'previewUrl'> = {
+type MediaField = 'thumbnailUrl' | 'coverUrl' | 'bannerUrl' | 'previewUrl' | 'mockupUrl';
+
+// preset → campo do formulário (mobile banner reaproveita o campo de mockup)
+const FIELD: Record<PresetKey, MediaField> = {
   thumbnail: 'thumbnailUrl',
   card: 'coverUrl',
   hero: 'bannerUrl',
   preview: 'previewUrl',
+  mobile: 'mockupUrl',
 };
-
-type MediaField = 'thumbnailUrl' | 'coverUrl' | 'bannerUrl' | 'previewUrl';
 
 export const SmartImageUpload: React.FC<{ onDone: (field: MediaField, url: string) => void }> = ({ onDone }) => {
   const { t } = useLanguage();

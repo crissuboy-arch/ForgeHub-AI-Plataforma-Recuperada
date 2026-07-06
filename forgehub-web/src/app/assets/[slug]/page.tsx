@@ -117,8 +117,9 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
   const displayShort = trQ.data?.shortDescription || asset.shortDescription;
   const displayFull = trQ.data?.fullDescription || asset.fullDescription;
   const linkOf = (type: LinkType) => asset.links.find((l) => l.type === type)?.url;
+  // Galeria: hero + miniaturas, até 10 imagens (item 4).
   const media = useMemo(
-    () => [asset.mockupUrl, asset.coverUrl, ...asset.screenshots.map((s) => s.url)].filter(Boolean) as string[],
+    () => ([asset.mockupUrl, asset.coverUrl, asset.bannerUrl, ...asset.screenshots.map((s) => s.url)].filter(Boolean) as string[]).slice(0, 10),
     [asset],
   );
   const [selected, setSelected] = useState(0);

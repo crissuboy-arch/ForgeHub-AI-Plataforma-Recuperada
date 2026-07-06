@@ -111,7 +111,6 @@ export interface SearchableAsset extends AssetSummary {
   license: string;
   revenueModel: string;
   deliveryBundle: string;
-  suggestedPrice?: number;
 }
 
 /** Carrega os assets com os campos pesquisáveis para busca instantânea client-side. */
@@ -122,7 +121,7 @@ export async function listSearchableAssets(): Promise<SearchableAsset[]> {
     .select(
       '*, categories(label), asset_tags(tags(label)), asset_ai_tools(ai_slug),' +
         ' asset_platforms(platform_slug), asset_languages(language_code),' +
-        ' asset_countries(country_code), asset_files(count)',
+        ' asset_countries(country_code), asset_files(count), asset_analytics(remixes, downloads)',
     )
     .in('status', ['active', 'updated'])
     .order('updated_at', { ascending: false });
@@ -132,9 +131,13 @@ export async function listSearchableAssets(): Promise<SearchableAsset[]> {
     const arr = <T>(rel: unknown, pick: (x: Record<string, unknown>) => T): T[] =>
       ((rel ?? []) as Record<string, unknown>[]).map(pick);
     const filesRel = r.asset_files as { count: number }[] | undefined;
+    const an = r.asset_analytics as { remixes?: number; downloads?: number } | { remixes?: number; downloads?: number }[] | undefined;
+    const a0 = Array.isArray(an) ? an[0] : an;
     return {
       ...base,
       filesCount: filesRel?.[0]?.count ?? 0,
+      remixes: Number(a0?.remixes ?? 0),
+      downloads: Number(a0?.downloads ?? 0),
       description: (r.short_description as string) ?? undefined,
       tags: arr(r.asset_tags, (t) => {
         const tag = Array.isArray(t.tags) ? t.tags[0] : t.tags;

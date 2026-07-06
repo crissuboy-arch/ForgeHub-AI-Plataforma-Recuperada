@@ -83,6 +83,9 @@ export interface AssetSummary {
   language?: string; // idioma primário (pt-BR/es/en)
   niche?: string; // slug do nicho
   filesCount?: number; // nº de arquivos incluídos
+  suggestedPrice?: number; // preço sugerido (exibido no card)
+  remixes?: number; // métrica exibida no card
+  downloads?: number; // métrica exibida no card
 }
 
 /** Registro completo do Asset (ficha). */

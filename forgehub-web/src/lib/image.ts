@@ -2,13 +2,14 @@
 // Detecta orientação, corta proporcionalmente (cover) centralizado, otimiza e
 // exporta em WebP quando possível. Zero dependências externas (usa <canvas>).
 
-export type PresetKey = 'thumbnail' | 'card' | 'hero' | 'preview';
+export type PresetKey = 'thumbnail' | 'card' | 'hero' | 'preview' | 'mobile';
 
 export const IMAGE_PRESETS: Record<PresetKey, { w: number; h: number; label: string; ratio: string }> = {
   thumbnail: { w: 800, h: 800, label: 'Thumbnail', ratio: '1:1' },
-  card: { w: 1200, h: 900, label: 'Card', ratio: '4:3' },
+  card: { w: 1080, h: 1350, label: 'Card', ratio: '4:5' },
   hero: { w: 1600, h: 900, label: 'Hero / Banner', ratio: '16:9' },
-  preview: { w: 1200, h: 630, label: 'Preview', ratio: '1200×630' },
+  preview: { w: 1280, h: 720, label: 'Preview', ratio: '16:9' },
+  mobile: { w: 720, h: 1280, label: 'Mobile Banner', ratio: '9:16' },
 };
 
 function loadImage(file: File): Promise<HTMLImageElement> {
@@ -59,7 +60,7 @@ export async function processImage(img: HTMLImageElement, w: number, h: number):
 /** Gera todas as variações (thumbnail, card, hero, preview) a partir de UM arquivo. */
 export async function generateVariants(
   file: File,
-  presets: PresetKey[] = ['thumbnail', 'card', 'hero', 'preview'],
+  presets: PresetKey[] = ['thumbnail', 'card', 'hero', 'preview', 'mobile'],
 ): Promise<Record<PresetKey, Blob>> {
   const img = await loadImage(file);
   const out = {} as Record<PresetKey, Blob>;
