@@ -1,5 +1,6 @@
 'use client';
 // src/app/dashboard/page.tsx — Dashboard Premium (Sprint 5.5)
+import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import { AssetGrid } from '../../components/organisms/AssetGrid';
@@ -36,6 +37,20 @@ export default function DashboardPage() {
   const workspace = settings.data?.workspace?.trim() || t('sidebar.workspace');
   const s = stats.data;
 
+  // Hero slider (item 7): boas-vindas + nichos em loop, fade a cada 5s.
+  const slides = useMemo(() => {
+    const niches = t('dash.slides').split('|');
+    return [
+      { title: firstName ? `${t('dash.welcome')}, ${firstName} 👋` : `${t('dash.welcome')} 👋`, sub: t('dashboard.subtitle') },
+      ...niches.map((nName) => ({ title: nName, sub: t('dash.slideSub') })),
+    ];
+  }, [t, firstName]);
+  const [slide, setSlide] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(() => setSlide((v) => (v + 1) % slides.length), 5000);
+    return () => window.clearInterval(id);
+  }, [slides.length]);
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
       {/* HERO */}
@@ -46,10 +61,31 @@ export default function DashboardPage() {
             <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur">
               <Icon name="stack" size={13} /> {workspace}
             </span>
-            <h1 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              {firstName ? `${t('dash.welcome')}, ${firstName} 👋` : `${t('dash.welcome')} 👋`}
-            </h1>
-            <p className="mt-2 text-white/85">{t('dashboard.subtitle')}</p>
+            {/* Slider de boas-vindas + nichos (item 7) */}
+            <div className="relative h-[92px] sm:h-[104px]">
+              {slides.map((sl, i) => (
+                <div
+                  key={i}
+                  className={`absolute inset-0 transition-opacity duration-700 ${i === slide ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                  aria-hidden={i !== slide}
+                >
+                  <h1 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{sl.title}</h1>
+                  <p className="mt-2 text-white/85">{sl.sub}</p>
+                </div>
+              ))}
+            </div>
+            {/* Indicadores do slider */}
+            <div className="mt-3 flex gap-1.5">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setSlide(i)}
+                  aria-label={`Slide ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+                />
+              ))}
+            </div>
           </div>
           <button className="inline-flex h-11 items-center gap-2 rounded-interactive bg-white px-5 text-sm font-semibold text-[#0B1E3C] shadow-lg transition-transform hover:-translate-y-0.5">
             <Icon name="sparkles" size={16} /> {t('dash.autoSetup')}

@@ -336,6 +336,8 @@ const ptBR: Dict = {
   'level.starter': 'Starter', 'level.pro': 'Pró', 'level.elite': 'Elite', 'level.enterprise': 'Empresa',
   'lib.newCollection': 'Nova', 'lib.deleteCollection': 'Excluir coleção',
   'lib.confirmDeleteCollection': 'Excluir esta coleção?', 'lib.manageCollection': 'Gerenciar coleção',
+  'lib.price': 'Preço', 'lib.type': 'Tipo',
+  'price.free': 'Grátis', 'price.p50': 'até R$50', 'price.p100': 'R$50–100', 'price.p100plus': 'R$100+',
   // Página de erro
   'err.title': 'Algo saiu do trilho',
   'err.desc': 'Encontramos um erro inesperado. Você pode tentar novamente — se persistir, nossa equipe já foi notificada.',
@@ -347,6 +349,8 @@ const ptBR: Dict = {
   'empty.noKits': 'Nenhum Kit encontrado', 'empty.tryOther': 'Tente outro idioma ou outro nicho.', 'empty.explore': 'Explorar Biblioteca',
   'toast.loginDone': 'Login realizado.', 'toast.logoutDone': 'Logout realizado.',
   'dash.available': 'Kits disponíveis', 'dash.lastAccess': 'Últimos acessos', 'dash.indicators': 'Indicadores rápidos',
+  'dash.slideSub': 'Negócios digitais prontos para remixar.',
+  'dash.slides': 'Nutrição|Finanças|Beleza|Psicologia|Marketing|Lifestyle|Relacionamentos|Devocional|Educação|Desenvolvimento Pessoal',
 };
 
 const es: Dict = {
@@ -675,6 +679,8 @@ const es: Dict = {
   'level.starter': 'Starter', 'level.pro': 'Pro', 'level.elite': 'Elite', 'level.enterprise': 'Empresa',
   'lib.newCollection': 'Nueva', 'lib.deleteCollection': 'Eliminar colección',
   'lib.confirmDeleteCollection': '¿Eliminar esta colección?', 'lib.manageCollection': 'Gestionar colección',
+  'lib.price': 'Precio', 'lib.type': 'Tipo',
+  'price.free': 'Gratis', 'price.p50': 'hasta R$50', 'price.p100': 'R$50–100', 'price.p100plus': 'R$100+',
   // Página de error
   'err.title': 'Algo salió mal',
   'err.desc': 'Encontramos un error inesperado. Puedes intentar de nuevo — si persiste, nuestro equipo ya fue notificado.',
@@ -686,6 +692,8 @@ const es: Dict = {
   'empty.noKits': 'Ningún Kit encontrado', 'empty.tryOther': 'Prueba otro idioma u otro nicho.', 'empty.explore': 'Explorar Biblioteca',
   'toast.loginDone': 'Sesión iniciada.', 'toast.logoutDone': 'Sesión cerrada.',
   'dash.available': 'Kits disponibles', 'dash.lastAccess': 'Últimos accesos', 'dash.indicators': 'Indicadores rápidos',
+  'dash.slideSub': 'Negocios digitales listos para remixar.',
+  'dash.slides': 'Nutrición|Finanzas|Belleza|Psicología|Marketing|Lifestyle|Relaciones|Devocional|Educación|Desarrollo Personal',
 };
 
 const en: Dict = {
@@ -1014,6 +1022,8 @@ const en: Dict = {
   'level.starter': 'Starter', 'level.pro': 'Pro', 'level.elite': 'Elite', 'level.enterprise': 'Enterprise',
   'lib.newCollection': 'New', 'lib.deleteCollection': 'Delete collection',
   'lib.confirmDeleteCollection': 'Delete this collection?', 'lib.manageCollection': 'Manage collection',
+  'lib.price': 'Price', 'lib.type': 'Type',
+  'price.free': 'Free', 'price.p50': 'up to R$50', 'price.p100': 'R$50–100', 'price.p100plus': 'R$100+',
   // Error page
   'err.title': 'Something went off track',
   'err.desc': 'We hit an unexpected error. You can try again — if it persists, our team has been notified.',
@@ -1025,6 +1035,8 @@ const en: Dict = {
   'empty.noKits': 'No Kits found', 'empty.tryOther': 'Try another language or niche.', 'empty.explore': 'Explore Library',
   'toast.loginDone': 'Signed in.', 'toast.logoutDone': 'Signed out.',
   'dash.available': 'Available Kits', 'dash.lastAccess': 'Recent access', 'dash.indicators': 'Quick indicators',
+  'dash.slideSub': 'Digital businesses ready to remix.',
+  'dash.slides': 'Nutrition|Finance|Beauty|Psychology|Marketing|Lifestyle|Relationships|Devotional|Education|Personal Development',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };

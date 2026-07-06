@@ -32,6 +32,21 @@ const LEVELS: { code: string; labelKey: string }[] = [
   { code: 'todos', labelKey: 'library.all' }, { code: 'starter', labelKey: 'level.starter' }, { code: 'pro', labelKey: 'level.pro' },
   { code: 'elite', labelKey: 'level.elite' }, { code: 'enterprise', labelKey: 'level.enterprise' },
 ];
+const PRICES: { code: string; labelKey: string }[] = [
+  { code: 'todos', labelKey: 'library.all' }, { code: 'free', labelKey: 'price.free' }, { code: 'p50', labelKey: 'price.p50' },
+  { code: 'p100', labelKey: 'price.p100' }, { code: 'p100plus', labelKey: 'price.p100plus' },
+];
+// "Tipo" mapeado ao delivery bundle (classificação real existente).
+const TYPES: { code: string; labelKey: string }[] = [
+  { code: 'todos', labelKey: 'library.all' }, { code: 'solo', labelKey: 'bundle.solo' }, { code: 'pack', labelKey: 'bundle.pack' },
+  { code: 'suite', labelKey: 'bundle.suite' }, { code: 'full_kit', labelKey: 'bundle.full_kit' },
+];
+const priceBucket = (p?: number): string => {
+  if (p == null || p === 0) return 'free';
+  if (p <= 50) return 'p50';
+  if (p <= 100) return 'p100';
+  return 'p100plus';
+};
 
 export default function LibraryPage() {
   const qc = useQueryClient();
@@ -40,6 +55,8 @@ export default function LibraryPage() {
   const [niche, setNiche] = useState('todos');
   const [langFilter, setLangFilter] = useState<string>(lang);
   const [level, setLevel] = useState('todos');
+  const [price, setPrice] = useState('todos');
+  const [type, setType] = useState('todos');
   const [collectionId, setCollectionId] = useState<string | null>(null);
 
   // Ao trocar o idioma global, a biblioteca acompanha automaticamente.
@@ -62,10 +79,12 @@ export default function LibraryPage() {
       if (niche !== 'todos' && a.niche !== niche) return false;
       if (langFilter !== 'todos' && (a.language ?? 'pt-BR') !== langFilter) return false;
       if (level !== 'todos' && a.level !== level) return false;
+      if (price !== 'todos' && priceBucket((a as SearchableAsset).suggestedPrice) !== price) return false;
+      if (type !== 'todos' && (a as SearchableAsset).deliveryBundle !== type) return false;
       if (!term) return true;
       return haystack(a).includes(term);
     });
-  }, [collectionId, collectionAssets.data, all.data, q, niche, langFilter, level]);
+  }, [collectionId, collectionAssets.data, all.data, q, niche, langFilter, level, price, type]);
 
   const refreshCollections = () => qc.invalidateQueries({ queryKey: ['collections'] });
   const refreshCollAssets = () => qc.invalidateQueries({ queryKey: ['collection-assets', collectionId] });
@@ -138,6 +157,14 @@ export default function LibraryPage() {
           <div className="flex items-center gap-1.5">
             <span className="text-xs uppercase tracking-wide text-dim">{t('studio.f.level')}</span>
             {LEVELS.map((l) => <button key={l.code} onClick={() => setLevel(l.code)} className={chip(level === l.code)}>{t(l.labelKey)}</button>)}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-wide text-dim">{t('lib.price')}</span>
+            {PRICES.map((p) => <button key={p.code} onClick={() => setPrice(p.code)} className={chip(price === p.code)}>{t(p.labelKey)}</button>)}
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs uppercase tracking-wide text-dim">{t('lib.type')}</span>
+            {TYPES.map((ty) => <button key={ty.code} onClick={() => setType(ty.code)} className={chip(type === ty.code)}>{t(ty.labelKey)}</button>)}
           </div>
         </div>
 

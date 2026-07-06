@@ -111,6 +111,7 @@ export interface SearchableAsset extends AssetSummary {
   license: string;
   revenueModel: string;
   deliveryBundle: string;
+  suggestedPrice?: number;
 }
 
 /** Carrega os assets com os campos pesquisáveis para busca instantânea client-side. */
@@ -146,6 +147,7 @@ export async function listSearchableAssets(): Promise<SearchableAsset[]> {
       license: String(r.license ?? ''),
       revenueModel: String(r.revenue_model ?? ''),
       deliveryBundle: String(r.delivery_bundle ?? ''),
+      suggestedPrice: r.suggested_price != null ? Number(r.suggested_price) : undefined,
     };
   });
 }
