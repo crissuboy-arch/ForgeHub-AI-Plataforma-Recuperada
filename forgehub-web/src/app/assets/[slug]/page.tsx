@@ -253,11 +253,22 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
         <Icon name="back" size={16} /> {t('gate.back')}
       </Link>
 
-      {/* Hero */}
-      <div className="relative mb-8 overflow-hidden rounded-container border border-border">
-        <div className="h-40 w-full bg-brand-glow sm:h-52" style={asset.bannerUrl ? { backgroundImage: `url(${asset.bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined} />
-        <div className="absolute inset-0 bg-gradient-to-t from-canvas/95 via-canvas/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-end justify-between gap-4 p-6">
+      {/* Hero — arte completa (object-contain), sem corte; título abaixo para não cobrir a arte */}
+      <div className="mb-8 overflow-hidden rounded-container border border-border bg-card">
+        {asset.bannerUrl ? (
+          <div className="flex items-center justify-center bg-card p-3 sm:p-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={asset.bannerUrl}
+              alt={displayName}
+              decoding="async"
+              className="max-h-[440px] w-auto max-w-full rounded-interactive object-contain"
+            />
+          </div>
+        ) : (
+          <div className="h-40 w-full bg-brand-glow sm:h-52" />
+        )}
+        <div className="flex flex-wrap items-end justify-between gap-4 border-t border-border p-6">
           <div>
             <div className="mb-2 flex flex-wrap items-center gap-2">
               <Badge tone="primary">{asset.category}</Badge>
