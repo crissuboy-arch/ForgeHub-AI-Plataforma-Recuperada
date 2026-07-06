@@ -141,7 +141,7 @@ export const heroSlides: HeroSlide[] = [
     icon: 'sparkles',
     accent: '#f59e0b',
     gradient: 'linear-gradient(135deg, #0B1E3C 0%, #4a2f14 100%)',
-    link: '/assets',
+    link: '/assets?niche=infantil',
     linkSecondary: '/assets',
     buttonKey: 'hero.explore',
     buttonSecondaryKey: 'hero.details',
