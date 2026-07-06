@@ -19,7 +19,6 @@ import { listCategories, listPlatforms, listAiTools, listTags, listNiches, saveA
 import { LANGUAGES as APP_LANGUAGES } from '../../lib/i18n/dictionary';
 import type { KitTranslation } from '../../types';
 import { uploadMedia } from '../../data/storage';
-import { SmartImageUpload } from '../molecules/SmartImageUpload';
 import { healthColor } from '../molecules/AssetCard';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import { useToast } from './Toast';
@@ -27,9 +26,10 @@ import { useToast } from './Toast';
 type MediaKey =
   | 'coverUrl' | 'bannerUrl' | 'logoUrl' | 'thumbnailUrl' | 'previewUrl' | 'mockupUrl';
 
-// Upload real no Supabase Storage: preview imediato, barra de progresso, substituir/remover.
-function MediaUpload({ label, name, control, setValue, register }: {
-  label: string; name: MediaKey; control: Control<AssetFormValues>;
+// Upload individual e independente no Supabase Storage — sem corte automático.
+// Preview imediato, enviar/substituir/remover; cada campo controla apenas a sua URL.
+function MediaUpload({ label, name, hint, control, setValue, register }: {
+  label: string; name: MediaKey; hint?: string; control: Control<AssetFormValues>;
   setValue: (n: MediaKey, v: string, o?: object) => void;
   register: ReturnType<typeof useForm<AssetFormValues>>['register'];
 }) {
@@ -52,7 +52,7 @@ function MediaUpload({ label, name, control, setValue, register }: {
     }
   };
   return (
-    <Field label={label}>
+    <Field label={label} hint={hint}>
       <div className="flex items-center gap-3">
         <div className="flex h-16 w-24 shrink-0 items-center justify-center overflow-hidden rounded-interactive border border-border bg-surface">
           {url ? (
@@ -481,16 +481,13 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
 
         {/* 2. Mídia */}
         <Section n={2} icon="asset" title={t('studio.sec2')}>
-          <div className="mb-4">
-            <SmartImageUpload onDone={(field, url) => setValue(field, url, { shouldValidate: true })} />
-          </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <MediaUpload label={t('studio.m.cover')} name="coverUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label={t('studio.m.banner')} name="bannerUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label={t('studio.m.logo')} name="logoUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label={t('studio.m.thumbnail')} name="thumbnailUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label={t('studio.m.preview')} name="previewUrl" control={control} setValue={setValue} register={register} />
-            <MediaUpload label={t('studio.m.mockup')} name="mockupUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.thumbnail')} hint={t('studio.m.thumbHint')} name="thumbnailUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.cover')} hint={t('studio.m.coverHint')} name="coverUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.banner')} hint={t('studio.m.bannerHint')} name="bannerUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.preview')} hint={t('studio.m.previewHint')} name="previewUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.mockup')} hint={t('studio.m.mockupHint')} name="mockupUrl" control={control} setValue={setValue} register={register} />
+            <MediaUpload label={t('studio.m.logo')} hint={t('studio.m.logoHint')} name="logoUrl" control={control} setValue={setValue} register={register} />
             <Field label={t('studio.f.ytVideo')} error={errors.videoYoutubeUrl?.message}><input className={inputClass} placeholder="https://youtube.com/…" {...register('videoYoutubeUrl')} /></Field>
             <Field label={t('studio.f.loomVideo')} error={errors.videoLoomUrl?.message}><input className={inputClass} placeholder="https://loom.com/…" {...register('videoLoomUrl')} /></Field>
           </div>
