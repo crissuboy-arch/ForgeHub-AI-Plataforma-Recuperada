@@ -358,6 +358,7 @@ const ptBR: Dict = {
   'dash.available': 'Kits disponíveis', 'dash.lastAccess': 'Últimos acessos', 'dash.indicators': 'Indicadores rápidos',
   'dash.slideSub': 'Negócios digitais prontos para remixar.',
   'dash.slides': 'Nutrição|Finanças|Beleza|Psicologia|Marketing|Lifestyle|Relacionamentos|Devocional|Educação|Desenvolvimento Pessoal',
+  'hero.explore': 'Explorar Kit', 'hero.details': 'Ver detalhes', 'hero.exploreLibrary': 'Explorar Biblioteca', 'hero.included': 'Inclui',
 };
 
 const es: Dict = {
@@ -708,6 +709,7 @@ const es: Dict = {
   'dash.available': 'Kits disponibles', 'dash.lastAccess': 'Últimos accesos', 'dash.indicators': 'Indicadores rápidos',
   'dash.slideSub': 'Negocios digitales listos para remixar.',
   'dash.slides': 'Nutrición|Finanzas|Belleza|Psicología|Marketing|Lifestyle|Relaciones|Devocional|Educación|Desarrollo Personal',
+  'hero.explore': 'Explorar Kit', 'hero.details': 'Ver detalles', 'hero.exploreLibrary': 'Explorar Biblioteca', 'hero.included': 'Incluye',
 };
 
 const en: Dict = {
@@ -1058,6 +1060,7 @@ const en: Dict = {
   'dash.available': 'Available Kits', 'dash.lastAccess': 'Recent access', 'dash.indicators': 'Quick indicators',
   'dash.slideSub': 'Digital businesses ready to remix.',
   'dash.slides': 'Nutrition|Finance|Beauty|Psychology|Marketing|Lifestyle|Relationships|Devotional|Education|Personal Development',
+  'hero.explore': 'Explore Kit', 'hero.details': 'View details', 'hero.exploreLibrary': 'Explore Library', 'hero.included': 'Includes',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };

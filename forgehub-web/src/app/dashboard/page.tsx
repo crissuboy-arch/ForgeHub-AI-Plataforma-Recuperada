@@ -1,6 +1,5 @@
 'use client';
 // src/app/dashboard/page.tsx — Dashboard Premium (Sprint 5.5)
-import { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
 import { AssetGrid } from '../../components/organisms/AssetGrid';
@@ -8,13 +7,13 @@ import { AssetCard } from '../../components/molecules/AssetCard';
 import { StatCard } from '../../components/molecules/StatCard';
 import { TopAssets } from '../../components/organisms/TopAssets';
 import { ActivityTimeline } from '../../components/organisms/ActivityTimeline';
+import { HeroCarousel } from '../../components/organisms/HeroCarousel';
 import { Typography } from '../../components/atoms/Typography';
 import { Icon } from '../../components/atoms/Icon';
 import { Skeleton } from '../../components/atoms/Skeleton';
-import { listRecents, getSettings } from '../../data/userData';
+import { listRecents } from '../../data/userData';
 import { getDashboardStats } from '../../data/assets';
 import { getActivitySeries } from '../../data/dashboard';
-import { useAuth } from '../../hooks/useAuth';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import { useTranslatedSummaries } from '../../hooks/useTranslatedSummaries';
 
@@ -25,75 +24,19 @@ const ActivityChart = dynamic(() => import('../../components/organisms/ActivityC
 });
 
 export default function DashboardPage() {
-  const { user } = useAuth();
   const { t } = useLanguage();
   const recents = useQuery({ queryKey: ['recents'], queryFn: () => listRecents(4) });
   const stats = useQuery({ queryKey: ['dashboard-stats'], queryFn: getDashboardStats });
-  const settings = useQuery({ queryKey: ['settings'], queryFn: getSettings });
   const series = useQuery({ queryKey: ['activity-series'], queryFn: () => getActivitySeries(30) });
   const recentsTr = useTranslatedSummaries(recents.data);
-
-  const firstName = settings.data?.fullName?.trim().split(' ')[0] || user?.email?.split('@')[0] || '';
-  const workspace = settings.data?.workspace?.trim() || t('sidebar.workspace');
   const s = stats.data;
-
-  // Hero slider (item 7): boas-vindas + nichos em loop, fade a cada 5s.
-  const slides = useMemo(() => {
-    const niches = t('dash.slides').split('|');
-    return [
-      { title: firstName ? `${t('dash.welcome')}, ${firstName} 👋` : `${t('dash.welcome')} 👋`, sub: t('dashboard.subtitle') },
-      ...niches.map((nName) => ({ title: nName, sub: t('dash.slideSub') })),
-    ];
-  }, [t, firstName]);
-  const [slide, setSlide] = useState(0);
-  useEffect(() => {
-    const id = window.setInterval(() => setSlide((v) => (v + 1) % slides.length), 5000);
-    return () => window.clearInterval(id);
-  }, [slides.length]);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* HERO */}
-      <div className="bg-banner-glow relative mb-8 overflow-hidden rounded-container p-8 shadow-[0_28px_70px_-24px_rgba(124,92,252,0.65)] sm:p-10">
-        <span className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-cyan/30 blur-3xl" />
-        <div className="relative flex flex-wrap items-center justify-between gap-6">
-          <div className="max-w-xl">
-            <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur">
-              <Icon name="stack" size={13} /> {workspace}
-            </span>
-            {/* Slider de boas-vindas + nichos (item 7) */}
-            <div className="relative h-[92px] sm:h-[104px]">
-              {slides.map((sl, i) => (
-                <div
-                  key={i}
-                  className={`absolute inset-0 transition-opacity duration-700 ${i === slide ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-                  aria-hidden={i !== slide}
-                >
-                  <h1 className="font-display text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{sl.title}</h1>
-                  <p className="mt-2 text-white/85">{sl.sub}</p>
-                </div>
-              ))}
-            </div>
-            {/* Indicadores do slider */}
-            <div className="mt-3 flex gap-1.5">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setSlide(i)}
-                  aria-label={`Slide ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all ${i === slide ? 'w-5 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
-                />
-              ))}
-            </div>
-          </div>
-          <button className="inline-flex h-11 items-center gap-2 rounded-interactive bg-white px-5 text-sm font-semibold text-[#0B1E3C] shadow-lg transition-transform hover:-translate-y-0.5">
-            <Icon name="sparkles" size={16} /> {t('dash.autoSetup')}
-          </button>
-        </div>
-      </div>
+      {/* HERO CAROUSEL premium (data-driven) */}
+      <HeroCarousel />
 
-      {/* INDICADORES RÁPIDOS (item 7) */}
+      {/* INDICADORES RÁPIDOS */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {[
           { icon: 'stack', label: t('dash.available'), value: s?.totalAssets ?? 0 },
