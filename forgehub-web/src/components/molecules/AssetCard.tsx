@@ -72,6 +72,13 @@ export const AssetCard: React.FC<AssetCardProps> = ({ asset, className }) => {
           <Icon name="check" size={12} className={healthColor(asset.healthScore)} />
           <span className={classNames('text-[11px] font-bold', healthColor(asset.healthScore))}>{asset.healthScore}%</span>
         </div>
+        {/* Selo de conclusão (item 6) */}
+        {asset.healthScore >= 100 && (
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 bg-gradient-to-t from-deep/85 to-transparent px-2 pb-1 pt-4">
+            <span className="text-[10px] leading-none tracking-[0.2em] text-gold">★★★★★</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-gold-light">{t('card.complete')}</span>
+          </div>
+        )}
       </div>
 
       {/* Corpo */}

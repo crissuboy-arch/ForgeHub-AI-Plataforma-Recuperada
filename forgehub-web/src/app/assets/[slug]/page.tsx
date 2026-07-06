@@ -16,7 +16,7 @@ import { Typography } from '../../../components/atoms/Typography';
 import { Badge } from '../../../components/atoms/Badge';
 import { Icon } from '../../../components/atoms/Icon';
 import { Skeleton } from '../../../components/atoms/Skeleton';
-import { relativeDate } from '../../../components/molecules/AssetCard';
+import { relativeDate, healthColor } from '../../../components/molecules/AssetCard';
 import { HealthRing } from '../../../components/atoms/HealthRing';
 import { useLanguage } from '../../../lib/i18n/LanguageProvider';
 import { useToast } from '../../../components/organisms/Toast';
@@ -224,6 +224,24 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
 
   const analytics = asset.analytics;
 
+  // Presença de itens do checklist (para entregáveis + barra de conclusão).
+  const has = (item: string) => asset.checklist.some((c) => c.item === item && c.present);
+  const videoUrl = asset.videoYoutubeUrl || asset.videoLoomUrl || undefined;
+
+  // Entregáveis do Kit (item 2): presente → abrir/incluído; ausente → "Em desenvolvimento".
+  const deliverables: { label: string; icon: string; present: boolean; url?: string }[] = [
+    { label: t('incl.appRemix'), icon: 'bolt', present: Boolean(openUrl) || has('microapp'), url: openUrl },
+    { label: t('incl.salesPage'), icon: 'money', present: Boolean(salesUrl) || has('landing'), url: salesUrl },
+    { label: t('incl.checkout'), icon: 'cube', present: Boolean(linkOf('deploy') ?? linkOf('demo')) || has('deploy'), url: linkOf('deploy') ?? linkOf('demo') },
+    { label: t('incl.ebookPremium'), icon: 'docs', present: Boolean(docsUrl ?? driveUrl) || has('documentacao'), url: docsUrl ?? driveUrl },
+    { label: t('incl.promptMaster'), icon: 'clipboard', present: promptAvailable, url: linkOf('prompt') },
+    { label: t('incl.templates'), icon: 'asset', present: Boolean(linkOf('canva')) || has('canva'), url: linkOf('canva') },
+    { label: t('incl.creatives'), icon: 'sparkles', present: has('criativos'), url: driveUrl },
+    { label: t('incl.videos'), icon: 'rocket', present: Boolean(videoUrl) || has('videos'), url: videoUrl },
+    { label: t('incl.logo'), icon: 'star', present: Boolean(asset.logoUrl), url: asset.logoUrl },
+    { label: t('incl.mockups'), icon: 'cube', present: has('mockups') || Boolean(asset.mockupUrl), url: asset.mockupUrl },
+  ];
+
   return (
     <div className="animate-in mx-auto max-w-6xl px-6 py-8">
       {/* Voltar */}
@@ -284,27 +302,29 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             )}
           </Section>
 
-          {/* Mockups do Kit (App / Landing / Checkout / Ebook) */}
+          {/* Entregáveis do Kit (item 2) */}
           <Section icon="stack" title={t('detail.included')}>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {[
-                { label: t('incl.app'), icon: 'bolt', url: openUrl },
-                { label: t('incl.sales'), icon: 'money', url: salesUrl },
-                { label: t('incl.checkout'), icon: 'cube', url: linkOf('deploy') ?? linkOf('demo') },
-                { label: t('incl.ebook'), icon: 'docs', url: docsUrl ?? driveUrl },
-              ].map((m) => (
-                <div key={m.label} className="overflow-hidden rounded-container border border-border bg-surface/50">
-                  <div className="flex h-28 items-center justify-center bg-brand-glow/15">
-                    <Icon name={m.icon} size={30} className="text-primary-hover" />
-                  </div>
-                  <div className="flex items-center justify-between p-3">
-                    <span className="text-sm font-medium text-content">{m.label}</span>
-                    {m.url ? (
-                      <a href={m.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-hover">
-                        {t('action.open')} <Icon name="external" size={13} />
-                      </a>
+              {deliverables.map((m) => (
+                <div
+                  key={m.label}
+                  className={`flex items-center gap-3 rounded-container border p-3 transition-colors ${m.present ? 'border-success/25 bg-success/5' : 'border-border bg-surface/40'}`}
+                >
+                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-interactive ${m.present ? 'bg-success/12 text-success' : 'bg-surface-2 text-muted'}`}>
+                    <Icon name={m.present ? 'check' : m.icon} size={18} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium text-content">{m.label}</span>
+                    {m.present ? (
+                      m.url ? (
+                        <a href={m.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-hover">
+                          {t('action.open')} <Icon name="external" size={11} />
+                        </a>
+                      ) : (
+                        <span className="text-xs font-medium text-success">✓</span>
+                      )
                     ) : (
-                      <span className="text-xs text-dim">{t('incl.notIncluded')}</span>
+                      <span className="text-xs text-muted">{t('incl.inDev')}</span>
                     )}
                   </div>
                 </div>
@@ -348,25 +368,37 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             </Section>
           )}
 
-          {/* Health Score + Checklist */}
-          <Section icon="check" title={t('detail.health')}>
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-              <HealthRing score={asset.healthScore} />
-              <div className="grid flex-1 grid-cols-2 gap-2 sm:grid-cols-3">
-                {asset.checklist.map((c) => (
-                  <div key={c.item} className="flex items-center gap-2 text-sm">
-                    <Icon
-                      name={c.present ? 'check' : 'x'}
-                      size={14}
-                      className={c.present ? 'text-success' : 'text-danger/70'}
-                    />
-                    <span className={c.present ? 'text-content' : 'text-muted line-through'}>
-                      {t(`checklist.${c.item}`)}
-                    </span>
-                  </div>
-                ))}
-              </div>
+          {/* Barra de conclusão do Kit (item 5) */}
+          <Section icon="check" title={t('complete.title')}>
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <span className="font-display text-sm font-bold uppercase tracking-wide text-content">
+                {asset.healthScore >= 100
+                  ? isAdmin ? t('complete.kitComplete') : t('complete.kitCompleteStudent')
+                  : `${asset.healthScore}%`}
+              </span>
+              {isAdmin && <span className={`text-sm font-bold ${healthColor(asset.healthScore)}`}>{asset.healthScore}%</span>}
             </div>
+            <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2">
+              <div className="h-full rounded-full bg-brand-glow transition-all duration-500" style={{ width: `${Math.min(100, asset.healthScore)}%` }} />
+            </div>
+
+            {/* Lista de entregáveis (✔️ incluído / pendente) */}
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {asset.checklist.map((c) => (
+                <div key={c.item} className="flex items-center gap-2 text-sm">
+                  <Icon name={c.present ? 'check' : 'x'} size={14} className={c.present ? 'text-success' : 'text-muted'} />
+                  <span className={c.present ? 'text-content' : 'text-muted'}>{t(`checklist.${c.item}`)}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Métrica interna (somente administrador) */}
+            {isAdmin && (
+              <div className="mt-5 flex items-center gap-3 border-t border-border pt-4">
+                <HealthRing score={asset.healthScore} />
+                <Typography variant="caption">{t('detail.health')}</Typography>
+              </div>
+            )}
           </Section>
 
           {/* Analytics */}
@@ -509,6 +541,15 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               >
                 <Icon name="remix" size={16} /> {remixing ? t('action.remixing') : t('action.remixKit')}
               </button>
+              {/* Editar Kit — somente administradores (item 3) */}
+              {isAdmin && (
+                <Link
+                  href={`/admin/assets/edit/${asset.slug}`}
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-interactive border border-primary/40 text-sm font-semibold text-primary-hover transition-colors hover:bg-primary/10"
+                >
+                  <Icon name="settings" size={15} /> {t('detail.editKit')}
+                </Link>
+              )}
               {remixErr && <p className="text-xs text-danger">{remixErr}</p>}
               <div className="grid grid-cols-2 gap-2">
                 <a

@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${montserrat.variable} h-full antialiased`}>
+    <html lang="pt-BR" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-deep text-content">
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
         <LanguageProvider>
