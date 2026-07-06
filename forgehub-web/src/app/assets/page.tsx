@@ -1,6 +1,7 @@
 'use client';
 // src/app/assets/page.tsx — BIBLIOTECA DE NEGÓCIOS DIGITAIS (por nicho, multilíngue).
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Badge } from '../../components/atoms/Badge';
 import { Icon } from '../../components/atoms/Icon';
@@ -48,15 +49,16 @@ const priceBucket = (p?: number): string => {
   return 'p100plus';
 };
 
-export default function LibraryPage() {
+function LibraryContent() {
   const qc = useQueryClient();
   const { t, lang } = useLanguage();
-  const [q, setQ] = useState('');
-  const [niche, setNiche] = useState('todos');
+  const sp = useSearchParams();
+  const [q, setQ] = useState(sp.get('q') ?? '');
+  const [niche, setNiche] = useState(sp.get('niche') ?? 'todos');
   const [langFilter, setLangFilter] = useState<string>(lang);
   const [level, setLevel] = useState('todos');
   const [price, setPrice] = useState('todos');
-  const [type, setType] = useState('todos');
+  const [type, setType] = useState(sp.get('tipo') ?? 'todos');
   const [collectionId, setCollectionId] = useState<string | null>(null);
 
   // Ao trocar o idioma global, a biblioteca acompanha automaticamente.
@@ -210,5 +212,14 @@ export default function LibraryPage() {
         </>
       )}
     </div>
+  );
+}
+
+// useSearchParams exige Suspense em páginas estáticas.
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={null}>
+      <LibraryContent />
+    </Suspense>
   );
 }
