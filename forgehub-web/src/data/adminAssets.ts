@@ -97,6 +97,7 @@ export async function getAssetForEdit(
   values.fullDescription = str('full_description');
   values.level = (row.level as AssetFormValues['level']) ?? 'starter';
   values.status = (row.status as AssetFormValues['status']) ?? 'draft';
+  values.assetType = (row.asset_type as AssetFormValues['assetType']) ?? 'kit';
   values.license = (row.license as AssetFormValues['license']) ?? 'comercial';
   values.revenueModel = (row.revenue_model as AssetFormValues['revenueModel']) ?? 'one_time';
   values.deliveryBundle = (row.delivery_bundle as AssetFormValues['deliveryBundle']) ?? 'solo';
@@ -176,6 +177,7 @@ export async function saveAsset(
     full_description: values.fullDescription || null,
     status,
     level: values.level,
+    asset_type: values.assetType,
     license: values.license,
     revenue_model: values.revenueModel,
     delivery_bundle: values.deliveryBundle,

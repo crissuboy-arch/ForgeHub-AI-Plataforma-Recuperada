@@ -342,6 +342,7 @@ const ptBR: Dict = {
   'lib.confirmDeleteCollection': 'Excluir esta coleção?', 'lib.manageCollection': 'Gerenciar coleção',
   'lib.price': 'Preço', 'lib.type': 'Tipo',
   'price.free': 'Grátis', 'price.p50': 'até R$50', 'price.p100': 'R$50–100', 'price.p100plus': 'R$100+',
+  'type.app': 'Aplicativo', 'type.prompt': 'Prompt', 'type.kit': 'Kit', 'type.template': 'Template', 'studio.f.assetType': 'Tipo do ativo',
   // Página de erro
   'err.title': 'Algo saiu do trilho',
   'err.desc': 'Encontramos um erro inesperado. Você pode tentar novamente — se persistir, nossa equipe já foi notificada.',
@@ -689,6 +690,7 @@ const es: Dict = {
   'lib.confirmDeleteCollection': '¿Eliminar esta colección?', 'lib.manageCollection': 'Gestionar colección',
   'lib.price': 'Precio', 'lib.type': 'Tipo',
   'price.free': 'Gratis', 'price.p50': 'hasta R$50', 'price.p100': 'R$50–100', 'price.p100plus': 'R$100+',
+  'type.app': 'Aplicación', 'type.prompt': 'Prompt', 'type.kit': 'Kit', 'type.template': 'Plantilla', 'studio.f.assetType': 'Tipo del activo',
   // Página de error
   'err.title': 'Algo salió mal',
   'err.desc': 'Encontramos un error inesperado. Puedes intentar de nuevo — si persiste, nuestro equipo ya fue notificado.',
@@ -1036,6 +1038,7 @@ const en: Dict = {
   'lib.confirmDeleteCollection': 'Delete this collection?', 'lib.manageCollection': 'Manage collection',
   'lib.price': 'Price', 'lib.type': 'Type',
   'price.free': 'Free', 'price.p50': 'up to R$50', 'price.p100': 'R$50–100', 'price.p100plus': 'R$100+',
+  'type.app': 'App', 'type.prompt': 'Prompt', 'type.kit': 'Kit', 'type.template': 'Template', 'studio.f.assetType': 'Asset type',
   // Error page
   'err.title': 'Something went off track',
   'err.desc': 'We hit an unexpected error. You can try again — if it persists, our team has been notified.',

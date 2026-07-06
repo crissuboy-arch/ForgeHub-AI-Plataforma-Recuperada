@@ -94,6 +94,7 @@ export const assetFormSchema = z.object({
   fullDescription: z.string().trim().optional().or(z.literal('')),
   level: z.enum(LEVELS),
   status: z.enum(STATUSES),
+  assetType: z.enum(['app', 'prompt', 'kit', 'template']),
   license: z.enum(LICENSES),
   revenueModel: z.enum(REVENUE_MODELS),
   deliveryBundle: z.enum(DELIVERY_BUNDLES),
@@ -158,7 +159,7 @@ export type AssetFormValues = z.infer<typeof assetFormSchema>;
 export function emptyFormValues(): AssetFormValues {
   return {
     name: '', slug: '', category: '', language: 'pt-BR', niche: '', shortDescription: '', fullDescription: '',
-    level: 'starter', status: 'draft', license: 'comercial',
+    level: 'starter', status: 'draft', assetType: 'kit', license: 'comercial',
     revenueModel: 'one_time', deliveryBundle: 'solo',
     setupTimeMinutes: null, timeToPublishMinutes: null, suggestedPrice: null,
     coverUrl: '', bannerUrl: '', logoUrl: '', thumbnailUrl: '', previewUrl: '',

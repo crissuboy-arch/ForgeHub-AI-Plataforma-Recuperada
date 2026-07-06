@@ -453,6 +453,14 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
             </Field>
             <Field label={t('studio.f.level')}><Select options={LEVELS} {...register('level')} /></Field>
             <Field label={t('studio.f.status')}><Select options={STATUSES} {...register('status')} /></Field>
+            <Field label={t('studio.f.assetType')}>
+              <select className={inputClass} {...register('assetType')}>
+                <option value="kit">{t('type.kit')}</option>
+                <option value="app">{t('type.app')}</option>
+                <option value="prompt">{t('type.prompt')}</option>
+                <option value="template">{t('type.template')}</option>
+              </select>
+            </Field>
             <Field label={t('studio.f.license')}><Select options={LICENSES} {...register('license')} /></Field>
             <Field label={t('studio.f.revenue')}><Select options={REVENUE_MODELS} {...register('revenueModel')} /></Field>
             <Field label={t('studio.f.bundle')}><Select options={DELIVERY_BUNDLES} {...register('deliveryBundle')} /></Field>

@@ -36,10 +36,10 @@ const PRICES: { code: string; labelKey: string }[] = [
   { code: 'todos', labelKey: 'library.all' }, { code: 'free', labelKey: 'price.free' }, { code: 'p50', labelKey: 'price.p50' },
   { code: 'p100', labelKey: 'price.p100' }, { code: 'p100plus', labelKey: 'price.p100plus' },
 ];
-// "Tipo" mapeado ao delivery bundle (classificação real existente).
+// "Tipo" do ativo (asset_type): App / Prompt / Kit / Template.
 const TYPES: { code: string; labelKey: string }[] = [
-  { code: 'todos', labelKey: 'library.all' }, { code: 'solo', labelKey: 'bundle.solo' }, { code: 'pack', labelKey: 'bundle.pack' },
-  { code: 'suite', labelKey: 'bundle.suite' }, { code: 'full_kit', labelKey: 'bundle.full_kit' },
+  { code: 'todos', labelKey: 'library.all' }, { code: 'kit', labelKey: 'type.kit' }, { code: 'app', labelKey: 'type.app' },
+  { code: 'prompt', labelKey: 'type.prompt' }, { code: 'template', labelKey: 'type.template' },
 ];
 const priceBucket = (p?: number): string => {
   if (p == null || p === 0) return 'free';
@@ -80,7 +80,7 @@ export default function LibraryPage() {
       if (langFilter !== 'todos' && (a.language ?? 'pt-BR') !== langFilter) return false;
       if (level !== 'todos' && a.level !== level) return false;
       if (price !== 'todos' && priceBucket((a as SearchableAsset).suggestedPrice) !== price) return false;
-      if (type !== 'todos' && (a as SearchableAsset).deliveryBundle !== type) return false;
+      if (type !== 'todos' && (a as SearchableAsset).assetType !== type) return false;
       if (!term) return true;
       return haystack(a).includes(term);
     });
