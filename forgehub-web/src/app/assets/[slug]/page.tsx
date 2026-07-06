@@ -4,7 +4,7 @@
 // via useAssetDetail. Estilo Linear/Vercel/Notion: Dark Slate, glass, hover 200ms.
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAssetDetail } from '../../../hooks/useAssets';
 import { getAssetTranslation } from '../../../data/assets';
@@ -183,6 +183,9 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
   // Admin abre o Studio para personalizar; aluno recebe a cópia na sua área.
   const router = useRouter();
   const { isAdmin } = useRole();
+  // "Ver como aluno" (item 11): ?preview=student força a visão de aluno.
+  const searchParams = useSearchParams();
+  const showAdmin = isAdmin && searchParams.get('preview') !== 'student';
   const [remixing, setRemixing] = useState(false);
   const [remixErr, setRemixErr] = useState<string | null>(null);
   const onRemix = async () => {
@@ -192,7 +195,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
       const res = await duplicateAsset(asset.slug);
       if (res) {
         toast(t('toast.remixed'), 'success');
-        router.push(isAdmin ? `/admin/assets/edit/${res.slug}` : `/assets/${res.slug}`);
+        router.push(showAdmin ? `/admin/assets/edit/${res.slug}` : `/assets/${res.slug}`);
       }
     } catch (e) {
       setRemixErr(e instanceof Error ? e.message : String(e));
@@ -373,10 +376,10 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             <div className="mb-2 flex items-center justify-between gap-3">
               <span className="font-display text-sm font-bold uppercase tracking-wide text-content">
                 {asset.healthScore >= 100
-                  ? isAdmin ? t('complete.kitComplete') : t('complete.kitCompleteStudent')
-                  : `${asset.healthScore}%`}
+                  ? showAdmin ? t('complete.kitComplete') : t('complete.kitCompleteStudent')
+                  : showAdmin ? `${asset.healthScore}%` : t('complete.kitCompleteStudent')}
               </span>
-              {isAdmin && <span className={`text-sm font-bold ${healthColor(asset.healthScore)}`}>{asset.healthScore}%</span>}
+              {showAdmin && <span className={`text-sm font-bold ${healthColor(asset.healthScore)}`}>{asset.healthScore}%</span>}
             </div>
             <div className="h-3 w-full overflow-hidden rounded-full bg-surface-2">
               <div className="h-full rounded-full bg-brand-glow transition-all duration-500" style={{ width: `${Math.min(100, asset.healthScore)}%` }} />
@@ -393,7 +396,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             </div>
 
             {/* Métrica interna (somente administrador) */}
-            {isAdmin && (
+            {showAdmin && (
               <div className="mt-5 flex items-center gap-3 border-t border-border pt-4">
                 <HealthRing score={asset.healthScore} />
                 <Typography variant="caption">{t('detail.health')}</Typography>
@@ -542,7 +545,7 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                 <Icon name="remix" size={16} /> {remixing ? t('action.remixing') : t('action.remixKit')}
               </button>
               {/* Editar Kit — somente administradores (item 3) */}
-              {isAdmin && (
+              {showAdmin && (
                 <Link
                   href={`/admin/assets/edit/${asset.slug}`}
                   className="flex h-11 w-full items-center justify-center gap-2 rounded-interactive border border-primary/40 text-sm font-semibold text-primary-hover transition-colors hover:bg-primary/10"

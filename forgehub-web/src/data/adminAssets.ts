@@ -246,6 +246,18 @@ export async function deleteAsset(id: string): Promise<void> {
   if (error) throw error;
 }
 
+/** Altera apenas o status do Kit (publicar/despublicar/arquivar) — item 11. */
+export async function setAssetStatus(
+  id: string,
+  status: 'draft' | 'active' | 'updated' | 'archived',
+): Promise<void> {
+  const { error } = await supabase
+    .from('assets')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', id);
+  if (error) throw error;
+}
+
 // ------------------------------------------------------------- Traduções do Kit (item 2)
 export async function getAssetTranslations(assetId: string): Promise<Record<string, KitTranslation>> {
   const { data, error } = await supabase.from('asset_translations').select('*').eq('asset_id', assetId);

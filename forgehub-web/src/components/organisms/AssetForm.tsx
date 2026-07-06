@@ -15,7 +15,7 @@ import {
   LEVELS, STATUSES, LICENSES, REVENUE_MODELS, DELIVERY_BUNDLES,
   LINK_FIELDS, CHECKLIST_ITEMS, COUNTRIES, LANGUAGES, type AssetFormValues,
 } from '../../lib/assetSchema';
-import { listCategories, listPlatforms, listAiTools, listTags, listNiches, saveAsset, deleteAsset, duplicateAsset, getAssetTranslations, saveAssetTranslations } from '../../data/adminAssets';
+import { listCategories, listPlatforms, listAiTools, listTags, listNiches, saveAsset, deleteAsset, duplicateAsset, getAssetTranslations, saveAssetTranslations, setAssetStatus } from '../../data/adminAssets';
 import { LANGUAGES as APP_LANGUAGES } from '../../lib/i18n/dictionary';
 import type { KitTranslation } from '../../types';
 import { uploadMedia } from '../../data/storage';
@@ -199,6 +199,87 @@ function TagInput({ control, suggestions }: { control: Control<AssetFormValues>;
   );
 }
 
+// ------------------------------------------------------------- Arquivos por categoria (item 12)
+const FILE_CATEGORIES: { value: string; key: string; icon: string }[] = [
+  { value: 'app', key: 'fcat.app', icon: 'bolt' },
+  { value: 'page', key: 'fcat.page', icon: 'money' },
+  { value: 'checkout', key: 'fcat.checkout', icon: 'cube' },
+  { value: 'prompt', key: 'fcat.prompt', icon: 'clipboard' },
+  { value: 'video', key: 'fcat.video', icon: 'rocket' },
+  { value: 'logo', key: 'fcat.logo', icon: 'star' },
+  { value: 'mockups', key: 'fcat.mockups', icon: 'cube' },
+  { value: 'canva', key: 'fcat.canva', icon: 'asset' },
+  { value: 'drive', key: 'fcat.drive', icon: 'download' },
+  { value: 'templates', key: 'fcat.templates', icon: 'asset' },
+  { value: 'creatives', key: 'fcat.creatives', icon: 'sparkles' },
+  { value: 'source', key: 'fcat.source', icon: 'code' },
+];
+const catIcon = (v?: string) => FILE_CATEGORIES.find((c) => c.value === v)?.icon ?? 'docs';
+const fmtSize = (b?: number | null) => {
+  if (!b) return '';
+  if (b < 1024) return `${b} B`;
+  if (b < 1048576) return `${(b / 1024).toFixed(0)} KB`;
+  return `${(b / 1048576).toFixed(1)} MB`;
+};
+
+function FileRow({ i, control, setValue, register, onRemove }: {
+  i: number;
+  control: Control<AssetFormValues>;
+  setValue: ReturnType<typeof useForm<AssetFormValues>>['setValue'];
+  register: ReturnType<typeof useForm<AssetFormValues>>['register'];
+  onRemove: () => void;
+}) {
+  const { t } = useLanguage();
+  const [busy, setBusy] = useState(false);
+  const url = useWatch({ control, name: `files.${i}.url` as const }) as string;
+  const size = useWatch({ control, name: `files.${i}.sizeBytes` as const }) as number | null;
+  const kind = useWatch({ control, name: `files.${i}.kind` as const }) as string;
+  const nameVal = useWatch({ control, name: `files.${i}.name` as const }) as string;
+
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setBusy(true);
+    try {
+      const publicUrl = await uploadMedia(f);
+      setValue(`files.${i}.url` as const, publicUrl, { shouldValidate: false });
+      setValue(`files.${i}.sizeBytes` as const, f.size);
+      if (!nameVal) setValue(`files.${i}.name` as const, f.name);
+    } finally {
+      setBusy(false);
+      e.target.value = '';
+    }
+  };
+
+  return (
+    <div className="rounded-interactive border border-border bg-surface p-3">
+      <div className="grid items-end gap-2 sm:grid-cols-[auto_1.5fr_1.1fr_auto]">
+        <span className="flex h-11 w-11 items-center justify-center rounded-interactive bg-primary/12 text-primary-hover">
+          <Icon name={catIcon(kind)} size={18} />
+        </span>
+        <Field label={t('studio.f.fileName')}><input className={inputClass} {...register(`files.${i}.name` as const)} /></Field>
+        <Field label={t('studio.f.category')}>
+          <select className={inputClass} {...register(`files.${i}.kind` as const)}>
+            <option value="">{t('studio.select')}</option>
+            {FILE_CATEGORIES.map((c) => <option key={c.value} value={c.value}>{t(c.key)}</option>)}
+          </select>
+        </Field>
+        <Button type="button" variant="ghost" size="sm" onClick={onRemove}><Icon name="x" size={15} /></Button>
+      </div>
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <label className="cursor-pointer rounded-interactive border border-border bg-card px-3 py-1.5 text-sm text-content transition-colors hover:bg-surface-2">
+          <Icon name="download" size={13} className="mr-1 inline rotate-180" /> {busy ? `${t('smart.processing')}…` : url ? t('studio.replace') : t('studio.upload')}
+          <input type="file" className="hidden" onChange={onFile} disabled={busy} />
+        </label>
+        {size ? <span className="text-xs text-muted">{fmtSize(size)}</span> : null}
+        <input className={`${inputClass} h-9 flex-1`} placeholder={t('studio.f.fileLink')} {...register(`files.${i}.url` as const)} />
+        <input type="hidden" {...register(`files.${i}.sizeBytes` as const, { valueAsNumber: true })} />
+        {url && <a href={url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-primary hover:text-primary-hover"><Icon name="external" size={15} /></a>}
+      </div>
+    </div>
+  );
+}
+
 // ------------------------------------------------------------- Formulário
 type Props = { mode: 'new' | 'edit'; assetId?: string; initialValues?: AssetFormValues };
 
@@ -272,6 +353,16 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
     if (!assetId || !window.confirm(t('studio.confirmDelete'))) return;
     run('del', async () => { await deleteAsset(assetId); router.push('/admin/assets'); });
   };
+  // Arquivar / Despublicar (item 11) — altera só o status.
+  const onStatus = (status: 'draft' | 'archived') => {
+    if (!assetId) return;
+    run(status, async () => {
+      await setAssetStatus(assetId, status);
+      setValue('status', status);
+      toast(t('toast.kitSaved'), 'success');
+    });
+  };
+  const onViewAsStudent = () => currentSlug && window.open(`/assets/${currentSlug}?preview=student`, '_blank');
 
   // Slugify ao vivo: aceita MAIÚSCULAS, minúsculas e espaços; converte tudo em
   // slug válido. Mantém hífen final durante a digitação (para digitar espaços
@@ -293,8 +384,17 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
           <Button type="button" variant="secondary" size="sm" onClick={() => currentSlug && window.open(`/assets/${currentSlug}`, '_blank')} disabled={mode === 'new'}>
             <Icon name="eye" size={15} /> {t('studio.preview')}
           </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={onViewAsStudent} disabled={mode === 'new'}>
+            <Icon name="user" size={15} /> {t('studio.viewAsStudent')}
+          </Button>
           <Button type="button" variant="ghost" size="sm" onClick={onDuplicate} loading={busy === 'dup'} disabled={mode === 'new'}>
             <Icon name="stack" size={15} /> {t('studio.duplicate')}
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => onStatus('draft')} loading={busy === 'draft'} disabled={mode === 'new'}>
+            <Icon name="back" size={15} /> {t('studio.unpublish')}
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => onStatus('archived')} loading={busy === 'archived'} disabled={mode === 'new'}>
+            <Icon name="stack" size={15} /> {t('studio.archive')}
           </Button>
           <Button type="button" variant="danger" size="sm" onClick={onDelete} loading={busy === 'del'} disabled={mode === 'new'}>
             <Icon name="x" size={15} /> {t('studio.delete')}
@@ -449,13 +549,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
           {filesFA.fields.length === 0 && <Typography variant="small">{t('studio.filesEmpty')}</Typography>}
           <div className="space-y-3">
             {filesFA.fields.map((f, i) => (
-              <div key={f.id} className="grid items-end gap-2 rounded-interactive border border-border bg-surface p-3 sm:grid-cols-[1.4fr_1fr_0.8fr_1.6fr_auto]">
-                <Field label={t('studio.f.fileName')}><input className={inputClass} {...register(`files.${i}.name` as const)} /></Field>
-                <Field label={t('studio.f.fileType')}><input className={inputClass} placeholder="pdf, xlsx…" {...register(`files.${i}.kind` as const)} /></Field>
-                <Field label={t('studio.f.fileSize')}><input type="number" className={inputClass} {...register(`files.${i}.sizeBytes` as const)} /></Field>
-                <Field label={t('studio.f.fileLink')}><input className={inputClass} placeholder="https://drive…" {...register(`files.${i}.url` as const)} /></Field>
-                <Button type="button" variant="ghost" size="sm" onClick={() => filesFA.remove(i)}><Icon name="x" size={15} /></Button>
-              </div>
+              <FileRow key={f.id} i={i} control={control} setValue={setValue} register={register} onRemove={() => filesFA.remove(i)} />
             ))}
           </div>
         </Section>
