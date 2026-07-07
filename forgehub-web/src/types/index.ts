@@ -11,7 +11,8 @@ export type AssetLicense = 'uso_pessoal' | 'comercial' | 'white_label' | 'open_s
 export type LinkType =
   | 'microapp' | 'deploy' | 'github' | 'remix' | 'drive' | 'canva' | 'docs'
   | 'lovable_remix' | 'bolt_remix' | 'vercel' | 'netlify' | 'figma' | 'demo' | 'prompt'
-  | 'base44' | 'cursor' | 'sales';
+  | 'base44' | 'cursor' | 'sales'
+  | 'checkout' | 'ebook_pdf' | 'ebook_canva' | 'criativos' | 'videos' | 'instrucoes';
 export type ChecklistItem =
   | 'github' | 'deploy' | 'drive' | 'canva' | 'prompt' | 'landing'
   | 'copy' | 'criativos' | 'documentacao' | 'videos' | 'microapp' | 'mockups';

@@ -21,18 +21,28 @@ export const ENUM_LABELS: Record<string, string> = {
 
 // ------------------------------------------------------------- Links (12)
 export const LINK_FIELDS: { key: LinkType; label: string }[] = [
-  { key: 'drive', label: 'Google Drive' },
+  // Entregáveis do Kit (aparecem na ficha como botões)
+  { key: 'remix', label: 'Aplicativo Remixável' },
+  { key: 'sales', label: 'Página de Vendas' },
+  { key: 'checkout', label: 'Checkout Modelo' },
+  { key: 'ebook_pdf', label: 'Ebook PDF' },
+  { key: 'ebook_canva', label: 'Ebook Editável (Canva)' },
+  { key: 'canva', label: 'Templates Canva' },
+  { key: 'criativos', label: 'Criativos' },
+  { key: 'videos', label: 'Vídeos' },
+  { key: 'drive', label: 'Pasta Google Drive' },
+  { key: 'prompt', label: 'Prompt Mestre' },
+  { key: 'instrucoes', label: 'Instruções de Uso' },
+  // Extras técnicos
   { key: 'lovable_remix', label: 'Lovable Remix' },
   { key: 'bolt_remix', label: 'Bolt Remix' },
   { key: 'github', label: 'GitHub' },
   { key: 'vercel', label: 'Vercel' },
   { key: 'netlify', label: 'Netlify' },
-  { key: 'canva', label: 'Canva' },
   { key: 'figma', label: 'Figma' },
   { key: 'docs', label: 'Documentação' },
   { key: 'demo', label: 'Demo' },
   { key: 'deploy', label: 'Deploy' },
-  { key: 'prompt', label: 'Prompt' },
 ];
 
 // ------------------------------------------------------------- Checklist (12)

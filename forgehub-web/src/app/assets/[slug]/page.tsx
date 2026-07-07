@@ -228,22 +228,23 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
 
   const analytics = asset.analytics;
 
-  // Presença de itens do checklist (para entregáveis + barra de conclusão).
-  const has = (item: string) => asset.checklist.some((c) => c.item === item && c.present);
   const videoUrl = asset.videoYoutubeUrl || asset.videoLoomUrl || undefined;
 
-  // Entregáveis do Kit (item 2): presente → abrir/incluído; ausente → "Em desenvolvimento".
-  const deliverables: { label: string; icon: string; present: boolean; url?: string }[] = [
-    { label: t('incl.appRemix'), icon: 'bolt', present: Boolean(openUrl) || has('microapp'), url: openUrl },
-    { label: t('incl.salesPage'), icon: 'money', present: Boolean(salesUrl) || has('landing'), url: salesUrl },
-    { label: t('incl.checkout'), icon: 'cube', present: Boolean(linkOf('deploy') ?? linkOf('demo')) || has('deploy'), url: linkOf('deploy') ?? linkOf('demo') },
-    { label: t('incl.ebookPremium'), icon: 'docs', present: Boolean(docsUrl ?? driveUrl) || has('documentacao'), url: docsUrl ?? driveUrl },
-    { label: t('incl.promptMaster'), icon: 'clipboard', present: promptAvailable, url: linkOf('prompt') },
-    { label: t('incl.templates'), icon: 'asset', present: Boolean(linkOf('canva')) || has('canva'), url: linkOf('canva') },
-    { label: t('incl.creatives'), icon: 'sparkles', present: has('criativos'), url: driveUrl },
-    { label: t('incl.videos'), icon: 'rocket', present: Boolean(videoUrl) || has('videos'), url: videoUrl },
-    { label: t('incl.logo'), icon: 'star', present: Boolean(asset.logoUrl), url: asset.logoUrl },
-    { label: t('incl.mockups'), icon: 'cube', present: has('mockups') || Boolean(asset.mockupUrl), url: asset.mockupUrl },
+  // Entregáveis do Kit (Item 1): links externos configurados no Studio.
+  // Se o link existir → botão abre em nova aba; se vazio → ADMIN vê "Configurar Link",
+  // ALUNO tem o item ocultado (mantém a ficha limpa, só o que está disponível).
+  const deliverables: { key: string; icon: string; url?: string }[] = [
+    { key: 'remixApp', icon: 'bolt', url: linkOf('remix') ?? linkOf('microapp') ?? linkOf('lovable_remix') ?? linkOf('bolt_remix') ?? openUrl },
+    { key: 'salesPage', icon: 'money', url: linkOf('sales') ?? salesUrl },
+    { key: 'checkout', icon: 'cube', url: linkOf('checkout') },
+    { key: 'downloadEbook', icon: 'docs', url: linkOf('ebook_pdf') },
+    { key: 'editEbook', icon: 'star', url: linkOf('ebook_canva') },
+    { key: 'canvaTemplates', icon: 'asset', url: linkOf('canva') },
+    { key: 'creatives', icon: 'sparkles', url: linkOf('criativos') },
+    { key: 'videos', icon: 'rocket', url: linkOf('videos') ?? videoUrl },
+    { key: 'driveFolder', icon: 'download', url: linkOf('drive') ?? driveUrl },
+    { key: 'instructions', icon: 'clipboard', url: linkOf('instrucoes') ?? linkOf('docs') ?? docsUrl },
+    { key: 'masterPrompt', icon: 'clipboard', url: linkOf('prompt') },
   ];
 
   return (
@@ -317,33 +318,51 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
             )}
           </Section>
 
-          {/* Entregáveis do Kit (item 2) */}
+          {/* Entregáveis do Kit (Item 1) — cada botão abre o link externo em nova aba */}
           <Section icon="stack" title={t('detail.included')}>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {deliverables.map((m) => (
-                <div
-                  key={m.label}
-                  className={`flex items-center gap-3 rounded-container border p-3 transition-colors ${m.present ? 'border-success/25 bg-success/5' : 'border-border bg-surface/40'}`}
-                >
-                  <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-interactive ${m.present ? 'bg-success/12 text-success' : 'bg-surface-2 text-muted'}`}>
-                    <Icon name={m.present ? 'check' : m.icon} size={18} />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium text-content">{m.label}</span>
-                    {m.present ? (
-                      m.url ? (
-                        <a href={m.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-hover">
-                          {t('action.open')} <Icon name="external" size={11} />
-                        </a>
-                      ) : (
-                        <span className="text-xs font-medium text-success">✓</span>
-                      )
-                    ) : (
-                      <span className="text-xs text-muted">{t('incl.inDev')}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
+              {deliverables
+                .filter((m) => Boolean(m.url) || showAdmin)
+                .map((m) => {
+                  const available = Boolean(m.url);
+                  const label = t(`deliv.${m.key}`);
+                  const iconBox = (
+                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-interactive ${available ? 'bg-success/12 text-success' : 'bg-surface-2 text-muted'}`}>
+                      <Icon name={m.icon} size={18} />
+                    </span>
+                  );
+                  if (available) {
+                    return (
+                      <a
+                        key={m.key}
+                        href={m.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-3 rounded-container border border-success/25 bg-success/5 p-3 transition-colors hover:border-primary/40 hover:bg-primary/5"
+                      >
+                        {iconBox}
+                        <span className="min-w-0 flex-1 truncate text-sm font-semibold text-content">{label}</span>
+                        <Icon name="external" size={15} className="shrink-0 text-muted transition-colors group-hover:text-primary" />
+                      </a>
+                    );
+                  }
+                  // Sem link → só ADMIN chega aqui (aluno é filtrado acima).
+                  return (
+                    <Link
+                      key={m.key}
+                      href={`/admin/assets/edit/${asset.slug}`}
+                      className="group flex items-center gap-3 rounded-container border border-dashed border-gold/40 bg-surface/40 p-3 transition-colors hover:border-gold hover:bg-gold/5"
+                    >
+                      {iconBox}
+                      <div className="min-w-0 flex-1">
+                        <span className="block truncate text-sm font-medium text-muted">{label}</span>
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-gold">
+                          {t('deliv.configure')} <Icon name="settings" size={11} />
+                        </span>
+                      </div>
+                    </Link>
+                  );
+                })}
             </div>
           </Section>
 
