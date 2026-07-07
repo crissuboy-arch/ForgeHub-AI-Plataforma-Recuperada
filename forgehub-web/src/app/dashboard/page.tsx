@@ -7,7 +7,9 @@ import { AssetCard } from '../../components/molecules/AssetCard';
 import { StatCard } from '../../components/molecules/StatCard';
 import { TopAssets } from '../../components/organisms/TopAssets';
 import { ActivityTimeline } from '../../components/organisms/ActivityTimeline';
-import { HeroCarousel } from '../../components/organisms/HeroCarousel';
+import { HeroBannerCarousel } from '../../components/organisms/HeroBannerCarousel';
+import { ComingSoonCarousel } from '../../components/organisms/ComingSoonCarousel';
+import { BonusCard } from '../../components/molecules/BonusCard';
 import { Typography } from '../../components/atoms/Typography';
 import { Icon } from '../../components/atoms/Icon';
 import { Skeleton } from '../../components/atoms/Skeleton';
@@ -33,8 +35,11 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
-      {/* HERO CAROUSEL premium (data-driven) */}
-      <HeroCarousel />
+      {/* HERO BANNER premium orientado a dados (config/niches.ts) */}
+      <HeroBannerCarousel />
+
+      {/* EM BREVE — vitrine de próximos nichos/recursos */}
+      <ComingSoonCarousel />
 
       {/* INDICADORES RÁPIDOS */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -106,6 +111,11 @@ export default function DashboardPage() {
         <div className="lg:col-span-1">
           <ActivityTimeline />
         </div>
+      </div>
+
+      {/* BÔNUS — biblioteca externa de Skills & Packs (SKU) */}
+      <div className="mt-8">
+        <BonusCard />
       </div>
     </div>
   );

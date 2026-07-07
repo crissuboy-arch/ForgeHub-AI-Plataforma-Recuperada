@@ -8,6 +8,7 @@ import { Icon } from '../atoms/Icon';
 import { Typography } from '../atoms/Typography';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import { useRole } from '../../hooks/useRole';
+import { useSku } from '../../hooks/useSku';
 import classNames from 'classnames';
 
 /**
@@ -18,6 +19,7 @@ import classNames from 'classnames';
 export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
   const pathname = usePathname();
   const { t } = useLanguage();
+  const sku = useSku();
   const { isAdmin } = useRole();
 
   const items = [
@@ -76,6 +78,17 @@ export const Sidebar: React.FC<{ className?: string }> = ({ className }) => {
             active={pathname === item.href || pathname?.startsWith(item.href + '/')}
           />
         ))}
+
+        {/* SKU — biblioteca externa de Skills & Packs (link discreto) */}
+        <button
+          type="button"
+          onClick={sku.open}
+          className="mt-1 flex items-center gap-3 rounded-interactive px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface-2 hover:text-content"
+        >
+          <Icon name="cube" size={18} />
+          <span className="flex-1 text-left">{t('sku.label')}</span>
+          <Icon name="external" size={13} className="text-dim" />
+        </button>
       </nav>
 
       {/* Perfil no rodapé */}

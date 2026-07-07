@@ -359,6 +359,18 @@ const ptBR: Dict = {
   'dash.slideSub': 'Negócios digitais prontos para remixar.',
   'dash.slides': 'Nutrição|Finanças|Beleza|Psicologia|Marketing|Lifestyle|Relacionamentos|Devocional|Educação|Desenvolvimento Pessoal',
   'hero.explore': 'Explorar Kit', 'hero.details': 'Ver detalhes', 'hero.exploreLibrary': 'Explorar Biblioteca', 'hero.included': 'Inclui',
+  // Em breve / SKU / Bônus
+  'comingSoon.title': 'Em breve na ForgeHub AI', 'comingSoon.notify': 'Avise-me',
+  'comingSoon.waitlist': 'na lista de espera', 'comingSoon.notified': 'Você está na lista! 🎉',
+  'cs.black': 'Black Collection 18+', 'cs.realestate': 'Imobiliário', 'cs.health': 'Saúde', 'cs.food': 'Gastronomia',
+  'cs.tourism': 'Turismo', 'cs.pets': 'Pets', 'cs.law': 'Advocacia', 'cs.education': 'Educação',
+  'cs.beautyPremium': 'Beleza Premium', 'cs.localBiz': 'Negócios Locais', 'cs.aiSkills': 'Novas Skills IA',
+  'cs.canvaPacks': 'Novos Packs Canva', 'cs.newApps': 'Novos Aplicativos',
+  'sku.label': 'Skills & Packs', 'sku.notConfigured': 'Link da biblioteca ainda não configurado.',
+  'bonus.title': 'Bônus ForgeHub',
+  'bonus.desc': 'Além dos kits principais, você também recebe acesso a uma biblioteca extra com recursos digitais prontos para copiar, editar, personalizar e usar.',
+  'bonus.open': 'Abrir Biblioteca SKU',
+  'bonus.items': 'Kit Premium|Packs Profissionais|Biblioteca de Skills IA|Templates Canva|Figurinhas para Instagram|Social Media Packs|Prompts Premium',
 };
 
 const es: Dict = {
@@ -710,6 +722,18 @@ const es: Dict = {
   'dash.slideSub': 'Negocios digitales listos para remixar.',
   'dash.slides': 'Nutrición|Finanzas|Belleza|Psicología|Marketing|Lifestyle|Relaciones|Devocional|Educación|Desarrollo Personal',
   'hero.explore': 'Explorar Kit', 'hero.details': 'Ver detalles', 'hero.exploreLibrary': 'Explorar Biblioteca', 'hero.included': 'Incluye',
+  // Próximamente / SKU / Bono
+  'comingSoon.title': 'Próximamente en ForgeHub AI', 'comingSoon.notify': 'Avísame',
+  'comingSoon.waitlist': 'en lista de espera', 'comingSoon.notified': '¡Estás en la lista! 🎉',
+  'cs.black': 'Black Collection 18+', 'cs.realestate': 'Inmobiliario', 'cs.health': 'Salud', 'cs.food': 'Gastronomía',
+  'cs.tourism': 'Turismo', 'cs.pets': 'Mascotas', 'cs.law': 'Abogacía', 'cs.education': 'Educación',
+  'cs.beautyPremium': 'Belleza Premium', 'cs.localBiz': 'Negocios Locales', 'cs.aiSkills': 'Nuevas Skills IA',
+  'cs.canvaPacks': 'Nuevos Packs Canva', 'cs.newApps': 'Nuevas Aplicaciones',
+  'sku.label': 'Skills & Packs', 'sku.notConfigured': 'El enlace de la biblioteca aún no está configurado.',
+  'bonus.title': 'Bono ForgeHub',
+  'bonus.desc': 'Además de los kits principales, también recibes acceso a una biblioteca extra con recursos digitales listos para copiar, editar, personalizar y usar.',
+  'bonus.open': 'Abrir Biblioteca SKU',
+  'bonus.items': 'Kit Premium|Packs Profesionales|Biblioteca de Skills IA|Plantillas Canva|Stickers para Instagram|Social Media Packs|Prompts Premium',
 };
 
 const en: Dict = {
@@ -1061,6 +1085,18 @@ const en: Dict = {
   'dash.slideSub': 'Digital businesses ready to remix.',
   'dash.slides': 'Nutrition|Finance|Beauty|Psychology|Marketing|Lifestyle|Relationships|Devotional|Education|Personal Development',
   'hero.explore': 'Explore Kit', 'hero.details': 'View details', 'hero.exploreLibrary': 'Explore Library', 'hero.included': 'Includes',
+  // Coming soon / SKU / Bonus
+  'comingSoon.title': 'Coming soon to ForgeHub AI', 'comingSoon.notify': 'Notify me',
+  'comingSoon.waitlist': 'on the waitlist', 'comingSoon.notified': "You're on the list! 🎉",
+  'cs.black': 'Black Collection 18+', 'cs.realestate': 'Real Estate', 'cs.health': 'Health', 'cs.food': 'Food & Dining',
+  'cs.tourism': 'Tourism', 'cs.pets': 'Pets', 'cs.law': 'Law', 'cs.education': 'Education',
+  'cs.beautyPremium': 'Premium Beauty', 'cs.localBiz': 'Local Business', 'cs.aiSkills': 'New AI Skills',
+  'cs.canvaPacks': 'New Canva Packs', 'cs.newApps': 'New Apps',
+  'sku.label': 'Skills & Packs', 'sku.notConfigured': 'Library link not configured yet.',
+  'bonus.title': 'ForgeHub Bonus',
+  'bonus.desc': 'Beyond the main kits, you also get access to an extra library of digital resources ready to copy, edit, customize and use.',
+  'bonus.open': 'Open SKU Library',
+  'bonus.items': 'Premium Kit|Professional Packs|AI Skills Library|Canva Templates|Instagram Stickers|Social Media Packs|Premium Prompts',
 };
 
 export const DICTIONARIES: Record<AppLanguage, Dict> = { 'pt-BR': ptBR, es, en };
