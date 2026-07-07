@@ -8,6 +8,11 @@ import { Icon } from '../../components/atoms/Icon';
 import { Typography } from '../../components/atoms/Typography';
 import { LanguageSwitcher } from '../../components/atoms/LanguageSwitcher';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import { LimelightNav, type NavItem } from '../../components/ui/limelight-nav';
+import { PlatformShowcase, type ShowcaseSlide } from '../../components/ui/platform-showcase';
+import { MetricsColumn, type MetricCard } from '../../components/ui/metrics-columns';
+import { ActivityChart } from '../../components/ui/activity-chart';
+import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes } from 'lucide-react';
 
 const CHECKOUT = process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL || '';
 
@@ -29,15 +34,50 @@ export default function OfferPage() {
   const primaryBtn = 'bg-brand-glow inline-flex h-13 items-center justify-center gap-2 rounded-interactive px-8 py-3.5 text-base font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow-blue)]';
   const sectionTitle = 'font-display text-3xl font-extrabold tracking-tight text-content sm:text-4xl';
 
+  // Scroll suave para as âncoras da página (usado pela LimelightNav).
+  const scrollToId = (id: string) =>
+    (id === 'home'
+      ? window.scrollTo({ top: 0, behavior: 'smooth' })
+      : document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+
+  const navItems: NavItem[] = [
+    { id: 'home', icon: <Home />, label: t('nav.home'), onClick: () => scrollToId('home') },
+    { id: 'kits', icon: <Package />, label: t('nav.kits'), onClick: () => scrollToId('kits') },
+    { id: 'how', icon: <Workflow />, label: t('nav.how'), onClick: () => scrollToId('como-funciona') },
+    { id: 'pricing', icon: <Tag />, label: t('nav.pricing'), onClick: () => scrollToId('precos') },
+    { id: 'faq', icon: <HelpCircle />, label: t('nav.faq'), onClick: () => scrollToId('faq') },
+  ];
+
+  // Screenshots REAIS da plataforma (exportados do próprio app).
+  const slides: ShowcaseSlide[] = [
+    { src: '/images/showcase/dashboard.png', caption: t('showcase.dashboard') },
+    { src: '/images/showcase/hero-banner.png', caption: t('showcase.heroBanner') },
+    { src: '/images/showcase/kits.png', caption: t('showcase.kits') },
+    { src: '/images/showcase/nichos.png', caption: t('showcase.nichos') },
+    { src: '/images/showcase/studio.png', caption: t('showcase.studio') },
+  ];
+
+  // Números REAIS do dashboard (não são depoimentos fake).
+  const metrics: MetricCard[] = [
+    { icon: Download, value: '1.995', label: t('metric.downloads') },
+    { icon: Repeat, value: '340', label: t('metric.remixes') },
+    { icon: Eye, value: '8.600', label: t('metric.views') },
+    { icon: TrendingUp, value: '+21,4%', label: t('metric.growth') },
+    { icon: Boxes, value: '6', label: t('metric.kits') },
+  ];
+  const firstCol = metrics.slice(0, 3);
+  const secondCol = metrics.slice(2);
+
   return (
     <div className="relative flex min-h-screen flex-col bg-deep">
-      {/* Nav */}
+      {/* Nav (LimelightNav) */}
       <header className="sticky top-0 z-20 border-b border-border/60">
         <div className="glass mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-3">
           <Logo />
+          <LimelightNav items={navItems} className="hidden md:inline-flex" />
           <div className="flex items-center gap-2">
             <LanguageSwitcher className="hidden sm:flex" />
-            <Link href="/login" className="rounded-interactive px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-content">{t('offer.login')}</Link>
+            <Link href="/login" className="hidden rounded-interactive px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-content sm:block">{t('offer.login')}</Link>
             <Cta t={t} className="bg-brand-glow inline-flex h-10 items-center rounded-interactive px-5 text-sm font-semibold text-white transition-shadow hover:shadow-[var(--shadow-glow-blue)]" label={t('offer.ctaMain')} />
           </div>
         </div>
@@ -45,7 +85,7 @@ export default function OfferPage() {
 
       <main className="relative mx-auto w-full max-w-6xl flex-1 px-6">
         {/* 1. Hero */}
-        <section className="flex flex-col items-center pt-20 text-center">
+        <section id="home" className="flex flex-col items-center pt-20 text-center">
           <Badge tone="primary" className="mb-6"><Icon name="sparkles" size={14} /> {t('offer.badge')}</Badge>
           <h1 className="max-w-4xl font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-content sm:text-6xl">
             {t('offer.headline')}
@@ -70,14 +110,42 @@ export default function OfferPage() {
           </div>
         </section>
 
-        {/* 2. O que é */}
+        {/* 2. O que é (reframe) */}
         <section className="py-24 text-center">
           <h2 className={sectionTitle}>{t('offer.whatTitle')}</h2>
           <Typography variant="p" className="mx-auto mt-4 max-w-3xl text-lg">{t('offer.whatDesc')}</Typography>
         </section>
 
+        {/* 2b. Carrossel da plataforma real */}
+        <section id="kits" className="py-16">
+          <div className="mb-10 text-center">
+            <Badge tone="gold" className="mb-4"><Icon name="sparkles" size={14} /> {t('nav.kits')}</Badge>
+            <h2 className={sectionTitle}>{t('offer.showcaseTitle')}</h2>
+            <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.showcaseSub')}</Typography>
+          </div>
+          <PlatformShowcase slides={slides} />
+        </section>
+
+        {/* 2c. Números reais + gráfico (prova social por dados, não depoimento fake) */}
+        <section id="prova" className="py-20">
+          <div className="mb-12 text-center">
+            <h2 className={sectionTitle}>{t('offer.realTitle')}</h2>
+            <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.realSub')}</Typography>
+          </div>
+          <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
+            <ActivityChart
+              title={t('chart.title')}
+              labels={{ aberturas: t('chart.opens'), atualizacoes: t('chart.updates'), criacoes: t('chart.creations') }}
+            />
+            <div className="flex max-h-[420px] justify-center gap-5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_16%,black_84%,transparent)]">
+              <MetricsColumn metrics={firstCol} duration={16} />
+              <MetricsColumn metrics={secondCol} duration={22} className="hidden sm:block" />
+            </div>
+          </div>
+        </section>
+
         {/* 3. Como funciona */}
-        <section className="py-8">
+        <section id="como-funciona" className="py-8">
           <h2 className={`${sectionTitle} mb-10 text-center`}>{t('offer.howTitle')}</h2>
           <div className="grid gap-5 sm:grid-cols-3">
             {pairs(t('offer.how')).map((s, i) => (
@@ -137,7 +205,7 @@ export default function OfferPage() {
         </section>
 
         {/* 8. Planos */}
-        <section className="py-16 text-center">
+        <section id="precos" className="py-16 text-center">
           <h2 className={`${sectionTitle} mb-2`}>{t('offer.plansTitle')}</h2>
           <Typography variant="p" className="mx-auto mb-8 max-w-xl">{t('offer.plansDesc')}</Typography>
           <div className="mx-auto mb-8 flex max-w-2xl flex-wrap justify-center gap-3">
@@ -149,7 +217,7 @@ export default function OfferPage() {
         </section>
 
         {/* 10. FAQ */}
-        <section className="py-16">
+        <section id="faq" className="py-16">
           <h2 className={`${sectionTitle} mb-8 text-center`}>{t('offer.faqTitle')}</h2>
           <div className="mx-auto max-w-3xl space-y-3">
             {pairs(t('offer.faq')).map((f) => (

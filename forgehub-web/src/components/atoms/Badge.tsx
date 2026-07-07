@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-type BadgeTone = 'default' | 'primary' | 'success' | 'warning' | 'danger';
+type BadgeTone = 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'gold';
 
 type BadgeProps = {
   tone?: BadgeTone;
@@ -18,6 +18,7 @@ export const Badge: React.FC<BadgeProps> = ({ tone = 'default', className, child
     success: 'bg-success/15 text-success border border-success/30',
     warning: 'bg-warning/15 text-warning border border-warning/30',
     danger: 'bg-danger/15 text-danger border border-danger/30',
+    gold: 'bg-gold/15 text-gold-light border border-gold/30',
   };
   return (
     <span
