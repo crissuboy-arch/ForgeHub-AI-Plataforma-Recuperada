@@ -7,6 +7,7 @@ import { Badge } from '../../components/atoms/Badge';
 import { Icon } from '../../components/atoms/Icon';
 import { Typography } from '../../components/atoms/Typography';
 import { LanguageSwitcher } from '../../components/atoms/LanguageSwitcher';
+import { CheckoutCta } from '../../components/atoms/CheckoutCta';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import dynamic from 'next/dynamic';
 import { LimelightNav, type NavItem } from '../../components/ui/limelight-nav';
@@ -28,22 +29,14 @@ const MetricsColumn = dynamic(() => import('../../components/ui/metrics-columns'
   ssr: false,
 });
 
-// Checkout real (Kiwify) com UTM. Env var sobrescreve se definida.
-const CHECKOUT =
-  process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL ||
-  'https://pay.kiwify.com.br/iY5RLP7?utm_source=forgehub_site&utm_medium=landing_page';
-
 // helpers de parsing (listas vindas do dicionário)
 const pipe = (s: string) => s.split('|').filter(Boolean);
 const pairs = (s: string) => pipe(s).map((p) => { const [a, b] = p.split('::'); return { a, b: b ?? '' }; });
 
-// CTA: usa o checkout externo se configurado, senão cai para o cadastro.
-const Cta: React.FC<{ t: (k: string) => string; className?: string; label?: string }> = ({ t, className, label }) =>
-  CHECKOUT ? (
-    <a href={CHECKOUT} target="_blank" rel="noopener noreferrer" className={className}>{label ?? t('offer.ctaMain')}</a>
-  ) : (
-    <Link href="/signup" className={className}>{label ?? t('offer.ctaMain')}</Link>
-  );
+// CTA de checkout compartilhado (mesmo componente da landing).
+const Cta: React.FC<{ t: (k: string) => string; className?: string; label?: string }> = ({ t, className = '', label }) => (
+  <CheckoutCta label={label ?? t('offer.ctaMain')} className={className} />
+);
 
 export default function OfferPage() {
   const { t } = useLanguage();
@@ -320,7 +313,6 @@ export default function OfferPage() {
             <Typography variant="h2" className="relative mb-3 text-white">{t('offer.finalTitle')}</Typography>
             <p className="relative mx-auto mb-8 max-w-xl text-lg text-white/85">{t('offer.finalDesc')}</p>
             <Cta t={t} className="relative inline-flex h-13 items-center justify-center rounded-interactive bg-white px-9 py-3.5 text-base font-bold text-[#0B1E3C] transition-transform hover:-translate-y-0.5" />
-            {!CHECKOUT && <p className="relative mt-4 text-xs text-white/60">{t('offer.checkoutNotice')}</p>}
           </div>
         </section>
       </main>

@@ -11,11 +11,7 @@ import { Reveal, Counter } from '../components/landing/primitives';
 import { DashboardMockup } from '../components/landing/DashboardMockup';
 import { HeroAvatar } from '../components/landing/HeroAvatar';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
-
-// Checkout real (Kiwify) com UTM. Env var sobrescreve se definida.
-const CHECKOUT =
-  process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL ||
-  'https://pay.kiwify.com.br/iY5RLP7?utm_source=forgehub_site&utm_medium=landing_page';
+import { CheckoutCta } from '../components/atoms/CheckoutCta';
 
 // ---- helpers de parsing (listas do dicionário) ----
 const pipe = (s: string) => s.split('|').map((x) => x.trim()).filter(Boolean);
@@ -25,12 +21,10 @@ const pairs = (s: string) => pipe(s).map((p) => { const [a, b] = p.split('::'); 
 const goldBtn =
   'group relative inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-goldp to-[#b9922f] px-8 py-4 text-base font-extrabold tracking-wide text-ink shadow-[0_12px_40px_-8px_rgba(217,180,74,0.6)] transition-transform hover:-translate-y-0.5';
 
-const Cta = ({ label, className = '' }: { label: string; className?: string }) =>
-  CHECKOUT ? (
-    <a href={CHECKOUT} target="_blank" rel="noopener noreferrer" className={`${goldBtn} ${className}`}>{label}</a>
-  ) : (
-    <Link href="/signup" className={`${goldBtn} ${className}`}>{label}</Link>
-  );
+// CTA dourado da landing = CheckoutCta compartilhado + estilo goldBtn.
+const Cta = ({ label, className = '' }: { label: string; className?: string }) => (
+  <CheckoutCta label={label} className={`${goldBtn} ${className}`} />
+);
 
 // ---- ícones dos entregáveis (na ordem da lista lp.insideList) ----
 const INSIDE_ICONS = [Zap, ShoppingBag, CreditCard, BookOpen, Palette, ImageIcon, Video, Layers, Sparkles, BrainCircuit, FileText, Calculator, RefreshCw];

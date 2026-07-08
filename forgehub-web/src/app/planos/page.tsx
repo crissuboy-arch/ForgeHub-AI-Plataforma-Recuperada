@@ -18,7 +18,7 @@ export default function PlanosPage() {
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="mb-12 text-center">
         <Badge tone="primary" className="mb-4"><Icon name="sparkles" size={14} /> {t('planos.badge')}</Badge>
-        <Typography variant="h2" className="mb-3">{t('planos.title')}</Typography>
+        <Typography variant="h1" className="mb-3">{t('planos.title')}</Typography>
         <Typography variant="p" className="mx-auto max-w-xl">
           {t('planos.subtitle')}
         </Typography>

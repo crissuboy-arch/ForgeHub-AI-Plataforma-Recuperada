@@ -22,7 +22,10 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ForgeHub AI — Pare de criar produtos digitais do zero",
+  title: {
+    default: "ForgeHub AI — Pare de criar produtos digitais do zero",
+    template: "%s · ForgeHub AI",
+  },
   description:
     "A maior biblioteca de kits de negócios digitais remixáveis: aplicativo, página de venda, checkout, ebook, criativos, vídeos e prompts — prontos para personalizar e vender como seus.",
   applicationName: "ForgeHub AI",
