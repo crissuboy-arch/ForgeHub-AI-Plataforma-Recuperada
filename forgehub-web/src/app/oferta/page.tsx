@@ -103,7 +103,11 @@ export default function OfferPage() {
       <header className="sticky top-0 z-20 border-b border-border/60">
         <div className="glass mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-3">
           <Logo />
-          <LimelightNav items={navItems} className="hidden md:inline-flex" />
+          {/* wrapper controla o display (o root da nav tem inline-flex fixo,
+              que venceria um `hidden` aplicado direto na nav) */}
+          <div className="hidden md:block">
+            <LimelightNav items={navItems} />
+          </div>
           <div className="flex items-center gap-2">
             <LanguageSwitcher className="hidden sm:flex" />
             <Link href="/login" className="hidden rounded-interactive px-4 py-2 text-sm font-medium text-muted transition-colors hover:text-content sm:block">{t('offer.login')}</Link>

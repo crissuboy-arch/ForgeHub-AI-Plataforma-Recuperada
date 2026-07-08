@@ -1,16 +1,14 @@
 'use client';
 // components/landing/HeroAvatar.tsx
 // Slot do vídeo de avatar do Hero — pronto ANTES do arquivo existir.
-// Camadas (de trás pra frente): placeholder de marca -> poster (se existir) -> vídeo (se existir).
-// Se /videos/hero-avatar.mp4 der 404, cai para /images/hero-avatar-poster.jpg;
-// se o poster também não existir, mostra o placeholder de marca — nunca imagem quebrada.
-// Basta subir o .mp4 (e opcionalmente o poster) na pasta public/ que ele passa a tocar.
+// Camadas: placeholder de marca (fundo) -> vídeo (se existir, por cima).
+// Se /videos/hero-avatar.mp4 não existir, o vídeo dá erro silencioso e fica só o
+// placeholder ("Vídeo em breve") — nunca uma imagem quebrada.
+// Para ativar: subir hero-avatar.mp4 em public/videos/ e commitar (sem mexer no código).
 import { useState } from 'react';
 
 export const HeroAvatar = ({ className = '' }: { className?: string }) => {
   const [videoOk, setVideoOk] = useState(true);
-  const [posterOk, setPosterOk] = useState(true);
-  const [posterLoaded, setPosterLoaded] = useState(false);
   const [canPlay, setCanPlay] = useState(false);
 
   return (
@@ -27,22 +25,7 @@ export const HeroAvatar = ({ className = '' }: { className?: string }) => {
         <span className="text-[10px] font-medium leading-tight text-white/55">Vídeo em breve</span>
       </div>
 
-      {/* Poster (se o arquivo existir) — só fica visível quando carrega de fato,
-          então um 404 nunca mostra ícone de imagem quebrada. */}
-      {posterOk && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/images/hero-avatar-poster.jpg"
-          alt=""
-          aria-hidden="true"
-          onLoad={() => setPosterLoaded(true)}
-          onError={() => setPosterOk(false)}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${posterLoaded ? 'opacity-100' : 'opacity-0'}`}
-        />
-      )}
-
-      {/* Vídeo (se o arquivo existir) — sem atributo poster (evita glyph quebrado);
-          só aparece quando realmente pode tocar. */}
+      {/* Vídeo (se o arquivo existir) — só aparece quando realmente pode tocar */}
       {videoOk && (
         <video
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${canPlay ? 'opacity-100' : 'opacity-0'}`}
