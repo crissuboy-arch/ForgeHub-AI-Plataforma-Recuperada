@@ -10,9 +10,14 @@
   --color-primary: #1472ff; /* azul elétrico */
   --color-primary-hover: #00c2ff; /* ciano de acento */
   --color-cyan: #00c2ff;
-  --color-accent: #7c5cfc; /* roxo (banner) */
+  --color-accent: #1e4fd4; /* azul royal (sem roxo — fora da paleta da marca) */
   --color-gold: #c8a459; /* dourado metálico */
   --color-gold-light: #e3c88a;
+
+  /* ---- Landing premium (tokens novos — não repintam o resto do app) ---- */
+  --color-ink: #070b14; /* preto premium */
+  --color-royal: #246bff; /* azul royal */
+  --color-goldp: #d9b44a; /* dourado premium */
 
   /* ---- Fundos (navy) ---- */
   --color-canvas: #0b1e3c; /* app principal */
@@ -50,7 +55,7 @@
   /* ---- Gradientes ---- */
   --gradient-brand: linear-gradient(135deg, #1472ff 0%, #00c2ff 100%);
   --gradient-gold: linear-gradient(135deg, #c8a459 0%, #e3c88a 55%, #b08d45 100%);
-  --gradient-banner: linear-gradient(90deg, #1472ff 0%, #7c5cfc 100%);
+  --gradient-banner: linear-gradient(135deg, #1e4fd4 0%, #0a0f1c 100%);
   --gradient-card: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.92) 100%);
 }
 

@@ -66,7 +66,7 @@ export const bonusLibrary: BonusItem[] = [
     icon: 'Film',
     buttonText: 'Abrir',
     url: '',
-    color: '#7C5CFC',
+    color: '#1E4FD4',
   },
   {
     id: 'mockups-premium',
@@ -159,6 +159,6 @@ export const bonusLibrary: BonusItem[] = [
     badge: 'Premium',
     buttonText: 'Abrir',
     url: '',
-    color: '#7C5CFC',
+    color: '#1E4FD4',
   },
 ];

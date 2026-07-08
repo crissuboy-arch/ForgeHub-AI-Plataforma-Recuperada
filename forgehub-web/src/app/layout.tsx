@@ -22,10 +22,18 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "ForgeHub AI — Crie, customize e distribua ativos digitais inteligentes",
+  title: "ForgeHub AI — Pare de criar produtos digitais do zero",
   description:
-    "A plataforma enterprise para criar, personalizar dinamicamente e distribuir ativos digitais com IA. Rápido, elegante e feito para escalar.",
+    "A maior biblioteca de kits de negócios digitais remixáveis: aplicativo, página de venda, checkout, ebook, criativos, vídeos e prompts — prontos para personalizar e vender como seus.",
   applicationName: "ForgeHub AI",
+  keywords: ["produtos digitais", "kits remixáveis", "infoprodutos", "biblioteca de negócios", "ForgeHub AI", "remix", "Kiwify", "Hotmart"],
+  openGraph: {
+    title: "ForgeHub AI — Pare de criar produtos digitais do zero",
+    description:
+      "Uma fábrica de produtos digitais: escolha um kit, remixe, personalize e venda como seu. Novos kits todos os meses.",
+    type: "website",
+    siteName: "ForgeHub AI",
+  },
 };
 
 export default function RootLayout({

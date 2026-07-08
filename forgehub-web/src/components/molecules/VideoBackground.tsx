@@ -28,7 +28,7 @@ export const VideoBackground: React.FC<{ videoUrl?: string; poster?: string; cla
         <div className="relative h-full w-full bg-brand-glow">
           {/* Realces premium no fallback (glow ciano + profundidade) */}
           <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 28% 18%, rgba(0,194,255,0.38), transparent 55%)' }} />
-          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 80% 90%, rgba(124,92,252,0.30), transparent 55%)' }} />
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 80% 90%, rgba(30,79,212,0.30), transparent 55%)' }} />
         </div>
       )}
       {/* Overlay para legibilidade do card (vale para vídeo e para o gradiente) */}

@@ -8,13 +8,30 @@ import { Icon } from '../../components/atoms/Icon';
 import { Typography } from '../../components/atoms/Typography';
 import { LanguageSwitcher } from '../../components/atoms/LanguageSwitcher';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
+import dynamic from 'next/dynamic';
 import { LimelightNav, type NavItem } from '../../components/ui/limelight-nav';
-import { PlatformShowcase, type ShowcaseSlide } from '../../components/ui/platform-showcase';
-import { MetricsColumn, type MetricCard } from '../../components/ui/metrics-columns';
-import { ActivityChart } from '../../components/ui/activity-chart';
-import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes } from 'lucide-react';
+import type { ShowcaseSlide } from '../../components/ui/platform-showcase';
+import type { MetricCard } from '../../components/ui/metrics-columns';
+import { LaunchCountdown } from '../../components/ui/launch-countdown';
+import { InViewMount } from '../../components/ui/in-view-mount';
+import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes, ShieldCheck, Check } from 'lucide-react';
 
-const CHECKOUT = process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL || '';
+// Componentes pesados (embla / recharts / framer-motion) fora do bundle inicial:
+// carregam sob demanda, só no cliente, quando o bloco entra na viewport.
+const PlatformShowcase = dynamic(() => import('../../components/ui/platform-showcase').then((m) => m.PlatformShowcase), {
+  ssr: false,
+});
+const ActivityChart = dynamic(() => import('../../components/ui/activity-chart').then((m) => m.ActivityChart), {
+  ssr: false,
+});
+const MetricsColumn = dynamic(() => import('../../components/ui/metrics-columns').then((m) => m.MetricsColumn), {
+  ssr: false,
+});
+
+// Checkout real (Kiwify) com UTM. Env var sobrescreve se definida.
+const CHECKOUT =
+  process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL ||
+  'https://pay.kiwify.com.br/iY5RLP7?utm_source=forgehub_site&utm_medium=landing_page';
 
 // helpers de parsing (listas vindas do dicionário)
 const pipe = (s: string) => s.split('|').filter(Boolean);
@@ -50,11 +67,11 @@ export default function OfferPage() {
 
   // Screenshots REAIS da plataforma (exportados do próprio app).
   const slides: ShowcaseSlide[] = [
-    { src: '/images/showcase/dashboard.png', caption: t('showcase.dashboard') },
-    { src: '/images/showcase/hero-banner.png', caption: t('showcase.heroBanner') },
-    { src: '/images/showcase/kits.png', caption: t('showcase.kits') },
-    { src: '/images/showcase/nichos.png', caption: t('showcase.nichos') },
-    { src: '/images/showcase/studio.png', caption: t('showcase.studio') },
+    { src: '/images/showcase/dashboard.webp', caption: t('showcase.dashboard') },
+    { src: '/images/showcase/hero-banner.webp', caption: t('showcase.heroBanner') },
+    { src: '/images/showcase/kits.webp', caption: t('showcase.kits') },
+    { src: '/images/showcase/nichos.webp', caption: t('showcase.nichos') },
+    { src: '/images/showcase/studio.webp', caption: t('showcase.studio') },
   ];
 
   // Números REAIS do dashboard (não são depoimentos fake).
@@ -67,6 +84,18 @@ export default function OfferPage() {
   ];
   const firstCol = metrics.slice(0, 3);
   const secondCol = metrics.slice(2);
+
+  // Value stack — itens do kit somando R$ 1.567 (valor x preço de entrada).
+  const valueStack: { label: string; price: number }[] = [
+    { label: t('price.stack.app'), price: 497 },
+    { label: t('price.stack.pages'), price: 297 },
+    { label: t('price.stack.ebook'), price: 197 },
+    { label: t('price.stack.creatives'), price: 227 },
+    { label: t('price.stack.media'), price: 141 },
+    { label: t('price.stack.bonus'), price: 208 },
+  ];
+  const totalValue = valueStack.reduce((sum, i) => sum + i.price, 0); // 1567
+  const brl = (n: number) => `R$ ${n.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`;
 
   return (
     <div className="relative flex min-h-screen flex-col bg-deep">
@@ -123,7 +152,9 @@ export default function OfferPage() {
             <h2 className={sectionTitle}>{t('offer.showcaseTitle')}</h2>
             <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.showcaseSub')}</Typography>
           </div>
-          <PlatformShowcase slides={slides} />
+          <InViewMount className="min-h-[300px] sm:min-h-[460px] lg:min-h-[500px]">
+            <PlatformShowcase slides={slides} />
+          </InViewMount>
         </section>
 
         {/* 2c. Números reais + gráfico (prova social por dados, não depoimento fake) */}
@@ -132,16 +163,18 @@ export default function OfferPage() {
             <h2 className={sectionTitle}>{t('offer.realTitle')}</h2>
             <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.realSub')}</Typography>
           </div>
-          <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
-            <ActivityChart
-              title={t('chart.title')}
-              labels={{ aberturas: t('chart.opens'), atualizacoes: t('chart.updates'), criacoes: t('chart.creations') }}
-            />
-            <div className="flex max-h-[420px] justify-center gap-5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_16%,black_84%,transparent)]">
-              <MetricsColumn metrics={firstCol} duration={16} />
-              <MetricsColumn metrics={secondCol} duration={22} className="hidden sm:block" />
+          <InViewMount className="min-h-[780px] lg:min-h-[420px]">
+            <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
+              <ActivityChart
+                title={t('chart.title')}
+                labels={{ aberturas: t('chart.opens'), atualizacoes: t('chart.updates'), criacoes: t('chart.creations') }}
+              />
+              <div className="flex max-h-[420px] justify-center gap-5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_16%,black_84%,transparent)]">
+                <MetricsColumn metrics={firstCol} duration={16} />
+                <MetricsColumn metrics={secondCol} duration={22} className="hidden sm:block" />
+              </div>
             </div>
-          </div>
+          </InViewMount>
         </section>
 
         {/* 3. Como funciona */}
@@ -204,16 +237,62 @@ export default function OfferPage() {
           </div>
         </section>
 
-        {/* 8. Planos */}
-        <section id="precos" className="py-16 text-center">
-          <h2 className={`${sectionTitle} mb-2`}>{t('offer.plansTitle')}</h2>
-          <Typography variant="p" className="mx-auto mb-8 max-w-xl">{t('offer.plansDesc')}</Typography>
-          <div className="mx-auto mb-8 flex max-w-2xl flex-wrap justify-center gap-3">
-            {['Starter', 'Pro', 'Premium'].map((p) => (
-              <span key={p} className="rounded-container border border-border bg-card px-6 py-3 font-display font-bold text-content">{p}</span>
-            ))}
+        {/* 8. Preço único de lançamento (pagamento único — sem tiers/assinatura no MVP) */}
+        <section id="precos" className="py-16">
+          <div className="mx-auto max-w-xl">
+            <div className="card-premium ring-hairline relative overflow-hidden rounded-container p-7 text-center shadow-modal sm:p-10">
+              <span className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold-glow opacity-20 blur-3xl" />
+
+              <div className="relative">
+                <Badge tone="gold" className="mb-6"><Icon name="sparkles" size={14} /> {t('price.badge')}</Badge>
+
+                {/* Value stack — soma dos itens x preço */}
+                <div className="mb-7 rounded-container border border-border bg-deep/40 p-5 text-left">
+                  <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-muted">{t('price.stackTitle')}</p>
+                  <ul className="space-y-2">
+                    {valueStack.map((item) => (
+                      <li key={item.label} className="flex items-center justify-between gap-3 text-sm">
+                        <span className="flex items-center gap-2 text-content">
+                          <Check className="h-4 w-4 shrink-0 text-gold" /> {item.label}
+                        </span>
+                        <span className="shrink-0 font-medium text-muted">{brl(item.price)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+                    <span className="text-sm font-semibold text-content">{t('price.totalLabel')}</span>
+                    <span className="font-display text-lg font-extrabold text-gold-light">{brl(totalValue)}</span>
+                  </div>
+                </div>
+
+                {/* Preço */}
+                <p className="text-sm text-muted">{t('price.oldLabel')} <span className="text-base font-semibold text-muted line-through">R$ 147,90</span></p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-gold">{t('price.nowLabel')}</p>
+                <p className="font-display text-5xl font-extrabold tracking-tight text-content sm:text-6xl">R$ 47,90</p>
+                <p className="mx-auto mt-3 max-w-sm text-sm text-muted">{t('price.oneTime')}</p>
+
+                {/* Contador */}
+                <div className="mt-7">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">{t('price.endsIn')}</p>
+                  <LaunchCountdown labels={{ hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') }} />
+                </div>
+
+                {/* CTA dourado */}
+                <Cta
+                  t={t}
+                  className="bg-gold-glow mt-8 inline-flex h-13 w-full items-center justify-center rounded-interactive px-8 py-3.5 text-base font-extrabold tracking-wide text-deep shadow-[var(--shadow-glow-gold)] transition-transform hover:-translate-y-0.5"
+                  label={t('price.cta')}
+                />
+
+                {/* Garantia */}
+                <p className="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-content">
+                  <ShieldCheck className="h-5 w-5 text-success" /> {t('price.guarantee')}
+                </p>
+
+                <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-dim">{t('price.footnote')}</p>
+              </div>
+            </div>
           </div>
-          <Link href="/planos" className={primaryBtn}>{t('offer.secondary')}</Link>
         </section>
 
         {/* 10. FAQ */}

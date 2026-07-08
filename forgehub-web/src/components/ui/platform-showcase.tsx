@@ -42,7 +42,7 @@ export const PlatformShowcase = ({ slides }: { slides: ShowcaseSlide[] }) => {
                     fill
                     sizes="(max-width: 640px) 88vw, (max-width: 1024px) 70vw, 900px"
                     className="object-cover object-top"
-                    priority={i === 0}
+                    loading="lazy"
                   />
                 </div>
                 <figcaption className="px-2 py-3 text-center text-sm font-medium text-muted">
