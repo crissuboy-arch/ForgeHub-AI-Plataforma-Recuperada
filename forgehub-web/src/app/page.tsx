@@ -9,6 +9,7 @@ import { LanguageSwitcher } from '../components/atoms/LanguageSwitcher';
 import { useLanguage } from '../lib/i18n/LanguageProvider';
 import { Reveal, Counter } from '../components/landing/primitives';
 import { DashboardMockup } from '../components/landing/DashboardMockup';
+import { HeroAvatar } from '../components/landing/HeroAvatar';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 
 // Checkout real (Kiwify) com UTM. Env var sobrescreve se definida.
@@ -118,8 +119,10 @@ export default function Home() {
             </Reveal>
           </div>
 
-          <div className="lg:pl-4">
+          <div className="relative lg:pl-4">
             <DashboardMockup />
+            {/* Slot do vídeo de avatar (fallback automático até o .mp4 existir) */}
+            <HeroAvatar className="mx-auto mt-6 lg:absolute lg:-bottom-8 lg:-left-5 lg:z-20 lg:mt-0" />
           </div>
         </section>
 
