@@ -10,6 +10,7 @@ import { Typography } from '../atoms/Typography';
 import { Icon } from '../atoms/Icon';
 import { Button } from '../atoms/Button';
 import { Badge } from '../atoms/Badge';
+import { AIChat } from '../molecules/AIChat';
 import {
   assetFormSchema, emptyFormValues, computeHealth, ENUM_LABELS,
   LEVELS, STATUSES, LICENSES, REVENUE_MODELS, DELIVERY_BUNDLES,
@@ -304,6 +305,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
 
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<{ kind: 'ok' | 'err'; text: string } | null>(null);
+  const [showAISlug, setShowAISlug] = useState(false);
   const [dragIdx, setDragIdx] = useState<number | null>(null);
 
   // Traduções do Kit por idioma (item 2)
@@ -422,14 +424,54 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label={t('studio.f.name')} error={errors.name?.message}><input className={inputClass} {...register('name')} /></Field>
             <Field label={t('studio.f.slug')} error={errors.slug?.message} hint={t('studio.f.slugHint')}>
-              <div className="flex gap-2">
-                <input
-                  className={inputClass}
-                  {...register('slug')}
-                  onChange={(e) => setValue('slug', liveSlug(e.target.value), { shouldValidate: false })}
-                  onBlur={(e) => setValue('slug', finalizeSlug(e.target.value), { shouldValidate: true })}
-                />
-                <Button type="button" variant="secondary" size="sm" onClick={slugFromName}>{t('studio.gen')}</Button>
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    className={inputClass}
+                    {...register('slug')}
+                    onChange={(e) => setValue('slug', liveSlug(e.target.value), { shouldValidate: false })}
+                    onBlur={(e) => setValue('slug', finalizeSlug(e.target.value), { shouldValidate: true })}
+                  />
+                  <Button type="button" variant="secondary" size="sm" onClick={slugFromName}>
+                    <Icon name="refresh" size={14} /> {t('studio.gen')}
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="secondary" 
+                    size="sm"
+                    onClick={() => setShowAISlug(!showAISlug)}
+                  >
+                    <Icon name="brain" size={14} /> IA
+                  </Button>
+                </div>
+                
+                {showAISlug && (
+                  <div className="rounded border border-border bg-card p-3">
+                    <AIChat 
+                      compact
+                      initialQuestion={nameVal ? `Gere slug para: ${nameVal}` : "Gere um slug criativo"}
+                      onResponse={(response) => {
+                        // Extrair apenas o slug da resposta
+                        const cleanSlug = response
+                          .toLowerCase()
+                          .replace(/[^a-z0-9\s-]/g, '')
+                          .replace(/\s+/g, '-')
+                          .replace(/-+/g, '-')
+                          .replace(/^-|-$/g, '')
+                          .substring(0,放的 50);
+                        
+                        if (cleanSlug && cleanSlug.length >(VVE 3)) {
+                          setValue('slug', cleanSlug, { shouldValidate: true });
+                          setShowAISlug(false);
+                        }
+                      }}
+                    />
+                    <div className="mt-2 text-xs text-muted">
+                      <Icon name="info" size={10} className="mr-1 inline" />
+                      A IA pode gerar slugs criativos ou responder perguntas sobre o produto.
+                    </div>
+                  </div>
+                )}
               </div>
             </Field>
             <Field label={t('studio.f.category')} error={errors.category?.message}>
@@ -655,6 +697,75 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
             <Field label={t('studio.f.promptContent')}>
               <textarea className={`${inputClass} h-32 py-2 font-mono text-xs`} value={translations[trLang]?.promptContent ?? ''} onChange={(e) => setTr('promptContent', e.target.value)} />
             </Field>
+          </div>
+        </Section>
+
+        {/* 14. Assistente IA */}
+        <Section n={14} icon="brain" title="Assistente IA">
+          <div className="mb-4">
+            <Typography variant="body" className="text-content">
+              Use IA para gerar conteúdo, ideias ou tirar dúvidas sobre o produto.
+            </Typography>
+            <Typography variant="small" className="mt-2 text-muted">
+              Conectado às APIs NVIDIA e AGNES. Configure as chaves nas variáveis de ambiente para uso completo.
+            </Typography>
+          </div>
+          
+          <div className="rounded border border-border bg-card p-4">
+            <AIChat 
+              initialQuestion={nameVal ? `Ajuda com produto: ${nameVal}` : "Como posso ajudar com este produto?"}
+              onResponse={(response) => {
+                // Opcional: usar resposta para preencher campos automaticamente
+                toast({
+                  title: "Resposta da IA",
+                  description: "Consulte a resposta abaixo",
+                  duration: 5000,
+                });
+              }}
+            />
+          </div>
+          
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => {
+                const prompt = `Gere uma descrição curta para: ${nameVal || 'um produto digital'}`;
+                // Implementar chamada direta aqui
+              }}
+            >
+              <Icon name="text" size={14} /> Descrição
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => {
+                const prompt = `Sugira tags para: ${nameVal || 'produto digital'} (formato: tag1, tag2, tag3)`;
+                // Implementar chamada direta aqui
+              }}
+            >
+              <Icon name="tag" size={14} /> Tags
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => {
+                const prompt = `Sugira nichos para: ${nameVal || 'produto'} (formato: nicho1, nicho2)`;
+                // Implementar chamada direta aqui
+              }}
+            >
+              <Icon name="target" size={14} /> Nichos
+            </Button>
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => {
+                const prompt = `Sugira título criativo para: ${nameVal || 'produto digital'}`;
+                // Implementar chamada direta aqui
+              }}
+            >
+              <Icon name="type" size={14} /> Título
+            </Button>
           </div>
         </Section>
       </div>
