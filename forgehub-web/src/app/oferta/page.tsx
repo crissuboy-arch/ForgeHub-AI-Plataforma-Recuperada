@@ -12,14 +12,18 @@ import { useLanguage } from '../../lib/i18n/LanguageProvider';
 import dynamic from 'next/dynamic';
 import { LimelightNav, type NavItem } from '../../components/ui/limelight-nav';
 import type { ShowcaseSlide } from '../../components/ui/platform-showcase';
+import type { PlatformTypeCard } from '../../components/ui/platform-types-showcase';
 import type { MetricCard } from '../../components/ui/metrics-columns';
 import { LaunchCountdown } from '../../components/ui/launch-countdown';
 import { InViewMount } from '../../components/ui/in-view-mount';
-import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes, ShieldCheck, Check } from 'lucide-react';
+import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes, ShieldCheck, Check, Smartphone, Bot, LayoutTemplate, BookOpen, CalendarDays, Library } from 'lucide-react';
 
 // Componentes pesados (embla / recharts / framer-motion) fora do bundle inicial:
 // carregam sob demanda, só no cliente, quando o bloco entra na viewport.
 const PlatformShowcase = dynamic(() => import('../../components/ui/platform-showcase').then((m) => m.PlatformShowcase), {
+  ssr: false,
+});
+const PlatformTypesShowcase = dynamic(() => import('../../components/ui/platform-types-showcase').then((m) => m.PlatformTypesShowcase), {
   ssr: false,
 });
 const ActivityChart = dynamic(() => import('../../components/ui/activity-chart').then((m) => m.ActivityChart), {
@@ -65,6 +69,61 @@ export default function OfferPage() {
     { src: '/images/showcase/kits.webp', caption: t('showcase.kits') },
     { src: '/images/showcase/nichos.webp', caption: t('showcase.nichos') },
     { src: '/images/showcase/studio.webp', caption: t('showcase.studio') },
+  ];
+
+  // Tipos de recursos que existem na plataforma (screenshots reais de kits).
+  const platformTypeCards: PlatformTypeCard[] = [
+    {
+      id: 'apps',
+      label: t('platformType.apps'),
+      icon: Smartphone,
+      images: [
+        { src: '/images/platform-types/app-nutricao.webp', alt: t('platformType.apps') },
+        { src: '/images/platform-types/app-beleza.webp', alt: t('platformType.apps') },
+        { src: '/images/platform-types/app-devocional.webp', alt: t('platformType.apps') },
+      ],
+    },
+    {
+      id: 'ai-agents',
+      label: t('platformType.aiAgents'),
+      icon: Bot,
+      images: [
+        { src: '/images/platform-types/ia-skill-library.webp', alt: t('platformType.aiAgents') },
+        { src: '/images/platform-types/ia-relacionamentos-chat.webp', alt: t('platformType.aiAgents') },
+        { src: '/images/platform-types/ia-meta-ads.webp', alt: t('platformType.aiAgents') },
+      ],
+    },
+    {
+      id: 'sales-pages',
+      label: t('platformType.salesPages'),
+      icon: LayoutTemplate,
+      images: [
+        { src: '/images/platform-types/venda-crescendo-jesus.webp', alt: t('platformType.salesPages') },
+        { src: '/images/platform-types/venda-alimentacao.webp', alt: t('platformType.salesPages') },
+        { src: '/images/platform-types/venda-controlar.webp', alt: t('platformType.salesPages') },
+      ],
+    },
+    {
+      id: 'ebooks',
+      label: t('platformType.ebooks'),
+      icon: BookOpen,
+      images: [
+        { src: '/images/platform-types/ebook-365-manhas.webp', alt: t('platformType.ebooks') },
+        { src: '/images/platform-types/ebook-detox.webp', alt: t('platformType.ebooks') },
+      ],
+    },
+    {
+      id: 'planners',
+      label: t('platformType.planners'),
+      icon: CalendarDays,
+      images: [{ src: '/images/platform-types/planner-calendario.webp', alt: t('platformType.planners') }],
+    },
+    {
+      id: 'library',
+      label: t('platformType.library'),
+      icon: Library,
+      images: [{ src: '/images/platform-types/biblioteca-crescendo-jesus.webp', alt: t('platformType.library') }],
+    },
   ];
 
   // Números REAIS do dashboard (não são depoimentos fake).
@@ -171,6 +230,18 @@ export default function OfferPage() {
                 <MetricsColumn metrics={secondCol} duration={22} className="hidden sm:block" />
               </div>
             </div>
+          </InViewMount>
+        </section>
+
+        {/* 2d. Conheça tudo que existe na plataforma (tipos de recursos) */}
+        <section className="py-16">
+          <div className="mb-10 text-center">
+            <Badge tone="gold" className="mb-4"><Icon name="sparkles" size={14} /> {t('offer.platformTypesKicker')}</Badge>
+            <h2 className={sectionTitle}>{t('offer.platformTypesTitle')}</h2>
+            <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.platformTypesSub')}</Typography>
+          </div>
+          <InViewMount className="min-h-[420px] sm:min-h-[480px] lg:min-h-[520px]">
+            <PlatformTypesShowcase cards={platformTypeCards} />
           </InViewMount>
         </section>
 
