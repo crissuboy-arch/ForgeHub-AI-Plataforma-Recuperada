@@ -458,9 +458,9 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
                           .replace(/\s+/g, '-')
                           .replace(/-+/g, '-')
                           .replace(/^-|-$/g, '')
-                          .substring(0,放的 50);
-                        
-                        if (cleanSlug && cleanSlug.length >(VVE 3)) {
+                          .substring(0, 50);
+
+                        if (cleanSlug && cleanSlug.length > 3) {
                           setValue('slug', cleanSlug, { shouldValidate: true });
                           setShowAISlug(false);
                         }
@@ -703,7 +703,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
         {/* 14. Assistente IA */}
         <Section n={14} icon="brain" title="Assistente IA">
           <div className="mb-4">
-            <Typography variant="body" className="text-content">
+            <Typography variant="p" className="text-content">
               Use IA para gerar conteúdo, ideias ou tirar dúvidas sobre o produto.
             </Typography>
             <Typography variant="small" className="mt-2 text-muted">
@@ -716,11 +716,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
               initialQuestion={nameVal ? `Ajuda com produto: ${nameVal}` : "Como posso ajudar com este produto?"}
               onResponse={(response) => {
                 // Opcional: usar resposta para preencher campos automaticamente
-                toast({
-                  title: "Resposta da IA",
-                  description: "Consulte a resposta abaixo",
-                  duration: 5000,
-                });
+                toast('Resposta da IA: consulte a resposta abaixo', 'info');
               }}
             />
           </div>

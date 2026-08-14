@@ -119,7 +119,7 @@ export function AIChat({ initialQuestion = '', onResponse, compact = false }: AI
                 Resposta da IA
               </Typography>
             </div>
-            <Typography variant="body" className="text-content">
+            <Typography variant="p" className="text-content">
               {response}
             </Typography>
             <div className="mt-3 flex justify-end">
