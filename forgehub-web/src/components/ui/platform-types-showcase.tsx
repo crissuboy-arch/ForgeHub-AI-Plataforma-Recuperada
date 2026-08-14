@@ -33,8 +33,8 @@ const CardImages = ({ images }: { images: { src: string; alt: string }[] }) => {
           src={img.src}
           alt={img.alt}
           fill
-          sizes="(max-width: 640px) 78vw, (max-width: 1024px) 46vw, 32vw"
-          className={`object-cover object-top transition-opacity duration-700 ${i === active ? 'opacity-100' : 'opacity-0'}`}
+          sizes="(max-width: 640px) 88vw, (max-width: 1024px) 56vw, 40vw"
+          className={`object-contain transition-opacity duration-700 ${i === active ? 'opacity-100' : 'opacity-0'}`}
           loading="lazy"
         />
       ))}
@@ -100,7 +100,7 @@ export const PlatformTypesShowcase = ({ cards }: { cards: PlatformTypeCard[] }) 
             const isActive = selected === i;
             const Icon = card.icon;
             return (
-              <div key={card.id} className="min-w-0 shrink-0 grow-0 basis-[78%] pl-4 sm:basis-[48%] lg:basis-[32%]">
+              <div key={card.id} className="min-w-0 shrink-0 grow-0 basis-[88%] pl-4 sm:basis-[56%] lg:basis-[40%]">
                 <button
                   type="button"
                   onClick={() => scrollTo(i)}
@@ -110,7 +110,7 @@ export const PlatformTypesShowcase = ({ cards }: { cards: PlatformTypeCard[] }) 
                       : 'scale-[0.94] border-border opacity-70 hover:opacity-100'
                   }`}
                 >
-                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-interactive border border-border/60">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden rounded-interactive border border-border/60 bg-deep/40">
                     <CardImages images={card.images} />
                   </div>
                   <div className="flex items-center gap-2 px-2 py-3">
