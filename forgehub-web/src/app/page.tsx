@@ -2,8 +2,9 @@
 // src/app/page.tsx — Landing Page premium da ForgeHub AI.
 // Dark premium (ink/royal/gold), glassmorphism, motion suave, trilíngue.
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { motion } from 'motion/react';
-import { Check, X, Zap, ShoppingBag, CreditCard, BookOpen, Palette, ImageIcon, Video, Layers, Sparkles, BrainCircuit, FileText, Calculator, RefreshCw, ShieldCheck } from 'lucide-react';
+import { Check, X, Zap, ShoppingBag, CreditCard, BookOpen, Palette, ImageIcon, Video, Layers, Sparkles, BrainCircuit, FileText, Calculator, RefreshCw, ShieldCheck, Smartphone, Bot, LayoutTemplate, CalendarDays, Library } from 'lucide-react';
 import { Logo } from '../components/atoms/Logo';
 import { LanguageSwitcher } from '../components/atoms/LanguageSwitcher';
 import { useLanguage } from '../lib/i18n/LanguageProvider';
@@ -12,6 +13,13 @@ import { DashboardMockup } from '../components/landing/DashboardMockup';
 import { HeroAvatar } from '../components/landing/HeroAvatar';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
+import { InViewMount } from '../components/ui/in-view-mount';
+import type { PlatformTypeCard } from '../components/ui/platform-types-showcase';
+
+// Componente pesado (embla) fora do bundle inicial: carrega sob demanda, só no cliente.
+const PlatformTypesShowcase = dynamic(() => import('../components/ui/platform-types-showcase').then((m) => m.PlatformTypesShowcase), {
+  ssr: false,
+});
 
 // ---- helpers de parsing (listas do dicionário) ----
 const pipe = (s: string) => s.split('|').map((x) => x.trim()).filter(Boolean);
@@ -61,6 +69,59 @@ export default function Home() {
   const valueTotal = valueRows.reduce((sum, r) => sum + (r.price || 0), 0);
   const faq = pairs(t('lp.faq'));
   const brl = (n: number) => `R$ ${n.toLocaleString('pt-BR')}`;
+
+  // Tipos de recursos que existem na plataforma (screenshots reais de kits).
+  const platformTypeCards: PlatformTypeCard[] = [
+    {
+      id: 'apps',
+      label: t('platformType.apps'),
+      icon: Smartphone,
+      images: [
+        { src: '/images/platform-types/app-nutricao.webp', alt: t('platformType.apps') },
+        { src: '/images/platform-types/app-beleza.webp', alt: t('platformType.apps') },
+        { src: '/images/platform-types/app-devocional.webp', alt: t('platformType.apps') },
+      ],
+    },
+    {
+      id: 'ai-agents',
+      label: t('platformType.aiAgents'),
+      icon: Bot,
+      images: [
+        { src: '/images/platform-types/ia-skill-library.webp', alt: t('platformType.aiAgents') },
+        { src: '/images/platform-types/ia-relacionamentos-chat.webp', alt: t('platformType.aiAgents') },
+        { src: '/images/platform-types/ia-meta-ads.webp', alt: t('platformType.aiAgents') },
+      ],
+    },
+    {
+      id: 'sales-pages',
+      label: t('platformType.salesPages'),
+      icon: LayoutTemplate,
+      images: [
+        { src: '/images/platform-types/venda-crescendo-jesus.webp', alt: t('platformType.salesPages') },
+        { src: '/images/platform-types/venda-alimentacao.webp', alt: t('platformType.salesPages') },
+        { src: '/images/platform-types/venda-controlar.webp', alt: t('platformType.salesPages') },
+        { src: '/images/platform-types/venda-detox.webp', alt: t('platformType.salesPages') },
+      ],
+    },
+    {
+      id: 'ebooks',
+      label: t('platformType.ebooks'),
+      icon: BookOpen,
+      images: [{ src: '/images/platform-types/ebook-365-manhas.webp', alt: t('platformType.ebooks') }],
+    },
+    {
+      id: 'planners',
+      label: t('platformType.planners'),
+      icon: CalendarDays,
+      images: [{ src: '/images/platform-types/planner-calendario.webp', alt: t('platformType.planners') }],
+    },
+    {
+      id: 'library',
+      label: t('platformType.library'),
+      icon: Library,
+      images: [{ src: '/images/platform-types/biblioteca-crescendo-jesus.webp', alt: t('platformType.library') }],
+    },
+  ];
 
   return (
     <div className="relative flex min-h-screen flex-col bg-ink text-white">
@@ -211,6 +272,18 @@ export default function Home() {
               );
             })}
           </div>
+        </section>
+
+        {/* ============ CONHEÇA TUDO QUE EXISTE NA PLATAFORMA ============ */}
+        <section className="py-16">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <span className={kicker}>{t('offer.platformTypesKicker')}</span>
+            <h2 className={sectionTitle}>{t('offer.platformTypesTitle')}</h2>
+            <p className="mt-4 text-lg text-white/55">{t('offer.platformTypesSub')}</p>
+          </Reveal>
+          <InViewMount className="mt-14 min-h-[420px] sm:min-h-[480px] lg:min-h-[520px]">
+            <PlatformTypesShowcase cards={platformTypeCards} />
+          </InViewMount>
         </section>
 
         {/* ============ NICHOS ============ */}
