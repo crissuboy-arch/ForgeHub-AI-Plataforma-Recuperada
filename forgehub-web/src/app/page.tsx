@@ -15,11 +15,13 @@ import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
 import { InViewMount } from '../components/ui/in-view-mount';
 import type { PlatformTypeCard } from '../components/ui/platform-types-showcase';
+import type { ImageItem } from '../components/ui/phone-mockups-1-utils/phone-carousel';
 
-// Componente pesado (embla) fora do bundle inicial: carrega sob demanda, só no cliente.
+// Componentes pesados (embla) fora do bundle inicial: carregam sob demanda, só no cliente.
 const PlatformTypesShowcase = dynamic(() => import('../components/ui/platform-types-showcase').then((m) => m.PlatformTypesShowcase), {
   ssr: false,
 });
+const PhoneMockupBasic = dynamic(() => import('../components/ui/phone-mockups-1'), { ssr: false });
 
 // ---- helpers de parsing (listas do dicionário) ----
 const pipe = (s: string) => s.split('|').map((x) => x.trim()).filter(Boolean);
@@ -121,6 +123,16 @@ export default function Home() {
       icon: Library,
       images: [{ src: '/images/platform-types/biblioteca-crescendo-jesus.webp', alt: t('platformType.library') }],
     },
+  ];
+
+  // Depoimentos reais de alunos (prints de conversa fornecidos pelo cliente).
+  const testimonialImages: ImageItem[] = [
+    { src: '/images/depoimentos/depoimento-priscila.webp', alt: 'Depoimento de Priscila' },
+    { src: '/images/depoimentos/depoimento-raimuindo.webp', alt: 'Depoimento de Raimuindo' },
+    { src: '/images/depoimentos/depoimento-ana.webp', alt: 'Depoimento de Ana' },
+    { src: '/images/depoimentos/depoimento-maria.webp', alt: 'Depoimento de Maria' },
+    { src: '/images/depoimentos/depoimento-pedro.webp', alt: 'Depoimento de Pedro' },
+    { src: '/images/depoimentos/depoimento-benedita.webp', alt: 'Depoimento de Benedita' },
   ];
 
   return (
@@ -306,6 +318,17 @@ export default function Home() {
               </Reveal>
             ))}
           </div>
+        </section>
+
+        {/* ============ DEPOIMENTOS (carrossel de celulares) ============ */}
+        <section className="py-24">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <span className={kicker}>{t('lp.testimonialsKicker')}</span>
+            <h2 className={sectionTitle}>{t('lp.testimonialsTitle')}</h2>
+          </Reveal>
+          <InViewMount className="mt-14 min-h-[440px] sm:min-h-[500px]">
+            <PhoneMockupBasic images={testimonialImages} />
+          </InViewMount>
         </section>
 
         {/* ============ COMO FUNCIONA ============ */}
