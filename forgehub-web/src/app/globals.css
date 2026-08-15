@@ -196,12 +196,17 @@ body::after {
   50% { transform: translateX(0%); }
   100% { transform: translateX(100%); }
 }
+@keyframes fh-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: fh-marquee 30s linear infinite; }
 @keyframes fh-pulse-glow {
   0%, 100% { opacity: 0.55; transform: scale(0.98); }
   50% { opacity: 1; transform: scale(1.04); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-in, .lift, .glow-blue-hover { animation: none; transition: none; }
+  .animate-in, .lift, .glow-blue-hover, .animate-marquee { animation: none; transition: none; }
 }
 
 /* Acessibilidade: foco sempre visível (AA) para teclado/leitores de tela */

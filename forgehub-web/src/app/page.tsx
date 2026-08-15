@@ -14,6 +14,7 @@ import { HeroAvatar } from '../components/landing/HeroAvatar';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
 import { InViewMount } from '../components/ui/in-view-mount';
+import { AnnouncementBar } from '../components/ui/announcement-bar';
 import type { PlatformTypeCard } from '../components/ui/platform-types-showcase';
 import type { ImageItem } from '../components/ui/phone-mockups-1-utils/phone-carousel';
 
@@ -135,8 +136,13 @@ export default function Home() {
     { src: '/images/depoimentos/depoimento-benedita.webp', alt: 'Depoimento de Benedita' },
   ];
 
+  const announcementItems = pipe(t('lp.announcementItems'));
+
   return (
     <div className="relative flex min-h-screen flex-col bg-ink text-white">
+      {/* ============ Barra de avisos (marquee) — topo absoluto, acima do header ============ */}
+      <AnnouncementBar items={announcementItems} />
+
       {/* Glows ambientes */}
       <div className="pointer-events-none fixed inset-0 -z-10">
         <div className="absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-royal/15 blur-[130px]" />

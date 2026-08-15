@@ -466,6 +466,8 @@ const ptBR: Dict = {
   // Depoimentos reais (carrossel de celulares)
   'lp.testimonialsKicker': 'Resultados reais',
   'lp.testimonialsTitle': 'Percepções de quem já conheceu o método.',
+  // Barra de avisos (marquee) no topo absoluto
+  'lp.announcementItems': 'Aplicativos prontos para personalizar|MicroApps para diferentes nichos|eBooks, templates e páginas prontas|Estruturas digitais prontas para vender|Personalize, publique e venda',
   // Preço único de lançamento
   'price.badge': 'Preço especial de lançamento',
   'price.stackTitle': 'Tudo o que entra, se comprado separado:',
@@ -941,6 +943,7 @@ const es: Dict = {
   'platformType.library': 'Biblioteca de Contenido',
   'lp.testimonialsKicker': 'Resultados reales',
   'lp.testimonialsTitle': 'Percepciones de quienes ya conocieron el método.',
+  'lp.announcementItems': 'Aplicaciones listas para personalizar|MicroApps para diferentes nichos|eBooks, plantillas y páginas listas|Estructuras digitales listas para vender|Personaliza, publica y vende',
   'price.badge': 'Precio especial de lanzamiento',
   'price.stackTitle': 'Todo lo que incluye, comprado por separado:',
   'price.stack.app': 'Aplicación remezclable', 'price.stack.pages': 'Página de venta + checkout modelo',
@@ -1415,6 +1418,7 @@ const en: Dict = {
   'platformType.library': 'Content Library',
   'lp.testimonialsKicker': 'Real results',
   'lp.testimonialsTitle': 'What people who already tried it are saying.',
+  'lp.announcementItems': 'Ready-to-customize apps|MicroApps for different niches|eBooks, templates and ready pages|Digital structures ready to sell|Customize, publish and sell',
   'price.badge': 'Special launch price',
   'price.stackTitle': 'Everything included, if bought separately:',
   'price.stack.app': 'Remixable app', 'price.stack.pages': 'Sales page + checkout template',
