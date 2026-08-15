@@ -12,7 +12,7 @@ export type ImageItem = { src: string; alt: string };
 
 const PhoneFrame = ({ image, active }: { image: ImageItem; active: boolean }) => (
   <div
-    className={`relative mx-auto aspect-[9/19] w-full max-w-[260px] overflow-hidden rounded-[2.2rem] border-[6px] transition-all duration-500 ease-out ${
+    className={`relative mx-auto aspect-[4/5] w-full max-w-[260px] overflow-hidden rounded-[2.2rem] border-[6px] transition-all duration-500 ease-out ${
       active
         ? 'scale-100 border-goldp/70 opacity-100 shadow-[0_0_32px_rgba(217,180,74,0.45)]'
         : 'scale-90 border-white/10 opacity-60'
@@ -25,7 +25,7 @@ const PhoneFrame = ({ image, active }: { image: ImageItem; active: boolean }) =>
       alt={image.alt}
       fill
       sizes="(max-width: 640px) 72vw, (max-width: 1024px) 40vw, 26vw"
-      className="object-cover object-top"
+      className="object-contain object-top"
       loading="lazy"
     />
   </div>
