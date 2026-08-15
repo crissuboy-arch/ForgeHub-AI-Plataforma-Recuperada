@@ -177,6 +177,7 @@ export default function Home() {
             </Reveal>
             <Reveal delay={0.1}>
               <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/65">{t('lp.sub1')}</p>
+              <p className="mt-4 max-w-xl text-lg leading-relaxed text-white/65">{t('lp.sub1b')}</p>
               <p className="mt-4 max-w-xl text-lg text-white/80">
                 <span className="font-semibold text-white">{t('lp.sub2')}</span>{' '}
                 <span className="font-semibold text-goldp">{t('lp.sub3')}</span>
