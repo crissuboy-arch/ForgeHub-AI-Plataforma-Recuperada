@@ -340,6 +340,10 @@ const ptBR: Dict = {
   'lp.sub1': 'Escolha um negócio digital pronto. Personalize com a sua marca. Publique e comece a vender.',
   'lp.sub1b': 'Aplicativos, páginas, eBooks, criativos, prompts e estruturas completas para você adaptar e lançar como suas.',
   'lp.sub2': 'Você não começa do zero.', 'lp.sub3': 'Começa do pronto.',
+  // Vídeo demonstrativo (seção grande, logo após o Hero)
+  'lp.videoTitleA': 'Veja como a ForgeHub AI', 'lp.videoTitleB': 'funciona na prática',
+  'lp.videoSub': 'Em poucos minutos, você entende por dentro, personaliza os materiais e começa a preparar o seu lançamento.',
+  'lp.videoComingSoon': 'Vídeo demonstrativo em breve',
   // Stats
   'lp.stat.kits': 'Kits disponíveis', 'lp.stat.niches': 'Nichos', 'lp.stat.downloads': 'Downloads', 'lp.stat.newkit': 'Novo kit todos os meses',
   // Dor
@@ -833,6 +837,9 @@ const es: Dict = {
   'lp.sub1': 'Elige un negocio digital listo. Personalízalo con tu marca. Publica y empieza a vender.',
   'lp.sub1b': 'Aplicaciones, páginas, eBooks, creativos, prompts y estructuras completas para que adaptes y lances como tuyas.',
   'lp.sub2': 'No empiezas desde cero.', 'lp.sub3': 'Empiezas desde lo listo.',
+  'lp.videoTitleA': 'Mira cómo ForgeHub AI', 'lp.videoTitleB': 'funciona en la práctica',
+  'lp.videoSub': 'En pocos minutos, entiendes cómo funciona por dentro, personalizas los materiales y empiezas a preparar tu lanzamiento.',
+  'lp.videoComingSoon': 'Video demostrativo próximamente',
   'lp.stat.kits': 'Kits disponibles', 'lp.stat.niches': 'Nichos', 'lp.stat.downloads': 'Descargas', 'lp.stat.newkit': 'Nuevo kit cada mes',
   'lp.painTitle': 'Ya intentaste lanzar un producto digital antes.',
   'lp.painSub': 'Y probablemente te rendiste a mitad de camino.',
@@ -1309,6 +1316,9 @@ const en: Dict = {
   'lp.sub1': 'Choose a ready-made digital business. Customize it with your brand. Publish and start selling.',
   'lp.sub1b': 'Apps, pages, eBooks, creatives, prompts and complete structures for you to adapt and launch as your own.',
   'lp.sub2': "You don't start from scratch.", 'lp.sub3': 'You start from ready.',
+  'lp.videoTitleA': 'See how ForgeHub AI', 'lp.videoTitleB': 'works in practice',
+  'lp.videoSub': 'In a few minutes, you understand how it works inside, customize the materials and start preparing your launch.',
+  'lp.videoComingSoon': 'Demo video coming soon',
   'lp.stat.kits': 'Available kits', 'lp.stat.niches': 'Niches', 'lp.stat.downloads': 'Downloads', 'lp.stat.newkit': 'New kit every month',
   'lp.painTitle': "You've tried to launch a digital product before.",
   'lp.painSub': 'And you probably gave up halfway through.',

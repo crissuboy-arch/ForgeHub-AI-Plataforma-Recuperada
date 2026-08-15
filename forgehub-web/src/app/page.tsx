@@ -10,7 +10,6 @@ import { LanguageSwitcher } from '../components/atoms/LanguageSwitcher';
 import { useLanguage } from '../lib/i18n/LanguageProvider';
 import { Reveal, Counter } from '../components/landing/primitives';
 import { DashboardMockup } from '../components/landing/DashboardMockup';
-import { HeroAvatar } from '../components/landing/HeroAvatar';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
 import { InViewMount } from '../components/ui/in-view-mount';
@@ -195,9 +194,30 @@ export default function Home() {
 
           <div className="relative lg:pl-4">
             <DashboardMockup />
-            {/* Slot do vídeo de avatar (fallback automático até o .mp4 existir) */}
-            <HeroAvatar className="mx-auto mt-6 lg:absolute lg:-bottom-8 lg:-left-5 lg:z-20 lg:mt-0" />
           </div>
+        </section>
+
+        {/* ============ VÍDEO DEMONSTRATIVO ============ */}
+        <section className="py-20 text-center">
+          <Reveal className="mx-auto max-w-2xl">
+            <h2 className={sectionTitle}>
+              {t('lp.videoTitleA')}<br />
+              {t('lp.videoTitleB')}
+            </h2>
+            <p className="mt-4 text-lg text-white/55">{t('lp.videoSub')}</p>
+          </Reveal>
+          <Reveal delay={0.1} className="mx-auto mt-10 w-full max-w-4xl">
+            <div className="group relative aspect-video w-full overflow-hidden rounded-3xl border border-royal/20 bg-black/40 shadow-[0_0_40px_-12px_rgba(36,107,255,0.3)]">
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-white/10 backdrop-blur transition-transform group-hover:scale-105">
+                  <svg viewBox="0 0 24 24" className="h-6 w-6 translate-x-[2px] fill-white/90">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </span>
+                <span className="text-sm font-medium text-white/55">{t('lp.videoComingSoon')}</span>
+              </div>
+            </div>
+          </Reveal>
         </section>
 
         {/* ============ STATS ============ */}
