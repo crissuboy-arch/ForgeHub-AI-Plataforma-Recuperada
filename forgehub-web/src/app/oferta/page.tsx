@@ -64,11 +64,14 @@ export default function OfferPage() {
 
   // Screenshots REAIS da plataforma (exportados do próprio app).
   const slides: ShowcaseSlide[] = [
-    { src: '/images/showcase/dashboard.webp', caption: t('showcase.dashboard') },
-    { src: '/images/showcase/hero-banner.webp', caption: t('showcase.heroBanner') },
-    { src: '/images/showcase/kits.webp', caption: t('showcase.kits') },
-    { src: '/images/showcase/nichos.webp', caption: t('showcase.nichos') },
-    { src: '/images/showcase/studio.webp', caption: t('showcase.studio') },
+    { src: '/images/showcase-vitrine/nutricao.webp', caption: t('showcase.nutricao') },
+    { src: '/images/showcase-vitrine/infantil.webp', caption: t('showcase.infantil') },
+    { src: '/images/showcase-vitrine/saude.webp', caption: t('showcase.saude') },
+    { src: '/images/showcase-vitrine/analytics.webp', caption: t('showcase.analytics') },
+    { src: '/images/showcase-vitrine/kits.webp', caption: t('showcase.kitsLibrary') },
+    { src: '/images/showcase-vitrine/comingsoon.webp', caption: t('showcase.comingSoon') },
+    { src: '/images/showcase-vitrine/gastronomia.webp', caption: t('showcase.gastronomia') },
+    { src: '/images/showcase-vitrine/relacionamentos.webp', caption: t('showcase.relacionamentos') },
   ];
 
   // Tipos de recursos que existem na plataforma (screenshots reais de kits).
