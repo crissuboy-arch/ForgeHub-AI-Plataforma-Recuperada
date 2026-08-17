@@ -9,7 +9,7 @@ import { Logo } from '../components/atoms/Logo';
 import { LanguageSwitcher } from '../components/atoms/LanguageSwitcher';
 import { useLanguage } from '../lib/i18n/LanguageProvider';
 import { Reveal, Counter } from '../components/landing/primitives';
-import { DashboardMockup } from '../components/landing/DashboardMockup';
+import { HeroShowcase } from '../components/landing/HeroShowcase';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
 import { InViewMount } from '../components/ui/in-view-mount';
@@ -193,7 +193,7 @@ export default function Home() {
           </div>
 
           <div className="relative lg:pl-4">
-            <DashboardMockup />
+            <HeroShowcase />
           </div>
         </section>
 
