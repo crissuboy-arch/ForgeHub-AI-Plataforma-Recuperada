@@ -8,11 +8,14 @@ import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
 
 const SLIDES = [
-  { src: '/images/showcase/dashboard.webp', alt: 'Dashboard da ForgeHub AI' },
-  { src: '/images/showcase/kits.webp', alt: 'Biblioteca de kits da ForgeHub AI' },
-  { src: '/images/showcase/hero-banner.webp', alt: 'Interior de um kit na ForgeHub AI' },
-  { src: '/images/showcase/studio.webp', alt: 'Asset Studio da ForgeHub AI' },
-  { src: '/images/showcase/nichos.webp', alt: 'Nichos disponíveis na ForgeHub AI' },
+  { src: '/images/showcase-vitrine/nutricao.webp', alt: 'Kit ForgeHub Nutrição' },
+  { src: '/images/showcase-vitrine/infantil.webp', alt: 'Kit ForgeHub Infantil' },
+  { src: '/images/showcase-vitrine/saude.webp', alt: 'Kit ForgeHub Saúde' },
+  { src: '/images/showcase-vitrine/analytics.webp', alt: 'Dashboard completo de analytics da ForgeHub AI' },
+  { src: '/images/showcase-vitrine/kits.webp', alt: 'Biblioteca de kits da ForgeHub AI' },
+  { src: '/images/showcase-vitrine/comingsoon.webp', alt: 'Novidades chegando em breve na ForgeHub AI' },
+  { src: '/images/showcase-vitrine/gastronomia.webp', alt: 'Kit ForgeHub Gastronomia' },
+  { src: '/images/showcase-vitrine/relacionamentos.webp', alt: 'Kit ForgeHub Relacionamentos' },
 ];
 
 export const HeroShowcase = () => {
