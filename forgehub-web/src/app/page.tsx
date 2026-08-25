@@ -339,35 +339,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ============ NÃO COPIE. REMIXE. (Antes → Remix → Depois) ============ */}
-        <section className="py-24">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <h2 className={sectionTitle}>{t('lp.remixTitle')}</h2>
-            <p className="mt-4 text-lg text-white/55">{t('lp.remixSub')}</p>
-          </Reveal>
-          <Reveal delay={0.1} className="mx-auto mt-14 grid max-w-4xl items-center gap-6 lg:grid-cols-[1fr_auto_1fr]">
-            <div className="rounded-3xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-center">
-              <p className="mb-4 text-xs font-bold uppercase tracking-wider text-white/40">{t('lp.remixBefore')}</p>
-              {/* Placeholder — substituir por screenshot real quando disponível */}
-              <div className="flex aspect-video items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 text-center text-sm text-white/35">
-                {t('lp.remixBeforeDesc')}
-              </div>
-            </div>
-            <div className="flex items-center justify-center py-2 lg:flex-col">
-              <span className="rounded-full border border-royal/30 bg-royal/10 px-4 py-2 text-center text-xs font-bold uppercase tracking-wider text-royal">
-                {t('lp.remixMiddle')}
-              </span>
-            </div>
-            <div className="rounded-3xl border border-goldp/25 bg-gradient-to-b from-goldp/[0.06] to-transparent p-6 text-center">
-              <p className="mb-4 text-xs font-bold uppercase tracking-wider text-goldp">{t('lp.remixAfter')}</p>
-              {/* Placeholder — substituir por screenshot real quando disponível */}
-              <div className="flex aspect-video items-center justify-center rounded-2xl border border-dashed border-goldp/20 bg-white/[0.02] px-4 text-center text-sm text-white/35">
-                {t('lp.remixAfterDesc')}
-              </div>
-            </div>
-          </Reveal>
-        </section>
-
         {/* ============ CONHEÇA TUDO QUE EXISTE NA PLATAFORMA ============ */}
         <section className="py-16">
           <Reveal className="mx-auto max-w-3xl text-center">
