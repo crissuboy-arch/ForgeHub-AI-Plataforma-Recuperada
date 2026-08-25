@@ -14,6 +14,7 @@ import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
 import { InViewMount } from '../components/ui/in-view-mount';
 import { AnnouncementBar } from '../components/ui/announcement-bar';
+import { LiteYouTube } from '../components/ui/lite-youtube';
 import type { PlatformTypeCard } from '../components/ui/platform-types-showcase';
 import type { ImageItem } from '../components/ui/phone-mockups-1-utils/phone-carousel';
 
@@ -207,15 +208,8 @@ export default function Home() {
             <p className="mt-4 text-lg text-white/55">{t('lp.videoSub')}</p>
           </Reveal>
           <Reveal delay={0.1} className="mx-auto mt-10 w-full max-w-4xl">
-            <div className="group relative aspect-video w-full overflow-hidden rounded-3xl border border-royal/20 bg-black/40 shadow-[0_0_40px_-12px_rgba(36,107,255,0.3)]">
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <span className="flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-white/10 backdrop-blur transition-transform group-hover:scale-105">
-                  <svg viewBox="0 0 24 24" className="h-6 w-6 translate-x-[2px] fill-white/90">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </span>
-                <span className="text-sm font-medium text-white/55">{t('lp.videoComingSoon')}</span>
-              </div>
+            <div className="relative aspect-video w-full overflow-hidden rounded-3xl border border-royal/20 bg-black/40 shadow-[0_0_40px_-12px_rgba(36,107,255,0.3)]">
+              <LiteYouTube videoId="y03YEmxqaaI" title="ForgeHub AI — Veja Como Funciona na Prática" />
             </div>
           </Reveal>
         </section>
