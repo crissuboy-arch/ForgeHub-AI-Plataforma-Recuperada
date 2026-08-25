@@ -232,10 +232,33 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ============ COMO FUNCIONA (5 passos) ============ */}
+        <section className="py-28">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <span className={kicker}>{t('lp.howKicker')}</span>
+            <h2 className={sectionTitle}>{t('lp.howTitle')}</h2>
+            <p className="mt-4 text-lg text-white/55">{t('lp.howSub')}</p>
+          </Reveal>
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {steps.map((s, i) => (
+              <Reveal key={s.a} delay={i * 0.06}>
+                <div className="h-full rounded-2xl border border-white/8 bg-white/[0.03] p-6">
+                  <span className="font-display text-sm font-extrabold text-royal">{String(i + 1).padStart(2, '0')} —</span>
+                  <h3 className="mt-2 font-display text-lg font-bold uppercase tracking-wide text-white">{s.a}</h3>
+                  {s.b && <p className="mt-1.5 text-sm leading-relaxed text-white/55">{s.b}</p>}
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
         {/* ============ DOR ============ */}
         <section className="py-28">
           <Reveal className="mx-auto max-w-3xl text-center">
-            <h2 className={sectionTitle}>{t('lp.painTitle')}</h2>
+            <h2 className={sectionTitle}>
+              {t('lp.painTitleA')}<br />
+              {t('lp.painTitleB')}
+            </h2>
             <p className="mt-4 text-xl text-white/55">{t('lp.painSub')}</p>
           </Reveal>
 
@@ -289,7 +312,10 @@ export default function Home() {
         <section className="py-28">
           <Reveal className="mx-auto max-w-3xl text-center">
             <span className={kicker}>{t('lp.insideKicker')}</span>
-            <h2 className={sectionTitle}>{t('lp.insideTitle')}</h2>
+            <h2 className={sectionTitle}>
+              {t('lp.insideTitleA')}<br />
+              {t('lp.insideTitleB')}
+            </h2>
             <p className="mt-4 text-lg text-white/55">{t('lp.insideSub')}</p>
           </Reveal>
           <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -311,6 +337,35 @@ export default function Home() {
               );
             })}
           </div>
+        </section>
+
+        {/* ============ NÃO COPIE. REMIXE. (Antes → Remix → Depois) ============ */}
+        <section className="py-24">
+          <Reveal className="mx-auto max-w-2xl text-center">
+            <h2 className={sectionTitle}>{t('lp.remixTitle')}</h2>
+            <p className="mt-4 text-lg text-white/55">{t('lp.remixSub')}</p>
+          </Reveal>
+          <Reveal delay={0.1} className="mx-auto mt-14 grid max-w-4xl items-center gap-6 lg:grid-cols-[1fr_auto_1fr]">
+            <div className="rounded-3xl border border-dashed border-white/15 bg-white/[0.02] p-6 text-center">
+              <p className="mb-4 text-xs font-bold uppercase tracking-wider text-white/40">{t('lp.remixBefore')}</p>
+              {/* Placeholder — substituir por screenshot real quando disponível */}
+              <div className="flex aspect-video items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 text-center text-sm text-white/35">
+                {t('lp.remixBeforeDesc')}
+              </div>
+            </div>
+            <div className="flex items-center justify-center py-2 lg:flex-col">
+              <span className="rounded-full border border-royal/30 bg-royal/10 px-4 py-2 text-center text-xs font-bold uppercase tracking-wider text-royal">
+                {t('lp.remixMiddle')}
+              </span>
+            </div>
+            <div className="rounded-3xl border border-goldp/25 bg-gradient-to-b from-goldp/[0.06] to-transparent p-6 text-center">
+              <p className="mb-4 text-xs font-bold uppercase tracking-wider text-goldp">{t('lp.remixAfter')}</p>
+              {/* Placeholder — substituir por screenshot real quando disponível */}
+              <div className="flex aspect-video items-center justify-center rounded-2xl border border-dashed border-goldp/20 bg-white/[0.02] px-4 text-center text-sm text-white/35">
+                {t('lp.remixAfterDesc')}
+              </div>
+            </div>
+          </Reveal>
         </section>
 
         {/* ============ CONHEÇA TUDO QUE EXISTE NA PLATAFORMA ============ */}
@@ -356,32 +411,6 @@ export default function Home() {
           <InViewMount className="mt-14 min-h-[440px] sm:min-h-[500px]">
             <PhoneMockupBasic images={testimonialImages} />
           </InViewMount>
-        </section>
-
-        {/* ============ COMO FUNCIONA ============ */}
-        <section className="py-28">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <span className={kicker}>{t('lp.howKicker')}</span>
-            <h2 className={sectionTitle}>{t('lp.howTitle')}</h2>
-          </Reveal>
-          <div className="relative mx-auto mt-16 max-w-2xl">
-            <div className="absolute left-[27px] top-2 bottom-2 w-px bg-gradient-to-b from-royal/60 via-royal/25 to-transparent sm:left-[31px]" />
-            <div className="space-y-8">
-              {steps.map((s, i) => (
-                <Reveal key={s.a} delay={i * 0.06}>
-                  <div className="flex items-start gap-6">
-                    <span className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-royal/30 bg-ink font-display text-xl font-extrabold text-royal shadow-[0_0_24px_rgba(36,107,255,0.25)]">
-                      {i + 1}
-                    </span>
-                    <div className="pt-1.5">
-                      <h3 className="font-display text-xl font-bold text-white">{s.a}</h3>
-                      {s.b && <p className="mt-1 text-white/55">{s.b}</p>}
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
         </section>
 
         {/* ============ VALOR PERCEBIDO ============ */}
