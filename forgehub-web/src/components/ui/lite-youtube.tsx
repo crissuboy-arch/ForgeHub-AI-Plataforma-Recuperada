@@ -7,14 +7,14 @@
 // (o container já reserva o aspect-video antes de qualquer conteúdo).
 import { useState } from 'react';
 
-export const LiteYouTube = ({ videoId, title }: { videoId: string; title: string }) => {
+export const LiteYouTube = ({ videoId, title, autoplay = true }: { videoId: string; title: string; autoplay?: boolean }) => {
   const [play, setPlay] = useState(false);
 
   if (play) {
     return (
       <iframe
         className="absolute inset-0 h-full w-full"
-        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`}
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0${autoplay ? '&autoplay=1' : ''}`}
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen

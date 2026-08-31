@@ -9,6 +9,7 @@ import { TopAssets } from '../../components/organisms/TopAssets';
 import { ActivityTimeline } from '../../components/organisms/ActivityTimeline';
 import { HeroBannerCarousel } from '../../components/organisms/HeroBannerCarousel';
 import { ComingSoonCarousel } from '../../components/organisms/ComingSoonCarousel';
+import { WelcomeStart } from '../../components/organisms/WelcomeStart';
 import { BonusCard } from '../../components/molecules/BonusCard';
 import { Typography } from '../../components/atoms/Typography';
 import { Icon } from '../../components/atoms/Icon';
@@ -37,6 +38,9 @@ export default function DashboardPage() {
     <div className="mx-auto max-w-7xl px-6 py-8">
       {/* HERO BANNER premium orientado a dados (config/niches.ts) */}
       <HeroBannerCarousel />
+
+      {/* COMECE POR AQUI — vídeo oficial, acesso à plataforma e Assistente Inteligente */}
+      <WelcomeStart />
 
       {/* EM BREVE — vitrine de próximos nichos/recursos */}
       <ComingSoonCarousel />
