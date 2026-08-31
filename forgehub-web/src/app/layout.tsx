@@ -31,10 +31,17 @@ export const metadata: Metadata = {
     "A maior biblioteca de kits de negócios digitais remixáveis: aplicativo, página de venda, checkout, ebook, criativos, vídeos e prompts — prontos para personalizar e vender como seus.",
   applicationName: "ForgeHub AI",
   keywords: ["produtos digitais", "kits remixáveis", "infoprodutos", "biblioteca de negócios", "ForgeHub AI", "remix", "Kiwify", "Hotmart"],
+  authors: [{ name: "ForgeHub AI", url: "https://www.devforgehub.online" }],
+  creator: "ForgeHub AI",
+  publisher: "ForgeHub AI",
+  formatDetection: { telephone: false, address: false, email: false },
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
+  // og:image / twitter:image vêm da convenção de arquivo (app/opengraph-image.png
+  // e app/twitter-image.png) — dimensões e URL absoluta geradas pelo Next.
   openGraph: {
     title: "ForgeHub AI — Pare de criar produtos digitais do zero",
     description:
@@ -42,21 +49,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "ForgeHub AI",
     locale: "pt_BR",
-    images: [
-      {
-        url: "/images/showcase-vitrine/analytics.webp",
-        width: 1440,
-        height: 900,
-        alt: "Dashboard completo de analytics da ForgeHub AI",
-      },
-    ],
+    url: "/",
   },
   twitter: {
     card: "summary_large_image",
     title: "ForgeHub AI — Pare de criar produtos digitais do zero",
     description:
       "Uma fábrica de produtos digitais: escolha um kit, remixe, personalize e venda como seu. Novos kits todos os meses.",
-    images: ["/images/showcase-vitrine/analytics.webp"],
   },
 };
 
