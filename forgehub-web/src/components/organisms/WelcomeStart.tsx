@@ -1,10 +1,12 @@
 'use client';
 // src/components/organisms/WelcomeStart.tsx — "Comece por aqui": vídeo oficial de
-// demonstração e card do Assistente Inteligente ForgeHub + orientação de suporte.
+// demonstração com capa premium da ForgeHub (nada de iframe/thumbnail cru do
+// YouTube antes do play) e card do Assistente Inteligente ForgeHub + suporte.
 // Integra-se ao Dashboard sem alterar nenhuma funcionalidade existente.
 import React from 'react';
 import { Icon } from '../atoms/Icon';
 import { Typography } from '../atoms/Typography';
+import { LogoSymbol } from '../atoms/Logo';
 import { LiteYouTube } from '../ui/lite-youtube';
 import { useLanguage } from '../../lib/i18n/LanguageProvider';
 
@@ -13,6 +15,56 @@ const DEMO_VIDEO_ID = 'WZ4UO3_oNoo';
 
 // Assistente Inteligente ForgeHub — GPT personalizado oficial (abre em nova aba).
 const ASSISTANT_URL = 'https://chatgpt.com/g/g-697b42b917f081919ca62be54c59e0a2-especialista-oficial-da-forgehub-ai';
+
+// Capa premium exibida antes do play — identidade ForgeHub (navy/preto),
+// composição com um print real do Dashboard, overlay/gradiente, logo, título,
+// subtítulo, botão de play grande e centralizado. Totalmente responsiva.
+const VideoCover: React.FC<{ title: string; subtitle: string; hint: string }> = ({ title, subtitle, hint }) => (
+  <>
+    {/* Composição de fundo: captura real da plataforma (crisp, object-cover) */}
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src="/images/showcase/studio.webp"
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      className="absolute inset-0 h-full w-full scale-[1.03] object-cover object-top"
+    />
+    {/* Overlay escuro + gradiente da marca para leitura */}
+    <span className="absolute inset-0 bg-gradient-to-b from-ink/75 via-canvas/85 to-ink/95" />
+    <span className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,11,20,0.6)_100%)]" />
+    {/* Glows ambientes da identidade */}
+    <span className="pointer-events-none absolute -left-16 -top-20 h-56 w-56 rounded-full bg-primary/25 blur-3xl" />
+    <span className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rounded-full bg-cyan/15 blur-3xl" />
+
+    {/* Conteúdo da capa */}
+    <span className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+      <span className="mb-3 flex items-center gap-2 sm:mb-4">
+        <LogoSymbol size={26} />
+        <span className="font-display text-sm font-extrabold leading-none tracking-tight sm:text-base">
+          <span className="text-content">Forge</span>
+          <span className="text-primary">Hub</span>
+          <span className="ml-0.5 align-top text-[9px] text-gold sm:text-[10px]">AI</span>
+        </span>
+      </span>
+
+      <span className="font-display text-xl font-extrabold leading-tight tracking-tight text-white sm:text-2xl lg:text-3xl">
+        {title}
+      </span>
+      <span className="mt-1.5 text-xs text-white/70 sm:text-sm lg:text-base">{subtitle}</span>
+
+      <span className="mt-5 flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-white/10 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.5)] backdrop-blur transition-all duration-300 group-hover:scale-110 group-hover:border-primary/60 group-hover:bg-white/15 group-hover:shadow-[0_0_40px_rgba(20,114,255,0.55)] sm:mt-6 sm:h-16 sm:w-16 lg:h-20 lg:w-20">
+        <svg viewBox="0 0 24 24" className="h-6 w-6 translate-x-[2px] fill-white sm:h-7 sm:w-7 lg:h-8 lg:w-8">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </span>
+
+      <span className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/55 sm:mt-4 sm:text-xs">
+        {hint}
+      </span>
+    </span>
+  </>
+);
 
 export const WelcomeStart: React.FC = () => {
   const { t } = useLanguage();
@@ -29,10 +81,14 @@ export const WelcomeStart: React.FC = () => {
         </div>
       </div>
 
-      {/* Vídeo oficial de demonstração — 16:9, sem autoplay, responsivo */}
+      {/* Vídeo oficial de demonstração — 16:9, capa premium, sem autoplay na carga */}
       <div className="card-premium ring-hairline overflow-hidden rounded-container p-2 sm:p-3">
         <div className="relative aspect-video w-full overflow-hidden rounded-interactive bg-deep">
-          <LiteYouTube videoId={DEMO_VIDEO_ID} title={t('welcome.videoTitle')} autoplay={false} />
+          <LiteYouTube
+            videoId={DEMO_VIDEO_ID}
+            title={t('welcome.videoTitle')}
+            cover={<VideoCover title={t('welcome.coverTitle')} subtitle={t('welcome.coverSubtitle')} hint={t('welcome.coverHint')} />}
+          />
         </div>
       </div>
 
