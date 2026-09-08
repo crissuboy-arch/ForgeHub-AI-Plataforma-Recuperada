@@ -2,6 +2,7 @@
 // src/app/oferta/page.tsx — Página OFICIAL de vendas da ForgeHub AI (pública).
 import React from 'react';
 import Link from 'next/link';
+import { trackMeta, CHECKOUT_PRODUCT } from '../../lib/analytics/meta-pixel';
 import { Logo, LogoSymbol } from '../../components/atoms/Logo';
 import { Badge } from '../../components/atoms/Badge';
 import { Icon } from '../../components/atoms/Icon';
@@ -44,6 +45,18 @@ const Cta: React.FC<{ t: (k: string) => string; className?: string; label?: stri
 
 export default function OfferPage() {
   const { t } = useLanguage();
+
+  // Meta Pixel — /oferta é a página oficial de oferta: visualizá-la é o evento
+  // padrão `ViewContent` (interesse no produto). Uma vez por montagem da página.
+  React.useEffect(() => {
+    trackMeta('ViewContent', {
+      content_ids: [CHECKOUT_PRODUCT.id],
+      content_name: CHECKOUT_PRODUCT.name,
+      content_type: 'product',
+      value: CHECKOUT_PRODUCT.value,
+      currency: CHECKOUT_PRODUCT.currency,
+    });
+  }, []);
 
   const primaryBtn = 'bg-brand-glow inline-flex h-13 items-center justify-center gap-2 rounded-interactive px-8 py-3.5 text-base font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow-blue)]';
   const sectionTitle = 'font-display text-3xl font-extrabold tracking-tight text-content sm:text-4xl';

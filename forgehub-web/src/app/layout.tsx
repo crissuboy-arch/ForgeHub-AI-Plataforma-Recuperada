@@ -5,6 +5,7 @@ import { LanguageProvider } from "../lib/i18n/LanguageProvider";
 import { ThemeProvider } from "../lib/theme/ThemeProvider";
 import { ToastProvider } from "../components/organisms/Toast";
 import { OfflineBanner } from "../components/organisms/OfflineBanner";
+import { MetaPixel } from "../components/analytics/MetaPixel";
 
 // Evita flash de tema errado (FOUC): aplica data-theme antes da hidratação.
 const themeInit = `(function(){try{var m=localStorage.getItem('fh-theme')||'dark';var r=m==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;document.documentElement.dataset.theme=r;}catch(e){}})();`;
@@ -68,6 +69,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-deep text-content">
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <MetaPixel />
         <LanguageProvider>
           <ThemeProvider>
             <ToastProvider>
