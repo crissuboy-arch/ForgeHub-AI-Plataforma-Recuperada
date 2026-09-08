@@ -21,9 +21,18 @@ const SLIDES = [
 export const HeroShowcase = () => {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
+  // Só o 1º slide (LCP) carrega no boot; os demais entram no DOM quando o
+  // carrossel chega neles — evita 7 downloads competindo com o LCP do hero.
+  const [mounted, setMounted] = useState<Set<number>>(() => new Set([0]));
 
   useEffect(() => {
-    const id = setInterval(() => setActive((v) => (v + 1) % SLIDES.length), 4500);
+    let cur = 0;
+    const id = setInterval(() => {
+      cur = (cur + 1) % SLIDES.length;
+      const next = cur;
+      setActive(next);
+      setMounted((m) => (m.has(next) ? m : new Set(m).add(next)));
+    }, 4500);
     return () => clearInterval(id);
   }, []);
 
@@ -58,17 +67,19 @@ export const HeroShowcase = () => {
 
           {/* Screenshots reais — crossfade, proporção original preservada (sem corte) */}
           <div className="relative aspect-[16/10] w-full bg-ink">
-            {SLIDES.map((slide, i) => (
-              <Image
-                key={slide.src}
-                src={slide.src}
-                alt={slide.alt}
-                fill
-                priority={i === 0}
-                sizes="(max-width: 1024px) 90vw, 45vw"
-                className={`object-contain transition-opacity duration-1000 ease-in-out ${i === active ? 'opacity-100' : 'opacity-0'}`}
-              />
-            ))}
+            {SLIDES.map((slide, i) =>
+              mounted.has(i) ? (
+                <Image
+                  key={slide.src}
+                  src={slide.src}
+                  alt={slide.alt}
+                  fill
+                  priority={i === 0}
+                  sizes="(max-width: 1024px) 90vw, 45vw"
+                  className={`object-contain transition-opacity duration-1000 ease-in-out ${i === active ? 'opacity-100' : 'opacity-0'}`}
+                />
+              ) : null,
+            )}
           </div>
         </div>
       </motion.div>

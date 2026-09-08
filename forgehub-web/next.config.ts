@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  images: {
+    // AVIF primeiro (≈20% menor que WebP), WebP como fallback. Sem mudança
+    // visual — só reduz bytes servidos em <Image> na LP (hero, showcases).
+    formats: ["image/avif", "image/webp"],
+    // Mantém as variantes otimizadas no cache por 31 dias (imagens da LP são
+    // estáticas). Menos reprocessamento = respostas mais rápidas.
+    minimumCacheTTL: 2678400,
+  },
 };
 
 export default nextConfig;
