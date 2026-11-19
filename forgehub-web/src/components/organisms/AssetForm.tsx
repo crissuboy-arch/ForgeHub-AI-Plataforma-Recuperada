@@ -334,6 +334,31 @@ function EbookAttach({ control, filesFA, setValue }: {
   );
 }
 
+// ------------------------------------------- Upload de screenshot (anexo)
+// Botão de anexar imagem numa linha de screenshot: envia o ficheiro e
+// preenche o URL da linha (antes só era possível colar um URL).
+function ShotUpload({ onDone }: { onDone: (url: string) => void }) {
+  const { t } = useLanguage();
+  const [busy, setBusy] = useState(false);
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setBusy(true);
+    try {
+      onDone(await uploadMedia(f));
+    } finally {
+      setBusy(false);
+      e.target.value = '';
+    }
+  };
+  return (
+    <label className="shrink-0 cursor-pointer rounded-interactive border border-border bg-card px-2.5 py-1.5 text-sm text-content transition-colors hover:bg-surface-2">
+      <Icon name="download" size={13} className="mr-1 inline rotate-180" /> {busy ? `${t('smart.processing')}…` : t('studio.upload')}
+      <input type="file" accept="image/*" className="hidden" onChange={onFile} disabled={busy} />
+    </label>
+  );
+}
+
 // ------------------------------------------------------------- Formulário
 type Props = { mode: 'new' | 'edit'; assetId?: string; initialValues?: AssetFormValues };
 
@@ -681,6 +706,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
                     <Icon name="asset" size={16} className="text-muted" />
                   )}
                 </span>
+                <ShotUpload onDone={(url) => setValue(`screenshots.${i}.url` as const, url, { shouldValidate: false })} />
                 <input className={inputClass} placeholder={t('studio.shotUrl')} {...register(`screenshots.${i}.url` as const)} />
                 <input className={inputClass} placeholder={t('studio.caption')} {...register(`screenshots.${i}.caption` as const)} />
                 <input type="hidden" {...register(`screenshots.${i}.position` as const, { valueAsNumber: true })} />
