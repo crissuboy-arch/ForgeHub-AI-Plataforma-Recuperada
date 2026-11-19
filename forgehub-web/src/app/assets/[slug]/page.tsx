@@ -379,6 +379,14 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
                   </div>
                 );
               }
+              const directMp4 = [linkOf('videos'), asset.videoLoomUrl].find((u) => u && /\.mp4($|\?)/i.test(u));
+              if (directMp4) {
+                return (
+                  <div className="mx-auto aspect-[9/16] max-h-[560px] w-full max-w-[340px] overflow-hidden rounded-container border border-border bg-black">
+                    <video className="h-full w-full" src={directMp4} controls playsInline preload="metadata" poster={asset.coverUrl} />
+                  </div>
+                );
+              }
               if (asset.videoLoomUrl) {
                 return (
                   <a href={asset.videoLoomUrl} target="_blank" rel="noopener noreferrer" className="flex h-48 items-center justify-center rounded-container border border-border bg-surface/50 text-primary hover:text-primary-hover">
