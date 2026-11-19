@@ -215,6 +215,8 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
   const promptText = (trQ.data?.promptContent || asset.promptContent)?.trim() || '';
   const promptCopyTarget = promptText || linkOf('prompt') || driveUrl || docsUrl || '';
   const promptAvailable = Boolean(promptCopyTarget);
+  // Ebook do Kit: ficheiro kind='ebook' com URL direta (download na própria plataforma).
+  const ebook = asset.files.find((f) => f.kind === 'ebook' && f.url);
 
   const platformsByKind = useMemo(() => {
     const map = new Map<PlatformKind, string[]>();
@@ -490,6 +492,32 @@ function AssetDetailView({ asset }: { asset: AssetDetail }) {
               </div>
             </div>
           </Section>
+
+          {/* Ebook do Kit — download direto em PDF, com capa */}
+          {ebook && (
+            <Section icon="docs" title={t('detail.ebook')}>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                {asset.coverUrl && (
+                  <img src={asset.coverUrl} alt={ebook.name} className="h-36 w-28 shrink-0 rounded-container border border-border object-cover" />
+                )}
+                <div className="min-w-0 flex-1">
+                  <Typography variant="h6" className="mb-1">{ebook.name}</Typography>
+                  <Typography variant="small" className="mb-3 block text-muted">
+                    PDF{ebook.sizeBytes ? ` · ${(ebook.sizeBytes / 1048576).toFixed(1).replace('.', ',')} MB` : ''}
+                  </Typography>
+                  <a
+                    href={ebook.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => toast(t('toast.downloadStarted'), 'success')}
+                    className="inline-flex h-11 items-center justify-center gap-2 rounded-interactive bg-primary px-5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover"
+                  >
+                    <Icon name="download" size={15} /> {t('detail.downloadEbook')}
+                  </a>
+                </div>
+              </div>
+            </Section>
+          )}
 
           {/* Arquivos disponíveis */}
           <Section icon="download" title={t('detail.files')}>
