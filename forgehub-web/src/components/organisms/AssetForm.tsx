@@ -214,6 +214,7 @@ const FILE_CATEGORIES: { value: string; key: string; icon: string }[] = [
   { value: 'templates', key: 'fcat.templates', icon: 'asset' },
   { value: 'creatives', key: 'fcat.creatives', icon: 'sparkles' },
   { value: 'source', key: 'fcat.source', icon: 'code' },
+  { value: 'ebook', key: 'fcat.ebook', icon: 'docs' },
 ];
 const catIcon = (v?: string) => FILE_CATEGORIES.find((c) => c.value === v)?.icon ?? 'docs';
 const fmtSize = (b?: number | null) => {
@@ -276,6 +277,58 @@ function FileRow({ i, control, setValue, register, onRemove }: {
         <input className={`${inputClass} h-9 flex-1`} placeholder={t('studio.f.fileLink')} {...register(`files.${i}.url` as const)} />
         <input type="hidden" {...register(`files.${i}.sizeBytes` as const, { valueAsNumber: true })} />
         {url && <a href={url} target="_blank" rel="noopener noreferrer" className="shrink-0 text-primary hover:text-primary-hover"><Icon name="external" size={15} /></a>}
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------------------- Ebook do Kit (anexo dedicado)
+// Campo próprio para anexar o PDF do ebook: grava na mesma lista `files`
+// com kind='ebook', que alimenta a secção «Ebook do Kit» da página pública.
+function EbookAttach({ control, filesFA, setValue }: {
+  control: Control<AssetFormValues>;
+  filesFA: { append: (v: AssetFormValues['files'][number]) => void; remove: (i: number) => void };
+  setValue: ReturnType<typeof useForm<AssetFormValues>>['setValue'];
+}) {
+  const { t } = useLanguage();
+  const [busy, setBusy] = useState(false);
+  const files = (useWatch({ control, name: 'files' }) as AssetFormValues['files']) ?? [];
+  const idx = files.findIndex((f) => f.kind === 'ebook');
+  const ebook = idx >= 0 ? files[idx] : undefined;
+
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setBusy(true);
+    try {
+      const url = await uploadMedia(f);
+      if (idx >= 0) {
+        setValue(`files.${idx}.url` as const, url, { shouldValidate: false });
+        setValue(`files.${idx}.sizeBytes` as const, f.size);
+        if (!files[idx].name) setValue(`files.${idx}.name` as const, f.name);
+      } else {
+        filesFA.append({ name: f.name, kind: 'ebook', sizeBytes: f.size, url, driveFolder: '' });
+      }
+    } finally {
+      setBusy(false);
+      e.target.value = '';
+    }
+  };
+
+  return (
+    <div className="mb-3 rounded-interactive border border-primary/30 bg-primary/5 p-3">
+      <Typography variant="small" className="font-semibold text-content">{t('studio.ebook')}</Typography>
+      <Typography variant="small" className="mb-2 block text-muted">{t('studio.ebookHint')}</Typography>
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="cursor-pointer rounded-interactive bg-primary px-3 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover">
+          <Icon name="download" size={13} className="mr-1 inline rotate-180" /> {busy ? `${t('smart.processing')}…` : ebook ? t('studio.replace') : t('studio.ebookAttach')}
+          <input type="file" accept="application/pdf" className="hidden" onChange={onFile} disabled={busy} />
+        </label>
+        {ebook?.name ? <span className="text-sm text-content">{ebook.name}</span> : null}
+        {ebook?.sizeBytes ? <span className="text-xs text-muted">{fmtSize(ebook.sizeBytes)}</span> : null}
+        {ebook && (
+          <Button type="button" variant="ghost" size="sm" onClick={() => filesFA.remove(idx)}>{t('studio.remove')}</Button>
+        )}
       </div>
     </div>
   );
@@ -593,6 +646,7 @@ export function AssetForm({ mode, assetId, initialValues }: Props) {
             <Icon name="plus" size={14} /> {t('studio.add')}
           </Button>
         }>
+          <EbookAttach control={control} filesFA={filesFA} setValue={setValue} />
           {filesFA.fields.length === 0 && <Typography variant="small">{t('studio.filesEmpty')}</Typography>}
           <div className="space-y-3">
             {filesFA.fields.map((f, i) => (
