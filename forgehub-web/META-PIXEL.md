@@ -23,16 +23,16 @@
 |---|---|---|---|
 | `PageView` | toda página, toda navegação | — | Base do Pixel / remarketing. |
 | `ViewContent` | ao abrir **`/oferta`** (1× por montagem) | `content_ids: ['iY5RLP7']`, `content_name`, `content_type: 'product'`, `value` = preço atual (`checkoutValue()` ← `src/config/pricing.ts`: 29.90 na Semana Black, senão 47.90), `currency: 'BRL'` | `/oferta` é a página oficial de oferta — visualizá-la é interesse no produto. |
-| `InitiateCheckout` | clique em **qualquer CTA de checkout** (`CheckoutCta` → link da Kiwify), em `/` e `/oferta` | `content_ids`, `content_name`, `content_type`, `num_items: 1`, `value` = preço atual (`checkoutValue()` ← `src/config/pricing.ts`: 29.90 na Semana Black, senão 47.90), `currency: 'BRL'` | O clique leva o usuário ao checkout externo — é o início real do checkout. |
+| `InitiateCheckout` | clique em **qualquer CTA de checkout** (`CheckoutCta` → link da Cakto), em `/` e `/oferta` | `content_ids`, `content_name`, `content_type`, `num_items: 1`, `value` = preço atual (`checkoutValue()` ← `src/config/pricing.ts`: 29.90 na Semana Black, senão 47.90), `currency: 'BRL'` | O clique leva o usuário ao checkout externo — é o início real do checkout. |
 
 ### Purchase — **NÃO disparado neste domínio**
 
-A compra é finalizada na **Kiwify** (`pay.kiwify.com.br`), fora de `devforgehub.online`. Não há retorno/thank-you page neste domínio que confirme pagamento, então disparar `Purchase` aqui seria uma conversão falsa.
+A compra é finalizada na **Cakto** (`pay.cakto.com.br`), fora de `devforgehub.online`. Não há retorno/thank-you page neste domínio que confirme pagamento, então disparar `Purchase` aqui seria uma conversão falsa.
 
 **Para ter `Purchase` real:**
-- Integração nativa **Kiwify → Meta** (a Kiwify tem campo para o Pixel ID + envia Purchase/CAPI), **ou**
-- Conversions API via webhook de compra da Kiwify, **ou**
-- Pixel no domínio de obrigado da Kiwify, se existir.
+- Integração nativa **Cakto → Meta** (pixel no checkout + API de Conversões), **ou**
+- Conversions API via webhook de compra da Cakto, **ou**
+- Pixel no domínio de obrigado da Cakto, se existir.
 
 Enquanto isso, otimize campanhas por **`InitiateCheckout`** (evento de conversão mais fundo disponível neste domínio).
 

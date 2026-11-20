@@ -68,7 +68,7 @@ necessário para emitir `metadata`, canonical e JSON-LD. Nenhum componente foi a
 - Vídeo YouTube via *lite embed* + capa própria (0 requisições ao YouTube antes do clique).
 - HTTPS + domínio único (Vercel). URLs limpas, sem `.html`, sem query desnecessária.
 - Página 404 personalizada (`not-found.tsx`) retornando status 404.
-- Checkout externo (Kiwify) é link público com UTM — **não é secret**.
+- Checkout externo (Cakto) é link público com UTM — **não é secret**.
 
 ## 4. MELHORIAS REALIZADAS (on-page / GEO / AEO / performance)
 

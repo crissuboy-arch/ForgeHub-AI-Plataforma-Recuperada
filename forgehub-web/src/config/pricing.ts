@@ -1,8 +1,8 @@
 // src/config/pricing.ts — FONTE ÚNICA de preço da ForgeHub AI no site.
 //
-// O preço cobrado de verdade é o do produto na Kiwify (pay.kiwify.com.br/iY5RLP7).
+// O preço cobrado de verdade é o do produto na Cakto (pay.cakto.com.br/8bnihyg_1349116).
 // Este arquivo só controla o que o SITE mostra (landing, /oferta, JSON-LD e
-// o `value` dos eventos do Meta Pixel) — mantenha-o em sincronia com a Kiwify.
+// o `value` dos eventos do Meta Pixel) — mantenha-o em sincronia com a Cakto.
 //
 // Semana Black ForgeHub: R$ 29,90 até 30/11/2026 23:59 (America/Sao_Paulo).
 // Depois disso o site volta SOZINHO para o preço normal (R$ 47,90) — no cliente

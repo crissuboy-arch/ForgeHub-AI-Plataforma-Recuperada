@@ -5,9 +5,9 @@ import { getPricing } from '../../config/pricing';
 
 export const META_PIXEL_ID = '1610553524011173';
 
-// Produto único vendido no checkout externo (Kiwify).
+// Produto único vendido no checkout externo (Cakto).
 export const CHECKOUT_PRODUCT = {
-  id: 'iY5RLP7', // id do produto na URL de checkout da Kiwify
+  id: 'iY5RLP7', // content_id histórico do Pixel (mantido para continuidade no Meta)
   name: 'ForgeHub AI — Acesso à Biblioteca',
   currency: 'BRL',
 } as const;

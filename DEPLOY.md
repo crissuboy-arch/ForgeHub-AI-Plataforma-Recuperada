@@ -55,7 +55,7 @@ os **valores reais** são seus (pegue no painel do Supabase).
 
 | Nome | Para que serve |
 | --- | --- |
-| `NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL` | Sobrescreve o link de checkout dos CTAs. **Não é obrigatória** — já existe um padrão Kiwify no código. Defina só se quiser trocar o destino sem alterar código. |
+| `NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL` | Sobrescreve o link de checkout dos CTAs. **Não é obrigatória** — já existe um padrão Cakto no código. Defina só se quiser trocar o destino sem alterar código. |
 | `NEXT_PUBLIC_SKU_LIBRARY_URL` | Link externo da grade da biblioteca (hook `useSku`). |
 | `NEXT_PUBLIC_AUTH_VIDEO_URL` | URL de um `.mp4` de fundo nas telas de login/cadastro. |
 

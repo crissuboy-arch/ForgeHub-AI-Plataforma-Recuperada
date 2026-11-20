@@ -1,19 +1,19 @@
 'use client';
 // src/components/atoms/CheckoutCta.tsx
 // CTA de checkout compartilhado (landing / e página de vendas /oferta).
-// Aponta para o checkout real (Kiwify com UTM); env var sobrescreve se definida.
+// Aponta para o checkout real (Cakto com UTM); env var sobrescreve se definida.
 // Abre em nova aba mantendo a página de vendas aberta. Se a URL ficar vazia,
 // cai para /signup.
 //
 // Meta Pixel: o clique nesse CTA (ir para o checkout externo) dispara
-// `InitiateCheckout`. NÃO dispara Purchase — a compra acontece na Kiwify,
+// `InitiateCheckout`. NÃO dispara Purchase — a compra acontece na Cakto,
 // fora deste domínio, e não é confirmável aqui.
 import Link from 'next/link';
 import { trackMeta, CHECKOUT_PRODUCT, checkoutValue } from '../../lib/analytics/meta-pixel';
 
 export const CHECKOUT_URL =
   process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL ||
-  'https://pay.kiwify.com.br/iY5RLP7?utm_source=forgehub_site&utm_medium=landing_page';
+  'https://pay.cakto.com.br/8bnihyg_1349116?utm_source=forgehub_site&utm_medium=landing_page';
 
 function onCheckoutClick() {
   trackMeta('InitiateCheckout', {
