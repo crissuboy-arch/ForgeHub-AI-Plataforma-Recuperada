@@ -144,6 +144,16 @@ export function HomeClient() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-ink text-white">
+      {/* ============ Faixa fixa Semana Black — bem visível, acima de tudo (só durante a promo) ============ */}
+      {pricing.promo && (
+        <Link
+          href="/oferta"
+          className="block bg-black px-4 py-2.5 text-center text-[13px] font-bold tracking-wide text-[#f5c542] underline-offset-2 hover:underline sm:text-sm"
+        >
+          🖤 {t('promo.announce')} — GARANTIR AGORA →
+        </Link>
+      )}
+
       {/* ============ Barra de avisos (marquee) — topo absoluto, acima do header ============ */}
       <AnnouncementBar items={announcementItems} />
 
