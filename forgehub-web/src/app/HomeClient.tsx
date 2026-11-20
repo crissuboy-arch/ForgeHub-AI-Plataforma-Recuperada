@@ -13,6 +13,8 @@ import { Reveal, Counter } from '../components/landing/primitives';
 import { HeroShowcase } from '../components/landing/HeroShowcase';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
+import { usePricing } from '../lib/pricing/PricingProvider';
+import { formatPrice } from '../config/pricing';
 import { InViewMount } from '../components/ui/in-view-mount';
 import { AnnouncementBar } from '../components/ui/announcement-bar';
 import { LiteYouTube } from '../components/ui/lite-youtube';
@@ -52,7 +54,8 @@ const sectionTitle = 'font-display text-4xl font-extrabold leading-[1.08] tracki
 const kicker = 'mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white/60';
 
 export function HomeClient() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const pricing = usePricing();
 
   const stats = [
     { value: 6, suffix: '+', label: t('lp.stat.kits') },
@@ -137,7 +140,7 @@ export function HomeClient() {
     { src: '/images/depoimentos/depoimento-benedita.webp', alt: 'Depoimento de Benedita' },
   ];
 
-  const announcementItems = pipe(t('lp.announcementItems'));
+  const announcementItems = [...(pricing.promo ? [t('promo.announce')] : []), ...pipe(t('lp.announcementItems'))];
 
   return (
     <div className="relative flex min-h-screen flex-col bg-ink text-white">
@@ -412,20 +415,21 @@ export function HomeClient() {
               <div className="pointer-events-none absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-goldp/15 blur-3xl" />
               <div className="relative">
                 <span className="inline-flex items-center gap-2 rounded-full border border-goldp/40 bg-goldp/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-goldp">
-                  <Sparkles className="h-3.5 w-3.5" /> {t('lp.offerBadge')}
+                  <Sparkles className="h-3.5 w-3.5" /> {pricing.promo ? t('promo.badge') : t('lp.offerBadge')}
                 </span>
 
                 <div className="mt-8 flex items-end justify-center gap-4">
                   <div className="text-right">
-                    <p className="text-sm text-white/40">{t('lp.offerOldLabel')}</p>
-                    <p className="font-display text-2xl font-bold text-white/40 line-through">{brl(valueTotal)}</p>
+                    <p className="text-sm text-white/40">{pricing.promo ? t('promo.oldLabel') : t('lp.offerOldLabel')}</p>
+                    <p className="font-display text-2xl font-bold text-white/40 line-through">{pricing.promo ? formatPrice(pricing.regular, lang) : brl(valueTotal)}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-goldp">{t('lp.offerNowLabel')}</p>
-                    <p className="font-display text-6xl font-extrabold tracking-tight text-white sm:text-7xl">{t('lp.offerNow')}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-goldp">{pricing.promo ? t('promo.nowLabel') : t('lp.offerNowLabel')}</p>
+                    <p className="font-display text-6xl font-extrabold tracking-tight text-white sm:text-7xl">{formatPrice(pricing.current, lang)}</p>
                   </div>
                 </div>
                 <p className="mt-3 text-sm font-medium text-white/60">{t('lp.offerOneTime')}</p>
+                {pricing.promo && <p className="mt-2 text-sm font-semibold text-goldp">{t('promo.revert')}</p>}
 
                 <Cta label={t('lp.offerCta')} className="mt-9 w-full" />
 

@@ -2,7 +2,9 @@
 // src/app/oferta/page.tsx — Página OFICIAL de vendas da ForgeHub AI (pública).
 import React from 'react';
 import Link from 'next/link';
-import { trackMeta, CHECKOUT_PRODUCT } from '../../lib/analytics/meta-pixel';
+import { trackMeta, CHECKOUT_PRODUCT, checkoutValue } from '../../lib/analytics/meta-pixel';
+import { usePricing } from '../../lib/pricing/PricingProvider';
+import { formatPrice, BLACK_FRIDAY_END_MS } from '../../config/pricing';
 import { Logo, LogoSymbol } from '../../components/atoms/Logo';
 import { Badge } from '../../components/atoms/Badge';
 import { Icon } from '../../components/atoms/Icon';
@@ -15,7 +17,7 @@ import { LimelightNav, type NavItem } from '../../components/ui/limelight-nav';
 import type { ShowcaseSlide } from '../../components/ui/platform-showcase';
 import type { PlatformTypeCard } from '../../components/ui/platform-types-showcase';
 import type { MetricCard } from '../../components/ui/metrics-columns';
-import { LaunchCountdown } from '../../components/ui/launch-countdown';
+import { LaunchCountdown, DeadlineCountdown } from '../../components/ui/launch-countdown';
 import { InViewMount } from '../../components/ui/in-view-mount';
 import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes, ShieldCheck, Check, Smartphone, Bot, LayoutTemplate, BookOpen, CalendarDays, Library } from 'lucide-react';
 
@@ -44,7 +46,8 @@ const Cta: React.FC<{ t: (k: string) => string; className?: string; label?: stri
 );
 
 export default function OfferPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const pricing = usePricing();
 
   // Meta Pixel — /oferta é a página oficial de oferta: visualizá-la é o evento
   // padrão `ViewContent` (interesse no produto). Uma vez por montagem da página.
@@ -53,7 +56,7 @@ export default function OfferPage() {
       content_ids: [CHECKOUT_PRODUCT.id],
       content_name: CHECKOUT_PRODUCT.name,
       content_type: 'product',
-      value: CHECKOUT_PRODUCT.value,
+      value: checkoutValue(),
       currency: CHECKOUT_PRODUCT.currency,
     });
   }, []);
@@ -328,7 +331,7 @@ export default function OfferPage() {
               <span className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gold-glow opacity-20 blur-3xl" />
 
               <div className="relative">
-                <Badge tone="gold" className="mb-6"><Icon name="sparkles" size={14} /> {t('price.badge')}</Badge>
+                <Badge tone="gold" className="mb-6"><Icon name="sparkles" size={14} /> {pricing.promo ? t('promo.badge') : t('price.badge')}</Badge>
 
                 {/* Value stack — soma dos itens x preço */}
                 <div className="mb-7 rounded-container border border-border bg-deep/40 p-5 text-left">
@@ -350,15 +353,25 @@ export default function OfferPage() {
                 </div>
 
                 {/* Preço */}
-                <p className="text-sm text-muted">{t('price.oldLabel')} <span className="text-base font-semibold text-muted line-through">R$ 147,90</span></p>
+                <p className="text-sm text-muted">{t('price.oldLabel')} <span className="text-base font-semibold text-muted line-through">{pricing.promo ? formatPrice(pricing.regular, lang) : 'R$ 147,90'}</span></p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-gold">{t('price.nowLabel')}</p>
-                <p className="font-display text-5xl font-extrabold tracking-tight text-content sm:text-6xl">R$ 47,90</p>
+                <p className="font-display text-5xl font-extrabold tracking-tight text-content sm:text-6xl">{formatPrice(pricing.current, lang)}</p>
                 <p className="mx-auto mt-3 max-w-sm text-sm text-muted">{t('price.oneTime')}</p>
+                {pricing.promo && (
+                  <p className="mx-auto mt-2 max-w-sm text-sm font-semibold text-gold">{t('promo.revert')}</p>
+                )}
 
-                {/* Contador */}
+                {/* Contador — na Semana Black conta até o prazo REAL (30/11 23:59 BRT) */}
                 <div className="mt-7">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">{t('price.endsIn')}</p>
-                  <LaunchCountdown labels={{ hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') }} />
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">{pricing.promo ? t('promo.endsIn') : t('price.endsIn')}</p>
+                  {pricing.promo ? (
+                    <DeadlineCountdown
+                      deadline={BLACK_FRIDAY_END_MS}
+                      labels={{ days: t('countdown.days'), hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') }}
+                    />
+                  ) : (
+                    <LaunchCountdown labels={{ hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') }} />
+                  )}
                 </div>
 
                 {/* CTA dourado */}

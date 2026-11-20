@@ -3,6 +3,12 @@
 import type { Metadata } from 'next';
 import { HomeClient } from './HomeClient';
 import { translate } from '../lib/i18n/dictionary';
+import { getPricing, schemaPrice, BLACK_FRIDAY, type Pricing } from '../config/pricing';
+import { PricingProvider } from '../lib/pricing/PricingProvider';
+
+// ISR: regenera o HTML a cada 5 min para o preço da Semana Black entrar/sair
+// sozinho (ver src/config/pricing.ts).
+export const revalidate = 300;
 
 const SITE_URL = 'https://www.devforgehub.online';
 
@@ -63,70 +69,79 @@ function faqEntities() {
     }));
 }
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'Organization',
-      '@id': `${SITE_URL}/#organization`,
-      name: 'ForgeHub AI',
-      url: SITE_URL,
-      logo: `${SITE_URL}/logo.png`,
-      description:
-        'Plataforma e biblioteca de kits de negócios digitais remixáveis com aplicativos, páginas de venda, ebooks, criativos, templates e agentes de IA.',
-    },
-    {
-      '@type': 'WebSite',
-      '@id': `${SITE_URL}/#website`,
-      url: SITE_URL,
-      name: 'ForgeHub AI',
-      inLanguage: 'pt-BR',
-      publisher: { '@id': `${SITE_URL}/#organization` },
-    },
-    {
-      '@type': 'WebPage',
-      '@id': `${SITE_URL}/#webpage`,
-      url: `${SITE_URL}/`,
-      name: TITLE,
-      description: DESCRIPTION_LONG,
-      isPartOf: { '@id': `${SITE_URL}/#website` },
-      inLanguage: 'pt-BR',
-      about: { '@id': `${SITE_URL}/#software` },
-    },
-    {
-      '@type': 'SoftwareApplication',
-      '@id': `${SITE_URL}/#software`,
-      name: 'ForgeHub AI',
-      applicationCategory: 'BusinessApplication',
-      operatingSystem: 'Web',
-      url: SITE_URL,
-      inLanguage: 'pt-BR',
-      publisher: { '@id': `${SITE_URL}/#organization` },
-      description: DESCRIPTION_LONG,
-      offers: {
-        '@type': 'Offer',
-        price: '47.90',
-        priceCurrency: 'BRL',
-        url: `${SITE_URL}/oferta`,
-        availability: 'https://schema.org/InStock',
+// Montado a cada renderização (build/ISR) — não no carregamento do módulo —
+// para o preço do Offer acompanhar a Semana Black.
+function buildJsonLd(p: Pricing) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': `${SITE_URL}/#organization`,
+        name: 'ForgeHub AI',
+        url: SITE_URL,
+        logo: `${SITE_URL}/logo.png`,
+        description:
+          'Plataforma e biblioteca de kits de negócios digitais remixáveis com aplicativos, páginas de venda, ebooks, criativos, templates e agentes de IA.',
       },
-    },
-    {
-      '@type': 'FAQPage',
-      '@id': `${SITE_URL}/#faq`,
-      mainEntity: faqEntities(),
-    },
-  ],
-};
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: 'ForgeHub AI',
+        inLanguage: 'pt-BR',
+        publisher: { '@id': `${SITE_URL}/#organization` },
+      },
+      {
+        '@type': 'WebPage',
+        '@id': `${SITE_URL}/#webpage`,
+        url: `${SITE_URL}/`,
+        name: TITLE,
+        description: DESCRIPTION_LONG,
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+        inLanguage: 'pt-BR',
+        about: { '@id': `${SITE_URL}/#software` },
+      },
+      {
+        '@type': 'SoftwareApplication',
+        '@id': `${SITE_URL}/#software`,
+        name: 'ForgeHub AI',
+        applicationCategory: 'BusinessApplication',
+        operatingSystem: 'Web',
+        url: SITE_URL,
+        inLanguage: 'pt-BR',
+        publisher: { '@id': `${SITE_URL}/#organization` },
+        description: DESCRIPTION_LONG,
+        offers: {
+          '@type': 'Offer',
+          price: schemaPrice(p.current),
+          priceCurrency: 'BRL',
+          ...(p.promo ? { priceValidUntil: BLACK_FRIDAY.endsAt.slice(0, 10) } : {}),
+          url: `${SITE_URL}/oferta`,
+          availability: 'https://schema.org/InStock',
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${SITE_URL}/#faq`,
+        mainEntity: faqEntities(),
+      },
+    ],
+  };
+}
 
 export default function Page() {
+  const pricing = getPricing();
+  const jsonLd = buildJsonLd(pricing);
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HomeClient />
+      <PricingProvider promo={pricing.promo}>
+        <HomeClient />
+      </PricingProvider>
     </>
   );
 }

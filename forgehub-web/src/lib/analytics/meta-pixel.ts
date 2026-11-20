@@ -1,6 +1,7 @@
 // src/lib/analytics/meta-pixel.ts
 // Meta Pixel — ID oficial (Gerenciador de Eventos) + helper de eventos.
 // O carregamento do Pixel vive em components/analytics/MetaPixel.tsx.
+import { getPricing } from '../../config/pricing';
 
 export const META_PIXEL_ID = '1610553524011173';
 
@@ -8,9 +9,11 @@ export const META_PIXEL_ID = '1610553524011173';
 export const CHECKOUT_PRODUCT = {
   id: 'iY5RLP7', // id do produto na URL de checkout da Kiwify
   name: 'ForgeHub AI — Acesso à Biblioteca',
-  value: 47.9,
   currency: 'BRL',
 } as const;
+
+/** `value` dos eventos = preço atual (R$ 29,90 na Semana Black, senão R$ 47,90). */
+export const checkoutValue = (): number => getPricing().current;
 
 type FbqParams = Record<string, unknown>;
 

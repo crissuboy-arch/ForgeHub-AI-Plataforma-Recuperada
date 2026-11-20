@@ -22,8 +22,8 @@
 | Evento | Disparo | Parâmetros | Por quê |
 |---|---|---|---|
 | `PageView` | toda página, toda navegação | — | Base do Pixel / remarketing. |
-| `ViewContent` | ao abrir **`/oferta`** (1× por montagem) | `content_ids: ['iY5RLP7']`, `content_name`, `content_type: 'product'`, `value: 47.90`, `currency: 'BRL'` | `/oferta` é a página oficial de oferta — visualizá-la é interesse no produto. |
-| `InitiateCheckout` | clique em **qualquer CTA de checkout** (`CheckoutCta` → link da Kiwify), em `/` e `/oferta` | `content_ids`, `content_name`, `content_type`, `num_items: 1`, `value: 47.90`, `currency: 'BRL'` | O clique leva o usuário ao checkout externo — é o início real do checkout. |
+| `ViewContent` | ao abrir **`/oferta`** (1× por montagem) | `content_ids: ['iY5RLP7']`, `content_name`, `content_type: 'product'`, `value` = preço atual (`checkoutValue()` ← `src/config/pricing.ts`: 29.90 na Semana Black, senão 47.90), `currency: 'BRL'` | `/oferta` é a página oficial de oferta — visualizá-la é interesse no produto. |
+| `InitiateCheckout` | clique em **qualquer CTA de checkout** (`CheckoutCta` → link da Kiwify), em `/` e `/oferta` | `content_ids`, `content_name`, `content_type`, `num_items: 1`, `value` = preço atual (`checkoutValue()` ← `src/config/pricing.ts`: 29.90 na Semana Black, senão 47.90), `currency: 'BRL'` | O clique leva o usuário ao checkout externo — é o início real do checkout. |
 
 ### Purchase — **NÃO disparado neste domínio**
 

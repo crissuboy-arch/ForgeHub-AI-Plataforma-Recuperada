@@ -9,7 +9,7 @@
 // `InitiateCheckout`. NÃO dispara Purchase — a compra acontece na Kiwify,
 // fora deste domínio, e não é confirmável aqui.
 import Link from 'next/link';
-import { trackMeta, CHECKOUT_PRODUCT } from '../../lib/analytics/meta-pixel';
+import { trackMeta, CHECKOUT_PRODUCT, checkoutValue } from '../../lib/analytics/meta-pixel';
 
 export const CHECKOUT_URL =
   process.env.NEXT_PUBLIC_FORGEHUB_CHECKOUT_URL ||
@@ -21,7 +21,7 @@ function onCheckoutClick() {
     content_name: CHECKOUT_PRODUCT.name,
     content_type: 'product',
     num_items: 1,
-    value: CHECKOUT_PRODUCT.value,
+    value: checkoutValue(),
     currency: CHECKOUT_PRODUCT.currency,
   });
 }
