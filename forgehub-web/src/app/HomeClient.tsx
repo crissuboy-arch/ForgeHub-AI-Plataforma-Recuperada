@@ -58,7 +58,7 @@ export function HomeClient() {
   const pricing = usePricing();
 
   const stats = [
-    { value: 6, suffix: '+', label: t('lp.stat.kits') },
+    { value: 8, suffix: '+', label: t('lp.stat.kits') },
     { value: 15, suffix: '+', label: t('lp.stat.niches') },
     { value: 1995, suffix: '+', label: t('lp.stat.downloads') },
     { value: 1, prefix: '+', label: t('lp.stat.newkit') },
@@ -306,7 +306,7 @@ export function HomeClient() {
             <h2 className={sectionTitle}>{t('lp.libTitle')}</h2>
             <p className="mt-5 max-w-lg text-lg text-white/60">{t('lp.libSub')}</p>
             <div className="mt-8 flex items-center gap-6">
-              <div><Counter value={6} suffix="+" className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.kits')}</p></div>
+              <div><Counter value={8} suffix="+" className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.kits')}</p></div>
               <div className="h-8 w-px bg-white/10" />
               <div><Counter value={15} suffix="+" className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.niches')}</p></div>
             </div>

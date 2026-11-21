@@ -170,6 +170,12 @@ export default function OfferPage() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-deep">
+      {/* Faixa fixa Semana Black — bem visível no topo (só durante a promo) */}
+      {pricing.promo && (
+        <div className="bg-black px-4 py-2.5 text-center text-[13px] font-bold tracking-wide text-[#f5c542] sm:text-sm">
+          🖤 {t('promo.announce')}
+        </div>
+      )}
       {/* Nav (LimelightNav) */}
       <header className="sticky top-0 z-20 border-b border-border/60">
         <div className="glass mx-auto flex max-w-6xl items-center justify-between gap-3 px-6 py-3">
