@@ -203,7 +203,7 @@ export default function OfferPage() {
           <Typography variant="p" className="mt-6 max-w-2xl text-lg">{t('offer.sub')}</Typography>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Cta t={t} className={primaryBtn} />
-            <Link href="/planos" className="inline-flex h-13 items-center justify-center gap-2 rounded-interactive border border-white/15 px-8 py-3.5 text-base font-semibold text-content transition-colors hover:border-primary/50 hover:bg-surface-2">
+            <Link href="#precos" className="inline-flex h-13 items-center justify-center gap-2 rounded-interactive border border-white/15 px-8 py-3.5 text-base font-semibold text-content transition-colors hover:border-primary/50 hover:bg-surface-2">
               {t('offer.secondary')} <Icon name="chevron" size={16} />
             </Link>
           </div>
