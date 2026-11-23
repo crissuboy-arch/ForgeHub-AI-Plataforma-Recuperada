@@ -4,7 +4,7 @@
 // Este arquivo só controla o que o SITE mostra (landing, /oferta, JSON-LD e
 // o `value` dos eventos do Meta Pixel) — mantenha-o em sincronia com a Cakto.
 //
-// Semana Black ForgeHub: R$ 29,90 até 30/11/2026 23:59 (America/Sao_Paulo).
+// Semana Black ForgeHub: R$ 19,90 até 30/11/2026 23:59 (America/Sao_Paulo).
 // Depois disso o site volta SOZINHO para o preço normal (R$ 47,90) — no cliente
 // na hora, e no HTML estático na próxima revalidação (revalidate = 300 s nas
 // rotas / e /oferta). Para desligar antes: `enabled: false`.
@@ -16,7 +16,7 @@ export const BLACK_FRIDAY = {
   /** Interruptor único da campanha. `false` = site mostra só o preço normal. */
   enabled: true,
   /** Preço promocional (BRL). */
-  price: 29.9,
+  price: 19.9,
   /** Início (inclusive) — horário de Brasília (UTC-3, sem horário de verão). */
   startsAt: '2026-11-20T00:00:00-03:00',
   /** Fim (inclusive) — 30/11/2026 23:59:59 em America/Sao_Paulo. */

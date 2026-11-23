@@ -12,7 +12,7 @@ export const CHECKOUT_PRODUCT = {
   currency: 'BRL',
 } as const;
 
-/** `value` dos eventos = preço atual (R$ 29,90 na Semana Black, senão R$ 47,90). */
+/** `value` dos eventos = preço atual (R$ 19,90 na Semana Black, senão R$ 47,90). */
 export const checkoutValue = (): number => getPricing().current;
 
 type FbqParams = Record<string, unknown>;
