@@ -10,7 +10,7 @@ export const revalidate = 300;
 const SITE_URL = 'https://www.devforgehub.online';
 const TITLE = 'ForgeHub AI — Oferta de Lançamento';
 const DESCRIPTION =
-  'Acesso à ForgeHub AI: biblioteca de kits de negócios digitais remixáveis (apps, páginas de venda, ebooks, criativos, templates e agentes de IA). Pagamento único no lançamento, garantia de 7 dias.';
+  'ForgeHub AI: 8 negócios digitais prontos (6 kits completos + 2 apps) para personalizar e vender com a sua marca. Pagamento único, sem mensalidade, Pix ou cartão, garantia de 7 dias.';
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },

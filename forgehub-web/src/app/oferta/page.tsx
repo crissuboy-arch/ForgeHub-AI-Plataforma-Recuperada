@@ -17,9 +17,10 @@ import { LimelightNav, type NavItem } from '../../components/ui/limelight-nav';
 import type { ShowcaseSlide } from '../../components/ui/platform-showcase';
 import type { PlatformTypeCard } from '../../components/ui/platform-types-showcase';
 import type { MetricCard } from '../../components/ui/metrics-columns';
-import { LaunchCountdown, DeadlineCountdown } from '../../components/ui/launch-countdown';
+import { DeadlineCountdown } from '../../components/ui/launch-countdown';
 import { InViewMount } from '../../components/ui/in-view-mount';
-import { Home, Package, Workflow, Tag, HelpCircle, Download, Repeat, Eye, TrendingUp, Boxes, ShieldCheck, Check, Smartphone, Bot, LayoutTemplate, BookOpen, CalendarDays, Library } from 'lucide-react';
+import { Home, Package, Workflow, Tag, HelpCircle, Boxes, ShieldCheck, Check, Smartphone, Bot, LayoutTemplate, BookOpen, CalendarDays, Library, Lock, Mail } from 'lucide-react';
+import { LIBRARY, CONTACT_EMAIL } from '../../config/offer';
 
 // Componentes pesados (embla / recharts / framer-motion) fora do bundle inicial:
 // carregam sob demanda, só no cliente, quando o bloco entra na viewport.
@@ -27,12 +28,6 @@ const PlatformShowcase = dynamic(() => import('../../components/ui/platform-show
   ssr: false,
 });
 const PlatformTypesShowcase = dynamic(() => import('../../components/ui/platform-types-showcase').then((m) => m.PlatformTypesShowcase), {
-  ssr: false,
-});
-const ActivityChart = dynamic(() => import('../../components/ui/activity-chart').then((m) => m.ActivityChart), {
-  ssr: false,
-});
-const MetricsColumn = dynamic(() => import('../../components/ui/metrics-columns').then((m) => m.MetricsColumn), {
   ssr: false,
 });
 
@@ -145,16 +140,16 @@ export default function OfferPage() {
     },
   ];
 
-  // Números REAIS do dashboard (não são depoimentos fake).
-  const metrics: MetricCard[] = [
-    { icon: Download, value: '1.995', label: t('metric.downloads') },
-    { icon: Repeat, value: '340', label: t('metric.remixes') },
-    { icon: Eye, value: '8.600', label: t('metric.views') },
-    { icon: TrendingUp, value: '+21,4%', label: t('metric.growth') },
-    { icon: Boxes, value: '7', label: t('metric.kits') },
+  // Só fatos verificáveis (contados na biblioteca em 23/11/2026: 8 itens ativos =
+  // 6 kits completos + 2 apps). Sem contadores de downloads/visualizações sem fonte.
+  const facts: MetricCard[] = [
+    { icon: Boxes, value: String(LIBRARY.total), label: t('metric.items') },
+    { icon: Package, value: String(LIBRARY.kits), label: t('metric.fullKits') },
+    { icon: Smartphone, value: String(LIBRARY.apps), label: t('metric.apps') },
+    { icon: Library, value: String(LIBRARY.total), label: t('metric.niches') },
+    { icon: ShieldCheck, value: '7', label: t('metric.guaranteeDays') },
+    { icon: Check, value: '1x', label: t('metric.oneTime') },
   ];
-  const firstCol = metrics.slice(0, 3);
-  const secondCol = metrics.slice(2);
 
   // O que a pessoa recebe logo após o pagamento (só o que o produto entrega de verdade).
   const afterPay = pipe(t('price.afterPay'));
@@ -229,24 +224,21 @@ export default function OfferPage() {
           </InViewMount>
         </section>
 
-        {/* 2c. Números reais + gráfico (prova social por dados, não depoimento fake) */}
+        {/* 2c. A plataforma hoje — só números verificáveis (sem gráfico simulado) */}
         <section id="prova" className="py-20">
           <div className="mb-12 text-center">
             <h2 className={sectionTitle}>{t('offer.realTitle')}</h2>
             <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.realSub')}</Typography>
           </div>
-          <InViewMount className="min-h-[780px] lg:min-h-[420px]">
-            <div className="grid gap-6 lg:grid-cols-2 lg:items-stretch">
-              <ActivityChart
-                title={t('chart.title')}
-                labels={{ aberturas: t('chart.opens'), atualizacoes: t('chart.updates'), criacoes: t('chart.creations') }}
-              />
-              <div className="flex max-h-[420px] justify-center gap-5 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_16%,black_84%,transparent)]">
-                <MetricsColumn metrics={firstCol} duration={16} />
-                <MetricsColumn metrics={secondCol} duration={22} className="hidden sm:block" />
+          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
+            {facts.map(({ icon: FactIcon, value, label }) => (
+              <div key={label} className="card-premium ring-hairline rounded-container p-5 text-left">
+                <FactIcon className="mb-3 h-5 w-5 text-gold" />
+                <p className="font-display text-3xl font-extrabold text-content">{value}</p>
+                <p className="mt-1 text-sm text-muted">{label}</p>
               </div>
-            </div>
-          </InViewMount>
+            ))}
+          </div>
         </section>
 
         {/* 2d. Conheça tudo que existe na plataforma (tipos de recursos) */}
@@ -348,26 +340,27 @@ export default function OfferPage() {
                 </div>
 
                 {/* Preço */}
-                <p className="text-sm text-muted">{t('price.oldLabel')} <span className="text-base font-semibold text-muted line-through">{pricing.promo ? formatPrice(pricing.regular, lang) : 'R$ 147,90'}</span></p>
+                {pricing.promo && (
+                  <p className="text-sm text-muted">{t('price.oldLabel')} <span className="text-base font-semibold text-muted line-through">{formatPrice(pricing.regular, lang)}</span></p>
+                )}
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-gold">{t('price.nowLabel')}</p>
                 <p className="font-display text-5xl font-extrabold tracking-tight text-content sm:text-6xl">{formatPrice(pricing.current, lang)}</p>
                 <p className="mx-auto mt-3 max-w-sm text-sm text-muted">{t('price.oneTime')}</p>
+                <p className="mx-auto mt-1 max-w-sm text-sm text-content">{t('price.perItem').replace('{n}', String(LIBRARY.total)).replace('{v}', formatPrice(Math.round((pricing.current / LIBRARY.total) * 100) / 100, lang))}</p>
                 {pricing.promo && (
                   <p className="mx-auto mt-2 max-w-sm text-sm font-semibold text-gold">{t('promo.revert')}</p>
                 )}
 
-                {/* Contador — na Semana Black conta até o prazo REAL (30/11 23:59 BRT) */}
-                <div className="mt-7">
-                  <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">{pricing.promo ? t('promo.endsIn') : t('price.endsIn')}</p>
-                  {pricing.promo ? (
+                {/* Contador — só o prazo REAL da Semana Black (30/11 23:59 BRT); fora da promo não há contador */}
+                {pricing.promo && (
+                  <div className="mt-7">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">{t('promo.endsIn')}</p>
                     <DeadlineCountdown
                       deadline={BLACK_FRIDAY_END_MS}
                       labels={{ days: t('countdown.days'), hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') }}
                     />
-                  ) : (
-                    <LaunchCountdown labels={{ hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') }} />
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {/* CTA dourado */}
                 <Cta
@@ -376,10 +369,26 @@ export default function OfferPage() {
                   label={t('price.cta')}
                 />
 
-                {/* Garantia */}
+                {/* Checkout seguro: Pix ou cartão (Cakto) */}
                 <p className="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-content">
-                  <ShieldCheck className="h-5 w-5 text-success" /> {t('price.guarantee')}
+                  <Lock className="h-4 w-4 text-success" /> {t('price.secure')}
                 </p>
+                <p className="mt-1 text-xs text-dim">{t('price.fee')}</p>
+
+                {/* Garantia de 7 dias — caixa junto ao preço */}
+                <div className="mt-6 flex items-start gap-3 rounded-container border border-success/40 bg-success/10 p-4 text-left">
+                  <ShieldCheck className="mt-0.5 h-7 w-7 shrink-0 text-success" />
+                  <div>
+                    <p className="text-sm font-bold text-content">{t('price.guaranteeBoxTitle')}</p>
+                    <p className="mt-1 text-sm text-muted">{t('price.guaranteeBoxDesc')}</p>
+                  </div>
+                </div>
+
+                {CONTACT_EMAIL && (
+                  <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted">
+                    <Mail className="h-4 w-4" /> {t('price.contact')} <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-content underline">{CONTACT_EMAIL}</a>
+                  </p>
+                )}
 
                 <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-dim">{pricing.promo ? t('promo.footnote') : t('price.footnote')}</p>
               </div>
@@ -417,6 +426,9 @@ export default function OfferPage() {
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 sm:flex-row">
           <Logo />
           <Typography variant="caption">{t('home.footer')}</Typography>
+          {CONTACT_EMAIL && (
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-xs text-muted underline">{CONTACT_EMAIL}</a>
+          )}
         </div>
       </footer>
     </div>
