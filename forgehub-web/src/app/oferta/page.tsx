@@ -140,12 +140,10 @@ export default function OfferPage() {
     },
   ];
 
-  // Só fatos verificáveis (contados na biblioteca em 23/11/2026: 8 itens ativos =
-  // 6 kits completos + 2 apps). Sem contadores de downloads/visualizações sem fonte.
+  // Só fatos verificáveis anunciados na /oferta: 7 kits / 7 nichos.
+  // Sem a divisão «6 kits + 2 apps» e sem contadores de downloads/visualizações sem fonte.
   const facts: MetricCard[] = [
-    { icon: Boxes, value: String(LIBRARY.total), label: t('metric.items') },
-    { icon: Package, value: String(LIBRARY.kits), label: t('metric.fullKits') },
-    { icon: Smartphone, value: String(LIBRARY.apps), label: t('metric.apps') },
+    { icon: Boxes, value: String(LIBRARY.total), label: t('metric.kits') },
     { icon: Library, value: String(LIBRARY.total), label: t('metric.niches') },
     { icon: ShieldCheck, value: '7', label: t('metric.guaranteeDays') },
     { icon: Check, value: '1x', label: t('metric.oneTime') },
@@ -230,7 +228,7 @@ export default function OfferPage() {
             <h2 className={sectionTitle}>{t('offer.realTitle')}</h2>
             <Typography variant="p" className="mx-auto mt-4 max-w-2xl text-lg">{t('offer.realSub')}</Typography>
           </div>
-          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {facts.map(({ icon: FactIcon, value, label }) => (
               <div key={label} className="card-premium ring-hairline rounded-container p-5 text-left">
                 <FactIcon className="mb-3 h-5 w-5 text-gold" />

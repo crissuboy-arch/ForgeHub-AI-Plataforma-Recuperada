@@ -1,11 +1,10 @@
 // src/config/offer.ts — fatos da oferta usados no site (fonte única, sem números inventados).
 //
-// LIBRARY: contagem dos itens ATIVOS na biblioteca (tabela `assets`, status active/updated),
-// conferida em 23/11/2026: 8 itens = 6 kits completos + 2 apps
-// (NutriPlena, Finanças, Relacionamentos, Estética Premium, Alongamento Natural/Unhas,
-//  Crescendo com Jesus Kids, Cardápio Pro/MenuFlow [app], Na Tua Presença [app]).
-// Ao publicar um kit novo, atualize aqui (e o texto do dicionário que cita "8").
-export const LIBRARY = { total: 8, kits: 6, apps: 2 } as const;
+// Contagem PÚBLICA da /oferta: 7 kits / 7 nichos (decisão de 23/11/2026:
+// a página promete 7; o 8.º item da biblioteca — Alongamento Natural/Unhas —
+// fica como surpresa na entrega e não deve ser citado na /oferta).
+// Ao acrescentar um nicho anunciado, atualize aqui e o dicionário.
+export const LIBRARY = { total: 7 } as const;
 
 // E-mail de contato mostrado na /oferta. Só aparece se estiver definido
 // (variável NEXT_PUBLIC_FORGEHUB_CONTACT_EMAIL na Vercel) — nunca inventar um endereço.
