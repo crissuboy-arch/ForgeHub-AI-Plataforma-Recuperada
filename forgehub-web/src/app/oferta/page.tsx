@@ -151,22 +151,13 @@ export default function OfferPage() {
     { icon: Repeat, value: '340', label: t('metric.remixes') },
     { icon: Eye, value: '8.600', label: t('metric.views') },
     { icon: TrendingUp, value: '+21,4%', label: t('metric.growth') },
-    { icon: Boxes, value: '6', label: t('metric.kits') },
+    { icon: Boxes, value: '7', label: t('metric.kits') },
   ];
   const firstCol = metrics.slice(0, 3);
   const secondCol = metrics.slice(2);
 
-  // Value stack — itens do kit somando R$ 1.567 (valor x preço de entrada).
-  const valueStack: { label: string; price: number }[] = [
-    { label: t('price.stack.app'), price: 497 },
-    { label: t('price.stack.pages'), price: 297 },
-    { label: t('price.stack.ebook'), price: 197 },
-    { label: t('price.stack.creatives'), price: 227 },
-    { label: t('price.stack.media'), price: 141 },
-    { label: t('price.stack.bonus'), price: 208 },
-  ];
-  const totalValue = valueStack.reduce((sum, i) => sum + i.price, 0); // 1567
-  const brl = (n: number) => `R$ ${n.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`;
+  // O que a pessoa recebe logo após o pagamento (só o que o produto entrega de verdade).
+  const afterPay = pipe(t('price.afterPay'));
 
   return (
     <div className="relative flex min-h-screen flex-col bg-deep">
@@ -339,23 +330,21 @@ export default function OfferPage() {
               <div className="relative">
                 <Badge tone="gold" className="mb-6"><Icon name="sparkles" size={14} /> {pricing.promo ? t('promo.badge') : t('price.badge')}</Badge>
 
-                {/* Value stack — soma dos itens x preço */}
+                {/* O que você recebe logo após o pagamento */}
                 <div className="mb-7 rounded-container border border-border bg-deep/40 p-5 text-left">
-                  <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-muted">{t('price.stackTitle')}</p>
+                  <p className="mb-3 text-center text-xs font-semibold uppercase tracking-wider text-muted">{t('price.afterPayTitle')}</p>
                   <ul className="space-y-2">
-                    {valueStack.map((item) => (
-                      <li key={item.label} className="flex items-center justify-between gap-3 text-sm">
-                        <span className="flex items-center gap-2 text-content">
-                          <Check className="h-4 w-4 shrink-0 text-gold" /> {item.label}
-                        </span>
-                        <span className="shrink-0 font-medium text-muted">{brl(item.price)}</span>
+                    {afterPay.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm text-content">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-gold" /> {item}
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-                    <span className="text-sm font-semibold text-content">{t('price.totalLabel')}</span>
-                    <span className="font-display text-lg font-extrabold text-gold-light">{brl(totalValue)}</span>
-                  </div>
+                  {pricing.promo && (
+                    <p className="mt-4 border-t border-border pt-3 text-center text-sm font-semibold text-content">
+                      {t('price.normalLabel')} {formatPrice(pricing.regular, lang)} · {t('promo.shortLabel')} <span className="text-gold-light">{formatPrice(pricing.current, lang)}</span> · {t('price.oneTimeShort')}
+                    </p>
+                  )}
                 </div>
 
                 {/* Preço */}
@@ -392,7 +381,7 @@ export default function OfferPage() {
                   <ShieldCheck className="h-5 w-5 text-success" /> {t('price.guarantee')}
                 </p>
 
-                <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-dim">{t('price.footnote')}</p>
+                <p className="mx-auto mt-6 max-w-md text-xs leading-relaxed text-dim">{pricing.promo ? t('promo.footnote') : t('price.footnote')}</p>
               </div>
             </div>
           </div>
