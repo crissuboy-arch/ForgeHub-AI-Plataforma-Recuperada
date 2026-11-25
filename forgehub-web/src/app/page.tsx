@@ -15,7 +15,7 @@ const SITE_URL = 'https://www.devforgehub.online';
 const TITLE = 'ForgeHub AI — Pare de criar produtos digitais do zero';
 // Meta description ~155 caracteres (exibição no Google sem truncar).
 const DESCRIPTION =
-  'A maior biblioteca da ForgeHub AI com kits de negócios digitais remixáveis: apps, páginas de venda, ebooks, criativos, templates e agentes de IA prontos para vender.';
+  'A biblioteca da ForgeHub AI com 7 kits de negócios digitais remixáveis: apps, páginas de venda, ebooks, criativos, templates e agentes de IA prontos para vender.';
 // Descrição longa (JSON-LD / contexto para IA) — mais detalhada, sem keyword stuffing.
 const DESCRIPTION_LONG =
   'ForgeHub AI é uma plataforma e biblioteca de kits de negócios digitais remixáveis: aplicativos, páginas de venda, checkout, ebooks, criativos, vídeos, templates e agentes de IA — prontos para personalizar com a sua marca e vender como seus. Novos kits todos os meses.';

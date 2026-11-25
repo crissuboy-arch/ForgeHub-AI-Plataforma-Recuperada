@@ -7,18 +7,16 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion } from 'motion/react';
 
+// Só banners reais de kits ANUNCIADOS (Nutrição, Infantil cristão, Relacionamentos),
+// recortados sem a barra de estatísticas do painel (que mostrava 0 kits / 0 downloads)
+// e sem a faixa «Em breve». Não mostrar números inventados nem zerados aqui.
 const SLIDES = [
-  { src: '/images/showcase-vitrine/nutricao.webp', alt: 'Kit ForgeHub Nutrição' },
-  { src: '/images/showcase-vitrine/infantil.webp', alt: 'Kit ForgeHub Infantil' },
-  { src: '/images/showcase-vitrine/saude.webp', alt: 'Kit ForgeHub Saúde' },
-  { src: '/images/showcase-vitrine/analytics.webp', alt: 'Dashboard completo de analytics da ForgeHub AI' },
-  { src: '/images/showcase-vitrine/kits.webp', alt: 'Biblioteca de kits da ForgeHub AI' },
-  { src: '/images/showcase-vitrine/comingsoon.webp', alt: 'Novidades chegando em breve na ForgeHub AI' },
-  { src: '/images/showcase-vitrine/gastronomia.webp', alt: 'Kit ForgeHub Gastronomia' },
-  { src: '/images/showcase-vitrine/relacionamentos.webp', alt: 'Kit ForgeHub Relacionamentos' },
+  { src: '/images/hero-kits/nutricao.webp', alt: 'Kit ForgeHub Nutrição' },
+  { src: '/images/hero-kits/infantil.webp', alt: 'Kit ForgeHub Infantil cristão' },
+  { src: '/images/hero-kits/relacionamentos.webp', alt: 'Kit ForgeHub Relacionamentos' },
 ];
 
-export const HeroShowcase = () => {
+export const HeroShowcase = ({ caption }: { caption?: string }) => {
   const reduce = useReducedMotion();
   const [active, setActive] = useState(0);
   // Só o 1º slide (LCP) carrega no boot; os demais entram no DOM quando o
@@ -66,7 +64,7 @@ export const HeroShowcase = () => {
           </div>
 
           {/* Screenshots reais — crossfade, proporção original preservada (sem corte) */}
-          <div className="relative aspect-[16/10] w-full bg-ink">
+          <div className="relative aspect-[3/2] w-full bg-ink">
             {SLIDES.map((slide, i) =>
               mounted.has(i) ? (
                 <Image
@@ -76,11 +74,14 @@ export const HeroShowcase = () => {
                   fill
                   priority={i === 0}
                   sizes="(max-width: 1024px) 90vw, 45vw"
-                  className={`object-contain transition-opacity duration-1000 ease-in-out ${i === active ? 'opacity-100' : 'opacity-0'}`}
+                  className={`object-cover object-left transition-opacity duration-1000 ease-in-out ${i === active ? 'opacity-100' : 'opacity-0'}`}
                 />
               ) : null,
             )}
           </div>
+          {caption && (
+            <p className="border-t border-white/8 px-4 py-3 text-center text-[11px] font-medium leading-relaxed text-white/70 sm:text-xs">{caption}</p>
+          )}
         </div>
       </motion.div>
     </div>

@@ -123,7 +123,6 @@ export default function OfferPage() {
       icon: BookOpen,
       images: [
         { src: '/images/platform-types/ebook-365-manhas.webp', alt: t('platformType.ebooks') },
-        { src: '/images/platform-types/ebook-detox.webp', alt: t('platformType.ebooks') },
       ],
     },
     {

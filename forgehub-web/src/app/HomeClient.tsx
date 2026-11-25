@@ -14,7 +14,9 @@ import { HeroShowcase } from '../components/landing/HeroShowcase';
 import { LiveLibrary, type LibItem } from '../components/landing/LiveLibrary';
 import { CheckoutCta } from '../components/atoms/CheckoutCta';
 import { usePricing } from '../lib/pricing/PricingProvider';
-import { formatPrice } from '../config/pricing';
+import { formatPrice, BLACK_FRIDAY_END_MS } from '../config/pricing';
+import { DeadlineCountdown } from '../components/ui/launch-countdown';
+import { Lock } from 'lucide-react';
 import { InViewMount } from '../components/ui/in-view-mount';
 import { AnnouncementBar } from '../components/ui/announcement-bar';
 import { LiteYouTube } from '../components/ui/lite-youtube';
@@ -48,6 +50,7 @@ const STATUS: Record<string, { key: string; color: string }> = {
   proximo: { key: 'lp.status.proximo', color: '#f59e0b' },
   atualizado: { key: 'lp.status.atualizado', color: '#246bff' },
   novo: { key: 'lp.status.novo', color: '#d9b44a' },
+  disponivel: { key: 'lp.status.disponivel', color: '#22c55e' },
 };
 
 const sectionTitle = 'font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl';
@@ -57,12 +60,17 @@ export function HomeClient() {
   const { t, lang } = useLanguage();
   const pricing = usePricing();
 
-  const stats = [
-    { value: 8, label: t('lp.stat.kits') },
-    { value: 8, label: t('lp.stat.niches') },
-    { value: 1995, suffix: '+', label: t('lp.stat.downloads') },
-    { value: 1, prefix: '+', label: t('lp.stat.newkit') },
+  // Só fatos verificáveis (mesmos da /oferta): 7 kits, 7 nichos, 7 dias de garantia, pagamento único.
+  const stats: { value: number; label: string; prefix?: string; suffix?: string }[] = [
+    { value: 7, label: t('lp.stat.kits') },
+    { value: 7, label: t('lp.stat.niches') },
+    { value: 7, label: t('lp.stat.guarantee') },
+    { value: 1, suffix: 'x', label: t('lp.stat.oneTime') },
   ];
+  const blackLine = t('home.blackLine')
+    .replace('{old}', formatPrice(pricing.regular, lang))
+    .replace('{new}', formatPrice(pricing.current, lang));
+  const countdownLabels = { days: t('countdown.days'), hours: t('countdown.hours'), minutes: t('countdown.minutes'), seconds: t('countdown.seconds') };
 
   const libItems: LibItem[] = pairs(t('lp.libList')).map(({ a, b }) => {
     const s = STATUS[b] ?? STATUS.producao;
@@ -146,12 +154,10 @@ export function HomeClient() {
     <div className="relative flex min-h-screen flex-col bg-ink text-white">
       {/* ============ Faixa fixa Semana Black — bem visível, acima de tudo (só durante a promo) ============ */}
       {pricing.promo && (
-        <Link
-          href="/oferta"
+        <CheckoutCta
           className="block bg-black px-4 py-2.5 text-center text-[13px] font-bold tracking-wide text-[#f5c542] underline-offset-2 hover:underline sm:text-sm"
-        >
-          🖤 {t('promo.announce')} — GARANTIR AGORA →
-        </Link>
+          label={`🖤 ${blackLine} — GARANTIR AGORA →`}
+        />
       )}
 
       {/* ============ Barra de avisos (marquee) — topo absoluto, acima do header ============ */}
@@ -198,7 +204,14 @@ export function HomeClient() {
               </p>
             </Reveal>
             <Reveal delay={0.15}>
-              <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+              {pricing.promo && (
+                <div className="mt-8 rounded-2xl border border-goldp/40 bg-black/40 p-4 text-center sm:text-left">
+                  <p className="text-sm font-bold text-goldp sm:text-base">🖤 {blackLine}</p>
+                  <p className="mb-3 mt-3 text-[11px] font-semibold uppercase tracking-wider text-white/50">{t('promo.endsIn')}</p>
+                  <DeadlineCountdown deadline={BLACK_FRIDAY_END_MS} labels={countdownLabels} />
+                </div>
+              )}
+              <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                 <Cta label={t('lp.ctaMain')} className="w-full sm:w-auto" />
                 <span className="flex items-center gap-2 text-sm text-white/50">
                   <ShieldCheck className="h-4 w-4 text-emerald-400" /> {t('lp.guarantee')}
@@ -208,7 +221,7 @@ export function HomeClient() {
           </div>
 
           <div className="relative lg:pl-4">
-            <HeroShowcase />
+            <HeroShowcase caption={t('home.heroKits')} />
           </div>
         </section>
 
@@ -306,9 +319,9 @@ export function HomeClient() {
             <h2 className={sectionTitle}>{t('lp.libTitle')}</h2>
             <p className="mt-5 max-w-lg text-lg text-white/60">{t('lp.libSub')}</p>
             <div className="mt-8 flex items-center gap-6">
-              <div><Counter value={8} className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.kits')}</p></div>
+              <div><Counter value={7} className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.kits')}</p></div>
               <div className="h-8 w-px bg-white/10" />
-              <div><Counter value={8} className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.niches')}</p></div>
+              <div><Counter value={7} className="font-display text-3xl font-extrabold text-white" /><p className="text-xs text-white/45">{t('lp.stat.niches')}</p></div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
@@ -440,9 +453,19 @@ export function HomeClient() {
                 </div>
                 <p className="mt-3 text-sm font-medium text-white/60">{t('lp.offerOneTime')}</p>
                 {pricing.promo && <p className="mt-2 text-sm font-semibold text-goldp">{t('promo.revert')}</p>}
+                {pricing.promo && (
+                  <div className="mt-6">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-white/50">{t('promo.endsIn')}</p>
+                    <DeadlineCountdown deadline={BLACK_FRIDAY_END_MS} labels={countdownLabels} />
+                  </div>
+                )}
 
                 <Cta label={t('lp.offerCta')} className="mt-9 w-full" />
 
+                <p className="mt-4 flex items-center justify-center gap-2 text-sm font-medium text-white/80">
+                  <Lock className="h-4 w-4 text-emerald-400" /> {t('price.secure')}
+                </p>
+                <p className="mt-1 text-xs text-white/50">{t('price.fee')}</p>
                 <p className="mt-4 flex items-center justify-center gap-2 text-sm text-white/70">
                   <ShieldCheck className="h-4 w-4 text-emerald-400" /> {t('lp.guarantee')}
                 </p>

@@ -6,7 +6,6 @@ import { ThemeProvider } from "../lib/theme/ThemeProvider";
 import { ToastProvider } from "../components/organisms/Toast";
 import { OfflineBanner } from "../components/organisms/OfflineBanner";
 import { MetaPixel } from "../components/analytics/MetaPixel";
-import { Analytics } from "@vercel/analytics/next";
 
 // Evita flash de tema errado (FOUC): aplica data-theme antes da hidratação.
 const themeInit = `(function(){try{var m=localStorage.getItem('fh-theme')||'dark';var r=m==='system'?(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):m;document.documentElement.dataset.theme=r;}catch(e){}})();`;
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
     template: "%s · ForgeHub AI",
   },
   description:
-    "8 kits e apps de negócios digitais remixáveis: aplicativo, página de venda, checkout, ebook, criativos e prompts — prontos para personalizar e vender como seus.",
+    "7 kits de negócios digitais remixáveis: aplicativo, página de venda, checkout, ebook, criativos e prompts — prontos para personalizar e vender como seus.",
   applicationName: "ForgeHub AI",
   keywords: ["produtos digitais", "kits remixáveis", "infoprodutos", "biblioteca de negócios", "ForgeHub AI", "remix", "Kiwify", "Hotmart"],
   authors: [{ name: "ForgeHub AI", url: "https://www.devforgehub.online" }],
@@ -79,7 +78,6 @@ export default function RootLayout({
             </ToastProvider>
           </ThemeProvider>
         </LanguageProvider>
-        <Analytics />
       </body>
     </html>
   );

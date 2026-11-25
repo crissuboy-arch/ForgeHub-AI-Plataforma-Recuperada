@@ -348,7 +348,7 @@ const ptBR: Dict = {
   'lp.videoSub': 'Veja como você pode partir de uma estrutura existente, remixar os ativos e preparar seu próprio lançamento.',
   'lp.videoComingSoon': 'Vídeo demonstrativo em breve',
   // Stats
-  'lp.stat.kits': 'Kits disponíveis', 'lp.stat.niches': 'Nichos', 'lp.stat.downloads': 'Downloads', 'lp.stat.newkit': 'Novo kit todos os meses',
+  'lp.stat.kits': 'Kits completos', 'lp.stat.niches': 'Nichos', 'lp.stat.downloads': 'Downloads', 'lp.stat.newkit': 'Novo kit todos os meses', 'lp.stat.guarantee': 'Dias de garantia', 'lp.stat.oneTime': 'Pagamento único',
   // Dor
   'lp.painTitleA': 'O problema nunca foi ter uma ideia.', 'lp.painTitleB': 'É ter que construir tudo antes de conseguir lançar.',
   'lp.painSub': 'Produto. Página. Copy. Criativos. Checkout. Materiais. Conteúdo. Estrutura. Quando tudo começa do zero, uma simples ideia pode virar semanas de trabalho.',
@@ -358,8 +358,8 @@ const ptBR: Dict = {
   // Biblioteca viva
   'lp.libKicker': 'Plataforma viva', 'lp.libTitle': 'A biblioteca cresce todos os meses.',
   'lp.libSub': 'Você entra hoje e continua recebendo novos kits — sem pagar de novo. Cada mês, mais negócios prontos para remixar.',
-  'lp.status.producao': 'Em produção', 'lp.status.proximo': 'Próximo', 'lp.status.atualizado': 'Atualizado', 'lp.status.novo': 'Novo',
-  'lp.libList': 'Nutrição Premium::producao|Relacionamentos::proximo|Beleza::atualizado|Fitness::novo|Advocacia::producao|Gastronomia::proximo|Pets::producao|Educação::novo|Imobiliária::producao|Marketing::proximo|Clínicas::atualizado|Gospel::novo',
+  'lp.status.producao': 'Em produção', 'lp.status.proximo': 'Próximo', 'lp.status.atualizado': 'Atualizado', 'lp.status.novo': 'Novo', 'lp.status.disponivel': 'Disponível na biblioteca',
+  'lp.libList': 'Nutrição::disponivel|Finanças::disponivel|Relacionamentos::disponivel|Beleza e Estética::disponivel|Devocional cristão::disponivel|Infantil cristão::disponivel|Cardápio digital para restaurantes::disponivel',
   // O que vem dentro
   'lp.insideKicker': 'Kit completo',
   'lp.insideTitleA': 'Você não recebe arquivos soltos.', 'lp.insideTitleB': 'Recebe as peças de um negócio.',
@@ -368,7 +368,7 @@ const ptBR: Dict = {
   // Nichos
   'lp.nichesTitle': 'Não é um kit. É uma biblioteca de negócios.',
   'lp.nichesSub': 'Escolha o nicho que mais combina com você — ou domine vários. Todos com a mesma qualidade premium.',
-  'lp.nichesList': 'Nutrição|Relacionamentos|Fitness|Marketing|Beleza|Gospel|Finanças|Educação|Advocacia|Pets|Imobiliária|Restaurantes',
+  'lp.nichesList': 'Nutrição|Finanças|Relacionamentos|Beleza e Estética|Devocional cristão|Infantil cristão|Cardápio digital para restaurantes',
   // Como funciona
   'lp.howKicker': 'Simples assim', 'lp.howTitle': 'Do pronto ao seu negócio em 5 passos.',
   'lp.howSub': 'Em vez de começar com uma página em branco, você começa com uma estrutura.',
@@ -385,10 +385,10 @@ const ptBR: Dict = {
   'lp.offerText': "Pagamento único, sem mensalidade e sem cobranças futuras.",
   // FAQ
   'lp.faqTitle': 'Perguntas frequentes',
-  'lp.faq': 'Preciso saber programar?::Não. Tudo é feito para ser remixado sem código — você personaliza e publica.|Os produtos são realmente meus?::Sim. Você remixa, coloca seu nome e vende como seu, na plataforma que quiser.|Onde eu vendo?::Na Kiwify, Hotmart ou qualquer plataforma de pagamento que você já use.|Recebo novos kits depois?::Sim. A biblioteca cresce todos os meses e você continua recebendo, sem pagar de novo.|É pagamento único mesmo?::Sim, no lançamento beta atual. Quem entra agora mantém as condições.|E se eu não gostar?::Você tem 7 dias de garantia incondicional. Não gostou, devolvemos.',
+  'lp.faq': 'Preciso saber programar?::Não. Tudo é feito para ser remixado sem código — você personaliza e publica.|Os produtos são realmente meus?::Sim. Você remixa, coloca seu nome e vende como seu, na plataforma que quiser.|Onde eu vendo?::Em qualquer plataforma: Cakto, Kiwify, Hotmart…|Quantos kits tem hoje?::7 kits completos, um por nicho: Nutrição, Finanças, Relacionamentos, Beleza e Estética, Devocional cristão, Infantil cristão e Cardápio digital para restaurantes.|É pagamento único mesmo?::Sim. Quem compra na Semana Black paga uma vez e mantém o acesso, sem mensalidade.|E se eu não gostar?::Você tem 7 dias de garantia incondicional. Não gostou, devolvemos.',
   // CTA final
   'lp.finalTitle1': 'Pare de criar tudo do zero.', 'lp.finalTitle2': 'Comece remixando.',
-  'lp.finalSub': 'Entre hoje para a ForgeHub AI e tenha acesso imediato à maior biblioteca de kits digitais remixáveis.',
+  'lp.finalSub': 'Entre hoje para a ForgeHub AI e tenha acesso imediato aos 7 kits digitais remixáveis.',
   'lp.finalCta': 'QUERO ACESSAR AGORA',
   // Dashboard
   'dash.welcome': 'Bem-vindo(a)', 'dash.autoSetup': 'Começar Auto Setup', 'dash.activeTag': 'ativos',
@@ -539,6 +539,8 @@ const ptBR: Dict = {
   'promo.revert': 'Preço volta a R$ 47,90 em 01/12.',
   'promo.endsIn': 'A Semana Black termina em:',
   'promo.announce': 'SEMANA BLACK FORGEHUB: de R$ 47,90 por R$ 29,90 – só até 30/11',
+  'home.blackLine': 'Semana Black: de {old} por {new} · pagamento único · só até 30/11',
+  'home.heroKits': '7 kits incluídos: Nutrição · Finanças · Relacionamentos · Beleza e Estética · Devocional cristão · Infantil cristão · Cardápio digital',
   'countdown.hours': 'horas', 'countdown.minutes': 'min', 'countdown.seconds': 'seg',
   'offer.login': 'Entrar', 'offer.secondary': 'Ver planos',
   'offer.whatTitle': 'O que é a ForgeHub AI',

@@ -14,9 +14,8 @@ function initialLang(): AppLanguage {
   if (typeof window === 'undefined') return 'pt-BR';
   const saved = window.localStorage.getItem(STORAGE_KEY);
   if (saved && VALID.includes(saved as AppLanguage)) return saved as AppLanguage;
-  const nav = window.navigator.language;
-  if (nav?.startsWith('es')) return 'es';
-  if (nav?.startsWith('en')) return 'en';
+  // Sem deteção automática pelo idioma do navegador: o público (anúncios no Brasil,
+  // checkout em BRL/Pix) vê sempre pt-BR. Outro idioma só se a pessoa escolher no seletor.
   return 'pt-BR';
 }
 
