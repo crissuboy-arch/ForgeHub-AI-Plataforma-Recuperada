@@ -146,6 +146,9 @@ export function HomeClient() {
     { src: '/images/depoimentos/depoimento-maria.webp', alt: 'Depoimento de Maria' },
     { src: '/images/depoimentos/depoimento-pedro.webp', alt: 'Depoimento de Pedro' },
     { src: '/images/depoimentos/depoimento-benedita.webp', alt: 'Depoimento de Benedita' },
+    { src: '/images/depoimentos/depoimento-rogerio.webp', alt: 'Depoimento de Rogério Almeida' },
+    { src: '/images/depoimentos/depoimento-patricia.webp', alt: 'Depoimento de Patrícia Souza' },
+    { src: '/images/depoimentos/depoimento-cristiane-tablet.webp', alt: 'Cristiane com a plataforma ForgeHub AI no tablet' },
   ];
 
   const announcementItems = [...(pricing.promo ? [t('promo.announce')] : []), ...pipe(t('lp.announcementItems'))];
